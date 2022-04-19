@@ -8,6 +8,8 @@
 
 #include "../mem.h"
 #include "../main.h"
+#include "../mutil.h"
+#include "../stage.h"
 
 //Gfx constants
 #define OTLEN 8
@@ -190,6 +192,43 @@ void Gfx_BlendRect(const RECT *rect, u8 r, u8 g, u8 b, u8 mode)
 	nextpri += sizeof(DR_TPAGE);
 }
 
+void Gfx_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 mode)
+{
+	//Manipulate rects to comply with GPU restrictions
+	RECT csrc, cdst;
+	csrc = *src;
+	cdst = *dst;
+	
+	if (dst->w < 0)
+		csrc.x--;
+	if (dst->h < 0)
+		csrc.y--;
+	
+	if ((csrc.x + csrc.w) >= 0x100)
+	{
+		csrc.w = 0xFF - csrc.x;
+		cdst.w = cdst.w * csrc.w / src->w;
+	}
+	if ((csrc.y + csrc.h) >= 0x100)
+	{
+		csrc.h = 0xFF - csrc.y;
+		cdst.h = cdst.h * csrc.h / src->h;
+	}
+	
+	//Add quad
+	POLY_FT4 *quad = (POLY_FT4*)nextpri;
+	setPolyFT4(quad);
+	setUVWH(quad, csrc.x, csrc.y, csrc.w, csrc.h);
+	setXYWH(quad, cdst.x, cdst.y, cdst.w, cdst.h);
+	setRGB0(quad, 0x80, 0x80, 0x80);
+	setSemiTrans(quad, mode);
+	quad->tpage = tex->tpage;
+	quad->clut = tex->clut;
+	
+	addPrim(ot[db], quad);
+	nextpri += sizeof(POLY_FT4);
+}
+
 void Gfx_BlitTexCol(Gfx_Tex *tex, const RECT *src, s32 x, s32 y, u8 r, u8 g, u8 b)
 {
 	//Add sprite
@@ -240,54 +279,10 @@ void Gfx_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 r, u8 g, 
 		cdst.h = cdst.h * csrc.h / src->h;
 	}
 	
-	/*
-	//Subdivide if particularly large
-	if (csrc.w > 0x80)
-	{
-		RECT csrc2, cdst2;
-		
-		int srcs = csrc.w / 2;
-		csrc2.x = csrc.x + srcs;
-		csrc2.w = csrc.w - srcs;
-		csrc2.y = csrc.y;
-		csrc2.h = csrc.h;
-		csrc.w = srcs;
-		
-		int dsts = cdst.w / 2;
-		cdst2.x = cdst.x + dsts;
-		cdst2.w = cdst.w - dsts;
-		cdst2.y = cdst.y;
-		cdst2.h = cdst.h;
-		cdst.w = dsts;
-		
-		Gfx_DrawTexCol(tex, &csrc2, &cdst2, r, g, b);
-	}
-	if (csrc.h > 0x80)
-	{
-		RECT csrc2, cdst2;
-		
-		int srcs = csrc.h / 2;
-		csrc2.x = csrc.x;
-		csrc2.w = csrc.w;
-		csrc2.y = csrc.y + srcs;
-		csrc2.h = csrc.h - srcs;
-		csrc.h = srcs;
-		
-		int dsts = cdst.h / 2;
-		cdst2.x = cdst.x;
-		cdst2.w = cdst.w;
-		cdst2.y = cdst.y + dsts;
-		cdst2.h = cdst.h - dsts;
-		cdst.h = dsts;
-		
-		Gfx_DrawTexCol(tex, &csrc2, &cdst2, r, g, b);
-	}
-	*/
-	
 	//Add quad
 	POLY_FT4 *quad = (POLY_FT4*)nextpri;
 	setPolyFT4(quad);
-	setUVWH(quad, csrc.x, csrc.y, csrc.w, csrc.h);
+	setUVWH(quad, src->x, csrc.y, csrc.w, csrc.h);
 	setXYWH(quad, cdst.x, cdst.y, cdst.w, cdst.h);
 	setRGB0(quad, r, g, b);
 	quad->tpage = tex->tpage;
@@ -300,6 +295,44 @@ void Gfx_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 r, u8 g, 
 void Gfx_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT *dst)
 {
 	Gfx_DrawTexCol(tex, src, dst, 0x80, 0x80, 0x80);
+}
+
+void Gfx_DrawTexRotate(Gfx_Tex *tex, int x, int y, const RECT *src, u8 angle, fixed_t zoom, fixed_t fx, fixed_t fy)
+{	
+	s16 sin = MUtil_Sin(angle);
+	s16 cos = MUtil_Cos(angle);
+	
+	//Get tank rotated points
+	POINT p0 = {-45, -45};
+	MUtil_RotatePoint(&p0, sin, cos);
+	
+	POINT p1 = { 45, -45};
+	MUtil_RotatePoint(&p1, sin, cos);
+	
+	POINT p2 = {-45,  45};
+	MUtil_RotatePoint(&p2, sin, cos);
+	
+	POINT p3 = { 45,  45};
+	MUtil_RotatePoint(&p3, sin, cos);
+	
+	POINT_FIXED d0 = {
+		x + ((fixed_t)p0.x << FIXED_SHIFT) - fx,
+		y + ((fixed_t)p0.y << FIXED_SHIFT) - fy
+	};
+	POINT_FIXED d1 = {
+		x + ((fixed_t)p1.x << FIXED_SHIFT) - fx,
+		y + ((fixed_t)p1.y << FIXED_SHIFT) - fy
+	};
+	POINT_FIXED d2 = {
+        x + ((fixed_t)p2.x << FIXED_SHIFT) - fx,
+		y + ((fixed_t)p2.y << FIXED_SHIFT) - fy
+	};
+	POINT_FIXED d3 = {
+        x + ((fixed_t)p3.x << FIXED_SHIFT) - fx,
+		y + ((fixed_t)p3.y << FIXED_SHIFT) - fy
+	};
+	
+    Stage_DrawTexArb(tex, src, &d0, &d1, &d2, &d3, zoom);
 }
 
 void Gfx_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT *p0, const POINT *p1, const POINT *p2, const POINT *p3, u8 r, u8 g, u8 b)

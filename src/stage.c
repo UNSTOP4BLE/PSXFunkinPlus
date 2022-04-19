@@ -46,17 +46,31 @@ static int note_x[8] = {
 	 FIXED_DEC(-60,1) - FIXED_DEC(SCREEN_WIDEADD,4),
 	 FIXED_DEC(-26,1) - FIXED_DEC(SCREEN_WIDEADD,4),
 };
+
+static int note_xwidescreen[8] = {
+	//BF
+	 FIXED_DEC(30 + (28 * 0),1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(30 + (28 * 1),1) + FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(30 + (28 * 2),1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(30 + (28 * 3),1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	//Opponent
+	FIXED_DEC(-131 + (28 * 0),1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-131 + (28 * 1),1) - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(-131 + (28 * 2),1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-131 + (28 * 3),1) - FIXED_DEC(SCREEN_WIDEADD,4),
+};
+
 static int note_y[8] = {
 	//BF
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1),
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1),
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1),
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1),
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
 	//Opponent
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1),
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1),
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1),
-	FIXED_DEC(32 - SCREEN_HEIGHT2, 1)
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
+	FIXED_DEC(40 - SCREEN_HEIGHT2, 1)
 };
 
 static const u16 note_key[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
@@ -632,7 +646,7 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 		dst.y = -dst.y - dst.h;
 	
 	//Draw health icon
-	Stage_DrawTex(&stage.tex_hud1, &src, &dst, FIXED_MUL(stage.bump, stage.sbump));
+	//Gfx_DrawTexRotate(&stage.tex_hud1, dst.x, dst.y, &src, 0, FIXED_MUL(stage.bump, stage.sbump), 0, 0);
 }
 
 static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
@@ -785,6 +799,8 @@ static void Stage_DrawNotes(void)
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = (note_src.h << FIXED_SHIFT);
 						
+						note_dst.w = note_dst.w * 0.815;
+						
 						if (stage.downscroll)
 						{
 							note_dst.y = -note_dst.y;
@@ -812,6 +828,8 @@ static void Stage_DrawNotes(void)
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = (next_y - y) - clip;
 						
+						note_dst.w = note_dst.w * 0.815;
+						
 						if (stage.downscroll)
 							note_dst.y = -note_dst.y - note_dst.h;
 						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
@@ -834,6 +852,8 @@ static void Stage_DrawNotes(void)
 				note_dst.y = y - FIXED_DEC(16,1);
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
+				
+				note_dst.w = note_dst.w * 0.815;
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
@@ -889,6 +909,8 @@ static void Stage_DrawNotes(void)
 				note_dst.y = y - FIXED_DEC(16,1);
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
+				
+				note_dst.w = note_dst.w * 0.815;
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
@@ -1294,6 +1316,11 @@ void Stage_Tick(void)
 		}
 	}
 	
+	int i;
+	
+	for (i = 0; i < 8; ++i)
+		note_x[i] = note_xwidescreen[i];
+	
 	if (Trans_Tick())
 	{
 		switch (stage.trans)
@@ -1342,12 +1369,9 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
-			double strength = 1;
-			double scrollmax = 8;
-			
 			FntPrint("step: %d | scroll: %d", stage.song_step, scroll);
 			
-			if(true)
+			if(false)
 			{
 			note_y[0] = FIXED_DEC(40 + (pos / 4) - SCREEN_HEIGHT2, 1);
 			note_y[1] = FIXED_DEC(40 + (-pos / 4) - SCREEN_HEIGHT2, 1);
@@ -1390,8 +1414,8 @@ void Stage_Tick(void)
 			
 			pos += scroll;
 			
-			RECT dst_laser = {100, 50 + pos, 110, 110};
-			//Gfx_BlendRect(&dst_laser, 255, 255, 255, 1);
+			RECT scr_laser = {0, 50, 256, 110};
+			//Gfx_DrawTexRotate(&stage.tex_hud0, 100, 50, &scr_laser, pos, stage.camera.bzoom, stage.camera.x, stage.camera.y);
 			
 			if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
 			{
@@ -1646,7 +1670,7 @@ void Stage_Tick(void)
 			
 			//Draw note HUD
 			RECT note_src = {0, 0, 32, 32};
-			RECT_FIXED note_dst = {0, 0, FIXED_DEC(32,1), FIXED_DEC(32,1)};
+			RECT_FIXED note_dst = {0, 0, FIXED_DEC(32,1) * 0.815, FIXED_DEC(32,1)};
 			
 			for (u8 i = 0; i < 4; i++)
 			{
