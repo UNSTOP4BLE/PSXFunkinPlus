@@ -297,42 +297,43 @@ void Gfx_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT *dst)
 	Gfx_DrawTexCol(tex, src, dst, 0x80, 0x80, 0x80);
 }
 
-void Gfx_DrawTexRotate(Gfx_Tex *tex, int x, int y, const RECT *src, u8 angle, fixed_t zoom, fixed_t fx, fixed_t fy)
+void Gfx_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle)
 {	
 	s16 sin = MUtil_Sin(angle);
 	s16 cos = MUtil_Cos(angle);
+	int pw = dst->w / 2;
+	int ph = dst->h / 2;
 	
-	//Get tank rotated points
-	POINT p0 = {-45, -45};
+	POINT p0 = {-pw, -ph};
 	MUtil_RotatePoint(&p0, sin, cos);
 	
-	POINT p1 = { 45, -45};
+	POINT p1 = { pw, -ph};
 	MUtil_RotatePoint(&p1, sin, cos);
 	
-	POINT p2 = {-45,  45};
+	POINT p2 = {-pw,  ph};
 	MUtil_RotatePoint(&p2, sin, cos);
 	
-	POINT p3 = { 45,  45};
+	POINT p3 = { pw,  ph};
 	MUtil_RotatePoint(&p3, sin, cos);
 	
-	POINT_FIXED d0 = {
-		x + ((fixed_t)p0.x << FIXED_SHIFT) - fx,
-		y + ((fixed_t)p0.y << FIXED_SHIFT) - fy
+	POINT d0 = {
+		dst->x + p0.x,
+		dst->y + p0.y
 	};
-	POINT_FIXED d1 = {
-		x + ((fixed_t)p1.x << FIXED_SHIFT) - fx,
-		y + ((fixed_t)p1.y << FIXED_SHIFT) - fy
+	POINT d1 = {
+		dst->x + p1.x,
+		dst->y + p1.y
 	};
-	POINT_FIXED d2 = {
-        x + ((fixed_t)p2.x << FIXED_SHIFT) - fx,
-		y + ((fixed_t)p2.y << FIXED_SHIFT) - fy
+	POINT d2 = {
+        dst->x + p2.x,
+		dst->y + p2.y
 	};
-	POINT_FIXED d3 = {
-        x + ((fixed_t)p3.x << FIXED_SHIFT) - fx,
-		y + ((fixed_t)p3.y << FIXED_SHIFT) - fy
+	POINT d3 = {
+        dst->x + p3.x,
+		dst->y + p3.y
 	};
 	
-    Stage_DrawTexArb(tex, src, &d0, &d1, &d2, &d3, zoom);
+    Gfx_DrawTexArb(tex, src, &d0, &d1, &d2, &d3);
 }
 
 void Gfx_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT *p0, const POINT *p1, const POINT *p2, const POINT *p3, u8 r, u8 g, u8 b)

@@ -74,6 +74,7 @@ static struct
 	u8 page, next_page;
 	boolean page_swap;
 	u8 select, next_select;
+	s16 animcounter;
 	
 	fixed_t scroll;
 	fixed_t trans_time;
@@ -437,17 +438,22 @@ void Menu_Tick(void)
 				FIXED_DEC(97,100),
 			};
 			fixed_t logo_scale = logo_scales[(menu.page_state.title.logo_bump * 24) >> FIXED_SHIFT];
-			u32 x_rad = (logo_scale * (256 >> 1)) >> FIXED_SHIFT;
+			u32 x_rad = (logo_scale * (255 >> 1)) >> FIXED_SHIFT;
 			u32 y_rad = (logo_scale * (151 >> 1)) >> FIXED_SHIFT;
 			
-			RECT logo_src = {0, 0, 256, 151};
+			menu.animcounter += 4;
+			if (menu.animcounter > 250)
+				menu.animcounter -= 250;
+			
+			RECT logo_src = {0, 0, 255, 150};
 			RECT logo_dst = {
-				150 - x_rad + (SCREEN_WIDEADD2 >> 1),
-				100 - y_rad,
+				300 - x_rad + (SCREEN_WIDEADD2 >> 1),
+				190 - y_rad,
 				x_rad << 1,
 				y_rad << 1
 			};
-			Gfx_DrawTex(&menu.tex_title, &logo_src, &logo_dst);
+			
+			Gfx_DrawTexRotate(&menu.tex_title, &logo_src, &logo_dst, MUtil_Sin(menu.animcounter) / 40);
 			
 			if (menu.page_state.title.logo_bump > 0)
 				if ((menu.page_state.title.logo_bump -= timer_dt) < 0)

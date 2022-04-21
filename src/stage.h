@@ -233,6 +233,9 @@ typedef struct
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
+	
+	//Animations
+	s16 iconangle;
 } Stage;
 
 extern Stage stage;
@@ -241,7 +244,9 @@ extern Stage stage;
 void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 r, u8 g, u8 b);
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom);
 void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom);
+void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t zoom, fixed_t fx, fixed_t fy);
 void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, u8 mode);
+
 
 //Stage functions
 void Stage_Load(StageId id, StageDiff difficulty, boolean story);
