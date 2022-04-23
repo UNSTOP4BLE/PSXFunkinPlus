@@ -28,12 +28,26 @@
 
 //#define STAGE_FREECAM //Freecam
 
-int dir = 0;
-int dircooldown = 0;
-int timer = 0;
-int scroll = 0;
-int scrtog = 0;
-int pos = 10;
+static const u8 charicon[2][3][4] = {
+	//BF
+	{
+		//Normal
+		{93,10,46,30},
+		//Happy
+		{1,10,47,31},
+		//Sad
+		{49,10,43,35}
+	},
+	//BF
+	{
+		//Normal
+		{93,10,46,30},
+		//Happy
+		{1,10,47,31},
+		//Sad
+		{49,10,43,35}
+	}
+};
 
 static int note_x[8] = {
 	//BF
@@ -655,30 +669,40 @@ void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u
 static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 {
 	//Check if we should use 'dying' frame
-	s8 dying;
+	int status;
 	s16 angle;
 	if (ox < 0)
 	{
 		angle = stage.bump;
-		dying = (health >= 18000) * 24;
+		if (health >= 18000)
+			status = 2;
+		else if (health <= 2000)
+			status = 1;
+		else
+			status = 0;
 	}
 	else
 	{
 		angle = -stage.bump;
-		dying = (health <= 2000) * 24;
+		if (health <= 2000)
+			status = 2;
+		else if (health >= 18000)
+			status = 1;
+		else
+			status = 0;
 	}
 	
 	//Get src and dst
 	fixed_t hx = (128 << FIXED_SHIFT) * (10000 - health) / 10000;
 	RECT src = {
-		0,
-		10,
-		41,
-		29
+		charicon[i][status][0],
+		charicon[i][status][1],
+		charicon[i][status][2],
+		charicon[i][status][3]
 	};
 	RECT_FIXED dst = {
-		hx + ox * FIXED_DEC(20,1) - FIXED_DEC(12,1),
-		FIXED_DEC(SCREEN_HEIGHT2 - 20 + 4 - 12, 1),
+		hx + ox * FIXED_DEC(24,1) - FIXED_DEC(0,1),
+		FIXED_DEC(SCREEN_HEIGHT2 - 20 - (src.h / 2), 1),
 		src.w << FIXED_SHIFT,
 		src.h << FIXED_SHIFT
 	};
@@ -1413,53 +1437,7 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
-			FntPrint("step: %d | scroll: %d", stage.song_step, scroll);
-			
-			if(false)
-			{
-			note_y[0] = FIXED_DEC(40 + (pos / 4) - SCREEN_HEIGHT2, 1);
-			note_y[1] = FIXED_DEC(40 + (-pos / 4) - SCREEN_HEIGHT2, 1);
-			note_y[2] = FIXED_DEC(40 + (pos / 4) - SCREEN_HEIGHT2, 1);
-			note_y[3] = FIXED_DEC(40 + (-pos / 4) - SCREEN_HEIGHT2, 1);
-			note_y[4] = FIXED_DEC(40 + (pos / 4) - SCREEN_HEIGHT2, 1);
-			note_y[5] = FIXED_DEC(40 + (-pos / 4) - SCREEN_HEIGHT2, 1);
-			note_y[6] = FIXED_DEC(40 + (pos / 4) - SCREEN_HEIGHT2, 1);
-			note_y[7] = FIXED_DEC(40 + (-pos / 4) - SCREEN_HEIGHT2, 1);
-			}
-			
-			if (scrtog == 0)
-			{
-				if (timer == 0)
-				{
-					scroll += 1;
-					timer = 5;
-				}
-				if (pos > 10)
-				{
-					scroll = 5;
-					scrtog = 1;
-				}
-			}
-			if (scrtog == 1)
-			{
-				if (timer == 0)
-				{
-					scroll -= 1;
-					timer = 5;
-				}
-				if (pos < -10)
-				{
-					scroll = -5;
-					scrtog = 0;
-				}
-			}
-			if (timer > 0)
-				timer -= 1;
-			
-			pos += scroll;
-			
-			RECT scr_laser = {0, 50, 256, 110};
-			//Gfx_DrawTexRotate(&stage.tex_hud0, 100, 50, &scr_laser, pos, stage.camera.bzoom, stage.camera.x, stage.camera.y);
+			FntPrint("step: %d", stage.song_step);
 			
 			if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
 			{
@@ -1492,7 +1470,6 @@ void Stage_Tick(void)
 			fixed_t next_scroll;
 			
 			{
-				const fixed_t interp_int = FIXED_UNIT * 8 / 75;
 				if (stage.note_scroll < 0)
 				{
 					//Play countdown sequence
@@ -1992,8 +1969,6 @@ void Stage_Tick(void)
 			
 			Stage_FocusCharacter(stage.player, 0);
 			stage.song_time = 0;
-			
-			dir = 0;
 			
 			stage.state = StageState_DeadLoad;
 		}
