@@ -1,0 +1,4 @@
+2
+"fnf_loss_sfx.ogg" 1.0 0.0
+"fnf_loss_sfx.ogg" 0.0 1.0
+0

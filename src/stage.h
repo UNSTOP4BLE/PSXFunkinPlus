@@ -41,7 +41,6 @@ typedef enum
 	StageId_1_2, //Fresh
 	StageId_1_3, //Dadbattle
 	StageId_1_4, //Tutorial
-	StageId_1_5, //Armageddon
 	
 	StageId_Max
 } StageId;
@@ -98,7 +97,9 @@ typedef struct
 	fixed_t speed[3];
 	
 	u8 week, week_song;
-	u8 music_track, music_channel;
+	
+	//Mus file
+	const char *mus_path;
 	
 	StageId next_stage;
 	u8 next_load;

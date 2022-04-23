@@ -60,10 +60,6 @@
 				<file name = "1.4e.cht" type = "data" source = "iso/chart/tutorial-easy.json.cht"/>
 				<file name = "1.4n.cht" type = "data" source = "iso/chart/tutorial.json.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/chart/tutorial-hard.json.cht"/>
-				<!--armageddon charts -->
-				<file name = "1.5e.cht" type = "data" source = "iso/chart/armageddon.json.cht"/>
-				<file name = "1.5n.cht" type = "data" source = "iso/chart/armageddon.json.cht"/>
-				<file name = "1.5h.cht" type = "data" source = "iso/chart/armageddon.json.cht"/>
 				
 			</dir>
 			
@@ -89,14 +85,17 @@
 			
 			<!-- Music -->
 			<dir name = "music">
-				<file name = "menu.xa" type = "xa" source = "iso/music/menu.xa"/>
-				<dummy sectors="128"/>
-				<file name = "week1a.xa" type = "xa" source = "iso/music/week1a.xa"/>
-				<dummy sectors="128"/>
-				<file name = "week1b.xa" type = "xa" source = "iso/music/week1b.xa"/>
-				<dummy sectors="128"/>
-				<file name = "testweek.xa" type = "xa" source = "iso/music/testweek.xa"/>
-				<dummy sectors="128"/>
+				<file name = "menu.mus" type = "data" source = "iso/music/freakyMenu/freakyMenu.mus"/>
+				<file name = "gameover.mus" type = "data" source = "iso/music/gameover/gameover.mus"/>
+				<file name = "tutorial.mus" type = "data" source = "iso/music/tutorial/tutorial.mus"/>
+				<file name = "week1_1.mus" type = "data" source = "iso/music/bopeebo/bopeebo.mus"/>
+				<file name = "week1_2.mus" type = "data" source = "iso/music/fresh/fresh.mus"/>
+				<file name = "week1_3.mus" type = "data" source = "iso/music/dadbattle/dadbattle.mus"/>
+
+			</dir>
+			<!-- Sound -->
+			<dir name = "sound">
+				<file name = "micdrop.mus" type = "data" source = "iso/sound/fnf_loss_sfx/fnf_loss_sfx.mus"/>
 			</dir>
 			
 			<!-- Dummy sectors -->

@@ -1,0 +1,11 @@
+all: \
+	iso/music/freakymenu/freakymenu.mus \
+	iso/music/bopeebo/bopeebo.mus \
+	iso/music/fresh/fresh.mus \
+	iso/music/dadbattle/dadbattle.mus \
+	iso/music/tutorial/tutorial.mus \
+	iso/music/gameover/gameover.mus \
+	iso/sound/fnf_loss_sfx/fnf_loss_sfx.mus \
+
+iso/%.mus: iso/%.txt
+	tools/funkinmuspak/funkinmuspak $@ $<

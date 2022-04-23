@@ -17,7 +17,7 @@
 void LoadScr_Start(void)
 {
 	//Stop music and make sure frame has been drawn
-	Audio_StopXA();
+	Audio_StopMus();
 	Network_Process();
 	Gfx_Flip();
 	

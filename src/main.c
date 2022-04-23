@@ -76,7 +76,6 @@ int main(int argc, char **argv)
 	{
 		//Prepare frame
 		Timer_Tick();
-		Audio_ProcessXA();
 		Pad_Update();
 		
 		#ifdef MEM_STAT

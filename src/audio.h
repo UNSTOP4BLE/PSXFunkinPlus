@@ -9,47 +9,17 @@
 
 #include "psx.h"
 
-//XA enumerations
-typedef enum
-{
-	XA_Menu,   //MENU.XA
-	XA_Week1A, //WEEK1A.XA
-	XA_Week1B, //WEEK1B.XA
-	XA_TestWeek, //TESTWEEK.XA
-	
-	XA_Max,
-} XA_File;
+#include "fixed.h"
 
-typedef enum
-{
-	//MENU.XA
-	XA_GettinFreaky, //Gettin' Freaky
-	XA_GameOver,     //Game Over
-	XA_fnf_loss_sfx,
-	//WEEK1A.XA
-	XA_Bopeebo, //Bopeebo
-	XA_Fresh,   //Fresh
-	//WEEK1B.XA
-	XA_Dadbattle, //DadBattle
-	XA_Tutorial,  //Tutorial
-	//TESTWEEK.XA
-	XA_Armageddon,
-	
-	XA_TrackMax,
-} XA_Track;
-
-//Audio functions
+//Audio interface
 void Audio_Init(void);
 void Audio_Quit(void);
-void Audio_PlayXA_Track(XA_Track track, u8 volume, u8 channel, boolean loop);
-void Audio_SeekXA_Track(XA_Track track);
-void Audio_PauseXA(void);
-void Audio_StopXA(void);
-void Audio_ChannelXA(u8 channel);
-s32 Audio_TellXA_Sector(void);
-s32 Audio_TellXA_Milli(void);
-boolean Audio_PlayingXA(void);
-void Audio_WaitPlayXA(void);
-void Audio_ProcessXA(void);
+void Audio_LoadMusFile(CdlFILE *file);
+void Audio_LoadMus(const char *path);
+void Audio_PlayMus(boolean loops);
+void Audio_StopMus(void);
+void Audio_SetVolume(u8 i, u16 vol_left, u16 vol_right);
+fixed_t Audio_GetTime(void);
+boolean Audio_IsPlaying(void);
 
 #endif
