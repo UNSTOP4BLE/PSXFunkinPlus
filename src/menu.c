@@ -259,7 +259,6 @@ void Menu_Load(MenuPage page)
 		case MenuPage_Opening:
 			//Get funny message to use
 			//Do this here so timing is less reliant on VSync
-			stage.widescreen = true;
 			#ifdef PSXF_PC
 				menu.page_state.opening.funny_message = time(NULL) % COUNT_OF(funny_messages);
 			#else
@@ -332,6 +331,13 @@ void Menu_Tick(void)
 		{
 			u16 beat = stage.song_step >> 2;
 			
+			if (pad_state.press & PAD_TRIANGLE)
+				{
+				stage.widescreen = true;
+				stage.ghost = true;
+				stage.downscroll = true;
+				}
+			
 			//Start title screen if opening ended
 			if (beat >= 16)
 			{
@@ -396,6 +402,13 @@ void Menu_Tick(void)
 	//Fallthrough
 		case MenuPage_Title:
 		{
+			if (pad_state.press & PAD_TRIANGLE)
+				{
+				stage.widescreen = true;
+				stage.ghost = true;
+				stage.downscroll = true;
+				}
+			
 			//Initialize page
 			if (menu.page_swap)
 			{
@@ -962,7 +975,7 @@ void Menu_Tick(void)
 			} menu_options[] = {
 				{OptType_Boolean, "GHOST TAP ", &stage.ghost, {.spec_boolean = {0}}},
 				{OptType_Boolean, "DOWNSCROLL", &stage.downscroll, {.spec_boolean = {0}}},
-				{OptType_Boolean, "WIDESCREEN", &stage.widescreen, {.spec_boolean = {1}}}
+				{OptType_Boolean, "WIDESCREEN", &stage.widescreen, {.spec_boolean = {0}}}
 			};
 			
 			//Initialize page

@@ -8,7 +8,7 @@
 		Back_Week1_New,
 		
 		//Song info
-		{FIXED_DEC(1,1),FIXED_DEC(1,1),FIXED_DEC(33,10)},
+		{FIXED_DEC(1,1),FIXED_DEC(1,1),FIXED_DEC(13,10)},
 		1, 1,
 		"\\MUSIC\\WEEK1_1.MUS;1",
 		

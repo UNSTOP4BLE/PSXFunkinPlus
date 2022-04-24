@@ -62,19 +62,6 @@ static int note_x[8] = {
 	 FIXED_DEC(-26,1) - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
-static int note_xwidescreen[8] = {
-	//BF
-	 FIXED_DEC(30 + (28 * 0),1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	 FIXED_DEC(30 + (28 * 1),1) + FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	 FIXED_DEC(30 + (28 * 2),1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(30 + (28 * 3),1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	//Opponent
-	FIXED_DEC(-131 + (28 * 0),1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	 FIXED_DEC(-131 + (28 * 1),1) - FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	 FIXED_DEC(-131 + (28 * 2),1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	 FIXED_DEC(-131 + (28 * 3),1) - FIXED_DEC(SCREEN_WIDEADD,4),
-};
-
 static int note_y[8] = {
 	//BF
 	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
@@ -86,6 +73,32 @@ static int note_y[8] = {
 	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
 	FIXED_DEC(40 - SCREEN_HEIGHT2, 1),
 	FIXED_DEC(40 - SCREEN_HEIGHT2, 1)
+};
+
+static const fixed_t note_xdef[8] = {
+	//BF
+	 FIXED_DEC(26,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(60,1) + FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(94,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(128,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	//Opponent
+	FIXED_DEC(-128,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-94,1) - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(-60,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-26,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+};
+
+static const fixed_t note_xwidedef[8] = {
+	//BF
+	 FIXED_DEC(30 + (28 * 0),1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(30 + (28 * 1),1) + FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(30 + (28 * 2),1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(30 + (28 * 3),1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	//Opponent
+	FIXED_DEC(-131 + (28 * 0),1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-131 + (28 * 1),1) - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(-131 + (28 * 2),1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-131 + (28 * 3),1) - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 static const u16 note_key[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
@@ -693,7 +706,7 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 	}
 	
 	//Get src and dst
-	fixed_t hx = (128 << FIXED_SHIFT) * (10000 - health) / 10000;
+	fixed_t hx = (105 << FIXED_SHIFT) * (10000 - health) / 10000;
 	RECT src = {
 		charicon[i][status][0],
 		charicon[i][status][1],
@@ -701,8 +714,8 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 		charicon[i][status][3]
 	};
 	RECT_FIXED dst = {
-		hx + ox * FIXED_DEC(24,1) - FIXED_DEC(0,1),
-		FIXED_DEC(SCREEN_HEIGHT2 - 20 - (src.h / 2), 1),
+		hx + ox * FIXED_DEC(20,1) + FIXED_DEC(4,1),
+		(SCREEN_HEIGHT2 - 20 + 4 - (src.h / 2)) << FIXED_SHIFT,
 		src.w << FIXED_SHIFT,
 		src.h << FIXED_SHIFT
 	};
@@ -711,7 +724,7 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 		dst.w = -dst.w;
 	
 	if (stage.downscroll)
-		dst.y = -dst.y - dst.h;
+		dst.y = -dst.y;
 	
 	//Draw health icon
 	Stage_DrawTexRotate(&stage.tex_hud1, &src, &dst, angle, stage.bump, 0, 0);
@@ -867,7 +880,8 @@ static void Stage_DrawNotes(void)
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = (note_src.h << FIXED_SHIFT);
 						
-						note_dst.w = note_dst.w * 0.815;
+						if(stage.widescreen)
+							note_dst.w = note_dst.w * 0.815;
 						
 						if (stage.downscroll)
 						{
@@ -896,7 +910,8 @@ static void Stage_DrawNotes(void)
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = (next_y - y) - clip;
 						
-						note_dst.w = note_dst.w * 0.815;
+						if(stage.widescreen)
+							note_dst.w = note_dst.w * 0.815;
 						
 						if (stage.downscroll)
 							note_dst.y = -note_dst.y - note_dst.h;
@@ -921,7 +936,8 @@ static void Stage_DrawNotes(void)
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
 				
-				note_dst.w = note_dst.w * 0.815;
+				if(stage.widescreen)
+					note_dst.w = note_dst.w * 0.815;
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
@@ -978,7 +994,8 @@ static void Stage_DrawNotes(void)
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
 				
-				note_dst.w = note_dst.w * 0.815;
+				if(stage.widescreen)
+					note_dst.w = note_dst.w * 0.815;
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
@@ -1228,6 +1245,15 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	stage.stage_diff = difficulty;
 	stage.story = story;
 	
+	int i;
+	
+	if(stage.widescreen)
+		for (i = 0; i < 8; ++i)
+			note_x[i] = note_xwidedef[i];
+	else
+		for (i = 0; i < 8; ++i)
+			note_x[i] = note_xdef[i];
+	
 	//Load HUD textures
 	//if (id >= StageId_6_1 && id <= StageId_6_3)
 	if (false)
@@ -1383,11 +1409,6 @@ void Stage_Tick(void)
 			Trans_Start();
 		}
 	}
-	
-	int i;
-	
-	for (i = 0; i < 8; ++i)
-		note_x[i] = note_xwidescreen[i];
 	
 	if (Trans_Tick())
 	{
@@ -1821,7 +1842,10 @@ void Stage_Tick(void)
 			
 			//Draw note HUD
 			RECT note_src = {0, 0, 32, 32};
-			RECT_FIXED note_dst = {0, 0, FIXED_DEC(32,1) * 0.815, FIXED_DEC(32,1)};
+			RECT_FIXED note_dst = {0, 0, FIXED_DEC(32,1), FIXED_DEC(32,1)};
+			
+			if(stage.widescreen)
+				note_dst.w = note_dst.w * 0.815;
 			
 			for (u8 i = 0; i < 4; i++)
 			{
@@ -1865,13 +1889,28 @@ void Stage_Tick(void)
 				RECT health_border_src = {0, 0, 210, 9};
 				RECT_FIXED health_border_dst = {FIXED_DEC(-100,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(210,1), FIXED_DEC(9,1)};
 				
+				if (stage.downscroll)
+					health_border_dst.y = -health_border_dst.y;
+				
 				Stage_DrawTex(&stage.tex_hud1, &health_border_src, &health_border_dst, stage.bump);
 				
 				
 				RECT health_color_src = {210, 0, 1, 1};
-				RECT_FIXED health_color_dst = {FIXED_DEC(-99,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(208 - (208 * stage.player_state[0].health / 20000),1), FIXED_DEC(9,1)};
+				RECT_FIXED health_color_dst = {FIXED_DEC(109 - (208 * stage.player_state[0].health / 20000),1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(0 + (208 * stage.player_state[0].health / 20000),1), FIXED_DEC(9,1)};
+				
+				if (stage.downscroll)
+					health_color_dst.y = -health_color_dst.y;
 				
 				Stage_DrawTex(&stage.tex_hud1, &health_color_src, &health_color_dst, stage.bump);
+				
+				
+				RECT health_back_src = {210, 2, 1, 1};
+				RECT_FIXED health_back_dst = {FIXED_DEC(-99,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(208,1), FIXED_DEC(9,1)};
+				
+				if (stage.downscroll)
+					health_back_dst.y = -health_back_dst.y;
+				
+				Stage_DrawTex(&stage.tex_hud1, &health_back_src, &health_back_dst, stage.bump);
 				
 				
 				//if (stage.downscroll)
