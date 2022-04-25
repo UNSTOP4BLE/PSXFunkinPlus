@@ -275,14 +275,14 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 		 5, //SHIT
 	};
 	this->score += score_inc[hit_type];
-	this->min_accuracy += 1;
+	this->min_accuracy += 3 - hit_type;
 	this->refresh_score = true;
 	
 	//Restore vocals and health
 	Stage_StartVocal();
 	this->health += 800;
 	this->refresh_accuracy = true;
-	this->max_accuracy += 1;
+	this->max_accuracy += 3;
 	
 	//Create combo object telling of our combo
 	Obj_Combo *combo = Obj_Combo_New(
@@ -831,7 +831,7 @@ static void Stage_DrawNotes(void)
 					{
 						Stage_MissNote(this);
 						this->refresh_accuracy = true;
-						this->max_accuracy += 1;
+						this->max_accuracy += 3;
 						this->health -= 1000;
 					}
 				}
