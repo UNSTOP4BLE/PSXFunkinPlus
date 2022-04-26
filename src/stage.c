@@ -1795,18 +1795,6 @@ void Stage_Tick(void)
 				if (false)
 					score_dst.y = -score_dst.y - score_dst.h;
 				
-				RECT accur_src = {138, 223, 9, 11};
-				u8 accura;
-				if (this->accuracy == 100)
-					accura = 117;
-				else if (this->accuracy > 10)
-					accura = 110;
-				else
-					accura = 102;
-				
-				RECT_FIXED accur_dst = {FIXED_DEC(accura,1), score_dst.y - FIXED_DEC(1,1), FIXED_DEC(9,1), FIXED_DEC(11,1)};
-				Stage_DrawTex(&stage.tex_hud0, &accur_src, &accur_dst, stage.bump);
-				
 				Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
 				
 				//Draw number
@@ -1835,6 +1823,12 @@ void Stage_Tick(void)
 					//Move character right
 					score_dst.x += FIXED_DEC(7,1);
 				}
+				
+				RECT accur_src = {138, 223, 9, 11};
+				u8 accura = score_dst.x;
+				
+				RECT_FIXED accur_dst = {score_dst.x + FIXED_DEC(accura,1), score_dst.y - FIXED_DEC(1,1), FIXED_DEC(9,1), FIXED_DEC(11,1)};
+				Stage_DrawTex(&stage.tex_hud0, &accur_src, &accur_dst, stage.bump);
 			}			
 			
 			//Draw stage notes
