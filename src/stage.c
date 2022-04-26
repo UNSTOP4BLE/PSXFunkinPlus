@@ -1825,9 +1825,8 @@ void Stage_Tick(void)
 				}
 				
 				RECT accur_src = {138, 223, 9, 11};
-				u8 accura = score_dst.x;
 				
-				RECT_FIXED accur_dst = {score_dst.x + FIXED_DEC(accura,1), score_dst.y - FIXED_DEC(1,1), FIXED_DEC(9,1), FIXED_DEC(11,1)};
+				RECT_FIXED accur_dst = {score_dst.x, score_dst.y - FIXED_DEC(1,1), FIXED_DEC(9,1), FIXED_DEC(11,1)};
 				Stage_DrawTex(&stage.tex_hud0, &accur_src, &accur_dst, stage.bump);
 			}			
 			
