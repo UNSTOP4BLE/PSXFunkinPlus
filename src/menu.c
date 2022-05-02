@@ -746,7 +746,8 @@ void Menu_Tick(void)
 				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
 				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
 				{StageId_1_2, 0xFF9271FD, "FRESH"},
-				{StageId_1_3, 0xFF9271FD, "DADBATTLE"}
+				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
+				{StageId_1_5, 0xFF9271FD, "DEVIL'S GAMBIT"}
 			};
 			
 			//Initialize page

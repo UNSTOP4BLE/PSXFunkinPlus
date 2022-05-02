@@ -1,18 +1,18 @@
 all: \
-	iso/menu/menu.arc \
-	iso/menu/loading.tim \
-	iso/font/boldfont.tim \
-	iso/font/arial.tim \
-	iso/stage/hud0.tim \
-	iso/stage/hud1.tim \
-	iso/bf/main.arc \
-	iso/dad/main.arc \
-	iso/gf/main.arc \
-	iso/gf/tut.arc \
-	iso/gf/speaker.tim \
-	iso/week1/back.arc \
-	iso/week2/back.arc \
-	iso/cuphead/main.arc \
+	iso/images/menu/menu.arc \
+	iso/images/menu/loading.tim \
+	iso/images/font/boldfont.tim \
+	iso/images/font/arial.tim \
+	iso/images/hud0.tim \
+	iso/images/hud1.tim \
+	iso/characters/bf/main.arc \
+	iso/characters/dad/main.arc \
+	iso/characters/gf/main.arc \
+	iso/characters/gf/tut.arc \
+	iso/characters/gf/speaker.tim \
+	iso/stages/week1/back.arc \
+	iso/stages/week2/back.arc \
+	iso/characters/cuphead/main.arc \
 
 iso/%.tim: iso/%.png
 	tools/funkintimconv/funkintimconv $@ $<
@@ -21,23 +21,23 @@ iso/%.arc:
 	tools/funkinarcpak/funkinarcpak $@ $^
 
 # Menu
-iso/menu/menu.arc: iso/menu/back.tim iso/menu/ng.tim iso/menu/story.tim iso/menu/title.tim
+iso/images/menu/menu.arc: iso/images/menu/back.tim iso/images/menu/ng.tim iso/images/menu/story.tim iso/images/menu/title.tim
 
 # BF
-iso/bf/main.arc: iso/bf/bf0.tim iso/bf/bf1.tim iso/bf/bf2.tim iso/bf/bf3.tim iso/bf/bf4.tim iso/bf/bf5.tim iso/bf/bf6.tim iso/bf/dead0.tim iso/bf/dead1.tim iso/bf/dead2.tim iso/bf/retry.tim
+iso/characters/bf/main.arc: iso/characters/bf/bf0.tim iso/characters/bf/bf1.tim iso/characters/bf/bf2.tim iso/characters/bf/bf3.tim iso/characters/bf/bf4.tim iso/characters/bf/bf5.tim iso/characters/bf/bf6.tim iso/characters/bf/dead0.tim iso/characters/bf/dead1.tim iso/characters/bf/dead2.tim iso/characters/bf/retry.tim
 
 # Dad
-iso/dad/main.arc: iso/dad/idle0.tim iso/dad/idle1.tim iso/dad/left.tim iso/dad/down.tim iso/dad/up.tim iso/dad/right.tim
+iso/characters/dad/main.arc: iso/characters/dad/idle0.tim iso/characters/dad/idle1.tim iso/characters/dad/left.tim iso/characters/dad/down.tim iso/characters/dad/up.tim iso/characters/dad/right.tim
 
 # GF
-iso/gf/main.arc: iso/gf/gf0.tim iso/gf/gf1.tim iso/gf/gf2.tim
-iso/gf/tut.arc: iso/gf/tut0.tim iso/gf/tut1.tim
+iso/gf/main.arc: iso/characters/gf/gf0.tim iso/characters/gf/gf1.tim iso/characters/gf/gf2.tim
+iso/characters/gf/tut.arc: iso/characters/gf/tut0.tim iso/characters/gf/tut1.tim
 
 # Week 1
-iso/week1/back.arc: iso/week1/back0.tim iso/week1/back1.tim
+iso/stages/week1/back.arc: iso/stages/week1/back0.tim iso/stages/week1/back1.tim
 
 # Week 2
-iso/week2/back.arc: iso/week2/back0.tim iso/week2/back1.tim iso/week2/back2.tim
+iso/stages/week2/back.arc: iso/stages/week2/back0.tim iso/stages/week2/back1.tim iso/stages/week2/back2.tim
 
 # cuphead
-iso/cuphead/main.arc: iso/cuphead/idle0.tim iso/cuphead/idle1.tim iso/cuphead/idle2.tim iso/cuphead/left.tim iso/cuphead/down.tim iso/cuphead/up.tim iso/cuphead/right0.tim iso/cuphead/right1.tim
+iso/characters/cuphead/main.arc: iso/characters/cuphead/idle0.tim iso/characters/cuphead/idle1.tim iso/characters/cuphead/idle2.tim iso/characters/cuphead/left.tim iso/characters/cuphead/down.tim iso/characters/cuphead/up.tim iso/characters/cuphead/right0.tim iso/characters/cuphead/right1.tim

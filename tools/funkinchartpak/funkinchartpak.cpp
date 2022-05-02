@@ -33,7 +33,6 @@ struct Section
 
 #define NOTE_FLAG_HIT         (1 << 7) //Note has been hit
 
-
 struct Note
 {
 	uint16_t pos; //1/12 steps
@@ -127,10 +126,9 @@ int main(int argc, char *argv[])
 				new_note.type |= NOTE_FLAG_ALT_ANIM;
 			if (sustain >= 0)
 				new_note.type |= NOTE_FLAG_SUSTAIN_END;
-			if (j[3] == 2)
-				new_note.type |= NOTE_FLAG_MINE;
-			if (j[3] == 1)
-				new_note.type |= NOTE_FLAG_BULLET;
+			if (j[1] >= 104)
+				if (j[1] <= 111)
+					new_note.type |= NOTE_FLAG_MINE;
 			
 			if (note_fudge.count(*((uint32_t*)&new_note)))
 			{

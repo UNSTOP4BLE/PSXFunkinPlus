@@ -23,79 +23,91 @@
 			
 			<!-- Menu assets -->
 			<dir name = "menu">
-				<file name = "loading.tim" type = "data" source = "iso/menu/loading.tim"/>
-				<file name = "menu.arc" type = "data" source = "iso/menu/menu.arc"/>
+				<file name = "loading.tim" type = "data" source = "iso/images/menu/loading.tim"/>
+				<file name = "menu.arc" type = "data" source = "iso/images/menu/menu.arc"/>
 			</dir>
 			
 			<!-- Fonts -->
 			<dir name = "font">
-				<file name = "boldfont.tim" type = "data" source = "iso/font/boldfont.tim"/>
-				<file name = "arial.tim" type = "data" source = "iso/font/arial.tim"/>
+				<file name = "boldfont.tim" type = "data" source = "iso/images/font/boldfont.tim"/>
+				<file name = "arial.tim" type = "data" source = "iso/images/font/arial.tim"/>
 			</dir>
 			
 			<!-- Stage assets -->
 			<dir name = "stage">
-				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
-				<file name = "hud1.tim" type = "data" source = "iso/stage/hud1.tim"/>
+				<file name = "hud0.tim" type = "data" source = "iso/images/hud0.tim"/>
+				<file name = "hud1.tim" type = "data" source = "iso/images/hud1.tim"/>
 			</dir>
 			
 			<!-- Week 1 assets -->
 			<dir name = "week1">
 				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
+				<file name = "back.arc" type = "data" source = "iso/stages/week1/back.arc"/>
 				
 				<!-- Bopeebo charts -->
-				<file name = "1.1e.cht" type = "data" source = "iso/chart/bopeebo-easy.json.cht"/>
-				<file name = "1.1n.cht" type = "data" source = "iso/chart/bopeebo.json.cht"/>
-				<file name = "1.1h.cht" type = "data" source = "iso/chart/bopeebo-hard.json.cht"/>
+				<file name = "1.1e.cht" type = "data" source = "iso/data/bopeebo-easy.json.cht"/>
+				<file name = "1.1n.cht" type = "data" source = "iso/data/bopeebo.json.cht"/>
+				<file name = "1.1h.cht" type = "data" source = "iso/data/bopeebo-hard.json.cht"/>
 				<!-- Fresh charts -->
-				<file name = "1.2e.cht" type = "data" source = "iso/chart/fresh-easy.json.cht"/>
-				<file name = "1.2n.cht" type = "data" source = "iso/chart/fresh.json.cht"/>
-				<file name = "1.2h.cht" type = "data" source = "iso/chart/fresh-hard.json.cht"/>
+				<file name = "1.2e.cht" type = "data" source = "iso/data/fresh-easy.json.cht"/>
+				<file name = "1.2n.cht" type = "data" source = "iso/data/fresh.json.cht"/>
+				<file name = "1.2h.cht" type = "data" source = "iso/data/fresh-hard.json.cht"/>
 				<!-- Dadbattle charts -->
-				<file name = "1.3e.cht" type = "data" source = "iso/chart/dadbattle-easy.json.cht"/>
-				<file name = "1.3n.cht" type = "data" source = "iso/chart/dadbattle.json.cht"/>
-				<file name = "1.3h.cht" type = "data" source = "iso/chart/dadbattle-hard.json.cht"/>
+				<file name = "1.3e.cht" type = "data" source = "iso/data/dadbattle-easy.json.cht"/>
+				<file name = "1.3n.cht" type = "data" source = "iso/data/dadbattle.json.cht"/>
+				<file name = "1.3h.cht" type = "data" source = "iso/data/dadbattle-hard.json.cht"/>
 				<!-- Tutorial charts -->
-				<file name = "1.4e.cht" type = "data" source = "iso/chart/tutorial-easy.json.cht"/>
-				<file name = "1.4n.cht" type = "data" source = "iso/chart/tutorial.json.cht"/>
-				<file name = "1.4h.cht" type = "data" source = "iso/chart/tutorial-hard.json.cht"/>
+				<file name = "1.4e.cht" type = "data" source = "iso/data/tutorial-easy.json.cht"/>
+				<file name = "1.4n.cht" type = "data" source = "iso/data/tutorial.json.cht"/>
+				<file name = "1.4h.cht" type = "data" source = "iso/data/tutorial-hard.json.cht"/>
+				<!-- Devil's Gambit charts -->
+				<file name = "1.5e.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
+				<file name = "1.5n.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
+				<file name = "1.5h.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
 				
 			</dir>
 			
 			<!-- Week 2 assets -->
 			<dir name = "week2">
 				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week2/back.arc"/>
+				<file name = "back.arc" type = "data" source = "iso/stages/week2/back.arc"/>
 			</dir>
 			
-			<!-- Character assets -->
+			<!-- Characters assets -->
 			<dir name = "char">
 				<!-- Boyfriend assets -->
-				<file name = "bf.arc" type = "data" source = "iso/bf/main.arc"/>
+				<file name = "bf.arc" type = "data" source = "iso/characters/bf/main.arc"/>
 				
 				<!-- Dad assets -->
-				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
+				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>
 				
 				<!-- Girlfriend assets -->
-				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
-				<file name = "gftut.arc" type = "data" source = "iso/gf/tut.arc"/>
-				<file name = "speaker.tim" type = "data" source = "iso/gf/speaker.tim"/>
+				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
+				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
+				<file name = "speaker.tim" type = "data" source = "iso/characters/gf/speaker.tim"/>
+				
+				<!-- Cuphead assets -->
+				<file name = "cuphead.arc" type = "data" source = "iso/characters/cuphead/main.arc"/>
+			</dir>
+			
+			<!-- Songs -->
+			<dir name = "songs">
+				<file name = "tutorial.mus" type = "data" source = "iso/songs/tutorial/tutorial.mus"/>
+				<file name = "bopeebo.mus" type = "data" source = "iso/songs/bopeebo/bopeebo.mus"/>
+				<file name = "fresh.mus" type = "data" source = "iso/songs/fresh/fresh.mus"/>
+				<file name = "dadbattl.mus" type = "data" source = "iso/songs/dadbattle/dadbattle.mus"/>
+				<file name = "devil.mus" type = "data" source = "iso/songs/devils-gambit/devils-gambit.mus"/>
 			</dir>
 			
 			<!-- Music -->
 			<dir name = "music">
 				<file name = "menu.mus" type = "data" source = "iso/music/freakyMenu/freakyMenu.mus"/>
 				<file name = "gameover.mus" type = "data" source = "iso/music/gameover/gameover.mus"/>
-				<file name = "tutorial.mus" type = "data" source = "iso/music/tutorial/tutorial.mus"/>
-				<file name = "week1_1.mus" type = "data" source = "iso/music/bopeebo/bopeebo.mus"/>
-				<file name = "week1_2.mus" type = "data" source = "iso/music/fresh/fresh.mus"/>
-				<file name = "week1_3.mus" type = "data" source = "iso/music/dadbattle/dadbattle.mus"/>
 
 			</dir>
 			<!-- Sound -->
-			<dir name = "sound">
-				<file name = "micdrop.mus" type = "data" source = "iso/sound/fnf_loss_sfx/fnf_loss_sfx.mus"/>
+			<dir name = "sounds">
+				<file name = "micdrop.mus" type = "data" source = "iso/sounds/fnf_loss_sfx/fnf_loss_sfx.mus"/>
 			</dir>
 			
 			<!-- Dummy sectors -->
