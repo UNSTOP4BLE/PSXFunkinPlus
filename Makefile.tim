@@ -37,3 +37,6 @@ iso/week1/back.arc: iso/week1/back0.tim iso/week1/back1.tim
 
 # Week 2
 iso/week2/back.arc: iso/week2/back0.tim iso/week2/back1.tim iso/week2/back2.tim
+
+# cuphead
+iso/cuphead/main.arc: iso/cuphead/idle0.tim iso/cuphead/idle1.tim iso/cuphead/idle2.tim iso/cuphead/left.tim iso/cuphead/down.tim iso/cuphead/up.tim iso/cuphead/right0.tim iso/cuphead/right1.tim
