@@ -12,6 +12,7 @@ all: \
 	iso/gf/speaker.tim \
 	iso/week1/back.arc \
 	iso/week2/back.arc \
+	iso/cuphead/main.arc \
 
 iso/%.tim: iso/%.png
 	tools/funkintimconv/funkintimconv $@ $<
