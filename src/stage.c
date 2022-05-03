@@ -113,6 +113,7 @@ static const u8 note_anims[4][3] = {
 #include "character/bf.h"
 #include "character/dad.h"
 #include "character/gf.h"
+#include "character/cuphead.h"
 
 #include "stage/dummy.h"
 #include "stage/week1.h"
@@ -832,7 +833,10 @@ static void Stage_DrawNotes(void)
 						Stage_MissNote(this);
 						this->refresh_accuracy = true;
 						this->max_accuracy += 3;
-						this->health -= 1000;
+						if (stage.instakill)
+							this->health = -0x7000;
+						else
+							this->health -= 1000;
 					}
 				}
 			}
@@ -1665,9 +1669,6 @@ void Stage_Tick(void)
 			//Tick note splashes
 			ObjectList_Tick(&stage.objlist_splash);
 			
-			if(true)
-			{
-			
 			//Draw score
 			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
 			{
@@ -1858,7 +1859,6 @@ void Stage_Tick(void)
 				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 			}
 			
-			
 			if (stage.mode < StageMode_2P)
 			{
 				//Perform health checks
@@ -1871,41 +1871,42 @@ void Stage_Tick(void)
 				if (stage.player_state[0].health > 20000)
 					stage.player_state[0].health = 20000;
 				
-				//Draw health heads
-				Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i, 1);
-				Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, -1);
+				if (!stage.instakill)
+				{
+					//Draw health heads
+					Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i, 1);
+					Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, -1);
+					
+					//Draw health bar
+					RECT health_border_src = {0, 0, 210, 9};
+					RECT_FIXED health_border_dst = {FIXED_DEC(-100,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(210,1), FIXED_DEC(9,1)};
 				
-				//Draw health bar
-				RECT health_border_src = {0, 0, 210, 9};
-				RECT_FIXED health_border_dst = {FIXED_DEC(-100,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(210,1), FIXED_DEC(9,1)};
+					if (stage.downscroll)
+						health_border_dst.y = -health_border_dst.y;
 				
-				if (stage.downscroll)
-					health_border_dst.y = -health_border_dst.y;
+					Stage_DrawTex(&stage.tex_hud1, &health_border_src, &health_border_dst, stage.bump);
+					
+					
+					RECT health_color_src = {210, 0, 1, 1};
+					RECT_FIXED health_color_dst = {FIXED_DEC(109 - (208 * stage.player_state[0].health / 20000),1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(0 + (208 * stage.player_state[0].health / 20000),1), FIXED_DEC(9,1)};
+					
+					if (stage.downscroll)
+						health_color_dst.y = -health_color_dst.y;
 				
-				Stage_DrawTex(&stage.tex_hud1, &health_border_src, &health_border_dst, stage.bump);
-				
-				
-				RECT health_color_src = {210, 0, 1, 1};
-				RECT_FIXED health_color_dst = {FIXED_DEC(109 - (208 * stage.player_state[0].health / 20000),1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(0 + (208 * stage.player_state[0].health / 20000),1), FIXED_DEC(9,1)};
-				
-				if (stage.downscroll)
-					health_color_dst.y = -health_color_dst.y;
-				
-				Stage_DrawTex(&stage.tex_hud1, &health_color_src, &health_color_dst, stage.bump);
-				
-				
-				RECT health_back_src = {210, 2, 1, 1};
-				RECT_FIXED health_back_dst = {FIXED_DEC(-99,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(208,1), FIXED_DEC(9,1)};
-				
-				if (stage.downscroll)
-					health_back_dst.y = -health_back_dst.y;
+					Stage_DrawTex(&stage.tex_hud1, &health_color_src, &health_color_dst, stage.bump);
+					
+					
+					RECT health_back_src = {210, 2, 1, 1};
+					RECT_FIXED health_back_dst = {FIXED_DEC(-99,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, FIXED_DEC(208,1), FIXED_DEC(9,1)};
+					
+					if (stage.downscroll)
+						health_back_dst.y = -health_back_dst.y;
 				
 				Stage_DrawTex(&stage.tex_hud1, &health_back_src, &health_back_dst, stage.bump);
-				
+				}
 				
 				//if (stage.downscroll)
 				//	health_dst.y = -health_dst.y - health_dst.h;
-			}
 			}
 			
 			//Hardcoded stage stuff
@@ -1991,7 +1992,7 @@ void Stage_Tick(void)
 			//Run death animation, focus on player, and change state
 			stage.player->set_anim(stage.player, PlayerAnim_Dead0);
 			
-			Audio_LoadMus("\\SOUND\\MICDROP.MUS;1");
+			Audio_LoadMus("\\SOUNDS\\MICDROP.MUS;1");
 			Audio_PlayMus(true);
 			Audio_SetVolume(0, 0x3FFF, 0x0000);
 			Audio_SetVolume(1, 0x0000, 0x3FFF);

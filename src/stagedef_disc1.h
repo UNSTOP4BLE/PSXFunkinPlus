@@ -65,7 +65,7 @@
 	{ //StageId_1_5 (Devils-Gambit)
 		//Characters
 		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{Char_Cuphead_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
 		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
