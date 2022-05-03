@@ -4,6 +4,8 @@
   file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
+//thx igor for makin the offsets for this ^^
+
 #include "cuphead.h"
 
 #include "../mem.h"
@@ -41,33 +43,34 @@ typedef struct
 
 //Cuphead character definitions
 static const CharFrame char_cuphead_frame[] = {
-	{Cuphead_ArcMain_Idle0, {  0,   0, 106, 192}, { 42, 183+4}}, //0 idle 1
-	{Cuphead_ArcMain_Idle0, {107,   0, 108, 190}, { 43, 181+4}}, //1 idle 2
-	{Cuphead_ArcMain_Idle1, {  0,   0, 107, 190}, { 42, 181+4}}, //2 idle 3
-	{Cuphead_ArcMain_Idle2, {108,   0, 105, 192}, { 41, 183+4}}, //3 idle 4
+	{Cuphead_ArcMain_Idle0, {  0,   0,  96, 150}, { 49, 148}}, //0 idle 1
+	{Cuphead_ArcMain_Idle0, { 97,   0,  95, 152}, { 49, 150}}, //1 idle 2
+	{Cuphead_ArcMain_Idle1, {  0,   0,  97, 154}, { 49, 152}}, //2 idle 3
+	{Cuphead_ArcMain_Idle1, { 98,   0,  94, 155}, { 49, 153}}, //3 idle 4
+	{Cuphead_ArcMain_Idle2, {  0,   0,  96, 150}, { 49, 148}}, //4 idle 5
 	
-	{Cuphead_ArcMain_Left, {  0,   0,  93, 195}, { 40, 185+4}}, //4 left 1
-	{Cuphead_ArcMain_Left, { 94,   0,  95, 195}, { 40, 185+4}}, //5 left 2
+	{Cuphead_ArcMain_Left, {  0,   0, 140, 112}, { 80, 107}}, //5 left 1
+	{Cuphead_ArcMain_Left, {  0, 114, 121, 122}, { 73, 116}}, //6 left 2
 	
-	{Cuphead_ArcMain_Down, {  0,   0, 118, 183}, { 43, 174+4}}, //6 down 1
-	{Cuphead_ArcMain_Down, {119,   0, 117, 183}, { 43, 175+4}}, //7 down 2
+	{Cuphead_ArcMain_Down, {  0,   0, 133, 113}, {56, 110}}, //7 down 1
+	{Cuphead_ArcMain_Down, {135,   0, 115, 125}, {48, 122}}, //8 down 2
 	
-	{Cuphead_ArcMain_Up, {  0,   0, 102, 205}, { 40, 196+4}}, //8 up 1
-	{Cuphead_ArcMain_Up, {103,   0, 103, 203}, { 40, 194+4}}, //9 up 2
+	{Cuphead_ArcMain_Up, {  0,   0, 102, 160}, { 62, 158}}, //9 up 1
+	{Cuphead_ArcMain_Up, {104,   0, 114, 143}, { 70, 141}}, //10 up 2
 	
-	{Cuphead_ArcMain_Right0, {  0,   0, 117, 199}, { 43, 189+4}}, //10 right 1
-	{Cuphead_ArcMain_Right0, {118,   0, 114, 199}, { 42, 189+4}}, //11 right 2
+	{Cuphead_ArcMain_Right0, {  0,   0, 146, 132}, { 47, 129}}, //11 right 1
+	{Cuphead_ArcMain_Right1, {  0,   0, 128, 134}, { 44, 132}}, //12 right 2
 };
 
 static const Animation char_cuphead_anim[CharAnim_Max] = {
-	{2, (const u8[]){ 1,  2,  3,  0, ASCR_BACK, 1}}, //CharAnim_Idle
-	{2, (const u8[]){ 4,  5, ASCR_BACK, 1}},         //CharAnim_Left
+	{1, (const u8[]){ 0,  1,  2,  3,  4, ASCR_CHGANI, CharAnim_Idle, 1}}, //CharAnim_Idle
+	{1, (const u8[]){ 5,  6, ASCR_BACK, 1}},         //CharAnim_Left
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_LeftAlt
-	{2, (const u8[]){ 6,  7, ASCR_BACK, 1}},         //CharAnim_Down
+	{1, (const u8[]){ 7,  8, ASCR_BACK, 1}},         //CharAnim_Down
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_DownAlt
-	{2, (const u8[]){ 8,  9, ASCR_BACK, 1}},         //CharAnim_Up
+	{1, (const u8[]){ 9, 10, ASCR_BACK, 1}},         //CharAnim_Up
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_UpAlt
-	{2, (const u8[]){10, 11, ASCR_BACK, 1}},         //CharAnim_Right
+	{1, (const u8[]){11, 12, ASCR_BACK, 1}},         //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_RightAlt
 };
 
@@ -138,8 +141,8 @@ Character *Char_Cuphead_New(fixed_t x, fixed_t y)
 	
 	this->character.health_i = 1;
 	
-	this->character.focus_x = FIXED_DEC(65,1);
-	this->character.focus_y = FIXED_DEC(-115,1);
+	this->character.focus_x = FIXED_DEC(45,1);
+	this->character.focus_y = FIXED_DEC(-95,1);
 	this->character.focus_zoom = FIXED_DEC(1,1);
 	
 	//Load art

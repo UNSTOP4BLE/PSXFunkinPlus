@@ -343,8 +343,6 @@ void Char_BF_SetAnim(Character *character, u8 anim)
 			character->focus_zoom = FIXED_DEC(125,100);
 			break;
 		case PlayerAnim_Dead2:
-			this->arc_main = this->arc_dead;
-			
 			//Load retry art
 			Gfx_LoadTex(&this->tex_retry, this->arc_ptr[BF_ArcDead_Retry], 0);
 			break;
@@ -361,7 +359,6 @@ void Char_BF_Free(Character *character)
 	
 	//Free art
 	Mem_Free(this->arc_main);
-	Mem_Free(this->arc_dead);
 }
 
 Character *Char_BF_New(fixed_t x, fixed_t y)

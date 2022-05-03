@@ -1459,6 +1459,12 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
+			if (stage.stage_id == StageId_1_5)
+			{
+				if ((stage.song_step & 0xF) == 0 && stage.song_step >= 128 && stage.song_step <= 1346)
+					stage.camera.zoom += FIXED_DEC(1,20);
+			}
+			
 			FntPrint("step: %d", stage.song_step);
 			
 			if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
@@ -1963,6 +1969,11 @@ void Stage_Tick(void)
 		}
 		case StageState_Dead: //Start BREAK animation and reading extra data from CD
 		{
+			Audio_LoadMus("\\SOUNDS\\MICDROP.MUS;1");
+			Audio_PlayMus(false);
+			Audio_SetVolume(0, 0x3FFF, 0x0000);
+			Audio_SetVolume(1, 0x0000, 0x3FFF);
+			
 			//Unload stage data
 			Mem_Free(stage.chart_data);
 			stage.chart_data = NULL;
@@ -1992,11 +2003,6 @@ void Stage_Tick(void)
 			//Run death animation, focus on player, and change state
 			stage.player->set_anim(stage.player, PlayerAnim_Dead0);
 			
-			Audio_LoadMus("\\SOUNDS\\MICDROP.MUS;1");
-			Audio_PlayMus(true);
-			Audio_SetVolume(0, 0x3FFF, 0x0000);
-			Audio_SetVolume(1, 0x0000, 0x3FFF);
-			
 			Stage_FocusCharacter(stage.player, 0);
 			stage.song_time = 0;
 			
@@ -2013,6 +2019,7 @@ void Stage_Tick(void)
 			stage.camera.td = FIXED_DEC(-2, 100) + FIXED_MUL(stage.song_time, FIXED_DEC(45, 1000));
 			if (stage.camera.td > 0)
 				Stage_ScrollCamera();
+			stage.player->tick(stage.player);
 			
 			//Drop mic and change state if CD has finished reading and animation has ended
 			//if (IO_IsReading() || stage.player->animatable.anim != PlayerAnim_Dead1)
