@@ -644,8 +644,8 @@ void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u
 {	
 	s16 sin = MUtil_Sin(angle);
 	s16 cos = MUtil_Cos(angle);
-	int pw = dst->w / 2000;
-	int ph = dst->h / 2000;
+	int pw = dst->w / 2048;
+	int ph = dst->h / 2048;
 	
 	POINT p0 = {-pw, -ph};
 	MUtil_RotatePoint(&p0, sin, cos);
