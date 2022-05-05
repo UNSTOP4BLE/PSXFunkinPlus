@@ -43,6 +43,11 @@ s16 MUtil_Cos(u8 x)
 	return (sine_table + 0x40)[x];
 }
 
+int lerp(fixed_t a, fixed_t b, fixed_t t)
+{
+    return a + (b - a) * t;
+}
+
 void MUtil_RotatePoint(POINT *p, s16 s, s16 c)
 {
 	short px = p->x;

@@ -644,8 +644,8 @@ void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u
 {	
 	s16 sin = MUtil_Sin(angle);
 	s16 cos = MUtil_Cos(angle);
-	int pw = dst->w / 2048;
-	int ph = dst->h / 2048;
+	int pw = dst->w / 2000;
+	int ph = dst->h / 2000;
 	
 	POINT p0 = {-pw, -ph};
 	MUtil_RotatePoint(&p0, sin, cos);
@@ -679,15 +679,26 @@ void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u
     Stage_DrawTexArb(tex, src, &d0, &d1, &d2, &d3, zoom);
 }
 
+s8 iconscroll = 0;
+
 //Stage HUD functions
 static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 {
 	//Check if we should use 'dying' frame
 	int status;
-	s16 angle;
+	int angle;
+	if ((stage.song_step & 0xF) == 0)
+		iconscroll = 10;
+	
+	if (iconscroll > 0)
+		iconscroll -= 1;
+	else
+		iconscroll = 0;
+	
+	
 	if (ox < 0)
 	{
-		angle = stage.bump;
+		angle = -MUtil_Cos(iconscroll) / 1;
 		if (health >= 18000)
 			status = 2;
 		else if (health <= 2000)
@@ -697,7 +708,9 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 	}
 	else
 	{
-		angle = -stage.bump;
+		angle = (MUtil_Cos(iconscroll) / 1);
+		if ((stage.song_step & 0xF) == 0)
+			angle = -45;
 		if (health <= 2000)
 			status = 2;
 		else if (health >= 18000)
@@ -705,6 +718,7 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 		else
 			status = 0;
 	}
+	
 	
 	//Get src and dst
 	fixed_t hx = (105 << FIXED_SHIFT) * (10000 - health) / 10000;
@@ -1958,6 +1972,9 @@ void Stage_Tick(void)
 			//Tick girlfriend
 			if (stage.gf != NULL)
 				stage.gf->tick(stage.gf);
+			
+			static const RECT flash = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+			Gfx_BlendRect(&flash, stage.camera.zoom / 2, 0, stage.camera.zoom / 2, 1);
 			
 			//Tick background objects
 			ObjectList_Tick(&stage.objlist_bg);
