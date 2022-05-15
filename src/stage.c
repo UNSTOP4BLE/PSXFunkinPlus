@@ -114,6 +114,7 @@ static const u8 note_anims[4][3] = {
 #include "character/dad.h"
 #include "character/gf.h"
 #include "character/cuphead.h"
+#include "character/tricky.h"
 
 #include "stage/dummy.h"
 #include "stage/week1.h"
@@ -1973,8 +1974,8 @@ void Stage_Tick(void)
 			if (stage.gf != NULL)
 				stage.gf->tick(stage.gf);
 			
-			static const RECT flash = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-			Gfx_BlendRect(&flash, stage.camera.zoom / 2, 0, stage.camera.zoom / 2, 1);
+			//static const RECT flash = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+			//Gfx_BlendRect(&flash, stage.camera.zoom / 2, 0, stage.camera.zoom / 2, 1);
 			
 			//Tick background objects
 			ObjectList_Tick(&stage.objlist_bg);

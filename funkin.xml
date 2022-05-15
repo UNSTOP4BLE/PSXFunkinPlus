@@ -88,6 +88,9 @@
 				
 				<!-- Cuphead assets -->
 				<file name = "cuphead.arc" type = "data" source = "iso/characters/cuphead/main.arc"/>
+				
+				<!-- Tricky assets -->
+				<file name = "tricky.arc" type = "data" source = "iso/characters/tricky/main.arc"/>
 			</dir>
 			
 			<!-- Songs -->

@@ -13,6 +13,7 @@ all: \
 	iso/stages/week1/back.arc \
 	iso/stages/week2/back.arc \
 	iso/characters/cuphead/main.arc \
+	iso/characters/tricky/main.arc \
 
 iso/%.tim: iso/%.png
 	tools/funkintimconv/funkintimconv $@ $<
@@ -39,5 +40,8 @@ iso/stages/week1/back.arc: iso/stages/week1/back0.tim iso/stages/week1/back1.tim
 # Week 2
 iso/stages/week2/back.arc: iso/stages/week2/back0.tim iso/stages/week2/back1.tim iso/stages/week2/back2.tim
 
-# cuphead
+# Cuphead
 iso/characters/cuphead/main.arc: iso/characters/cuphead/idle0.tim iso/characters/cuphead/idle1.tim iso/characters/cuphead/idle2.tim iso/characters/cuphead/left.tim iso/characters/cuphead/down.tim iso/characters/cuphead/up.tim iso/characters/cuphead/right0.tim iso/characters/cuphead/right1.tim
+
+# Tricky
+iso/characters/tricky/main.arc: iso/characters/tricky/idle.tim iso/characters/tricky/idlef0.tim iso/characters/tricky/idlef1.tim
