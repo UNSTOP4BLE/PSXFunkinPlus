@@ -43,8 +43,8 @@ typedef struct
 
 //Tricky character definitions
 static const CharFrame char_Tricky_frame[] = {
-	{Tricky_Idle_Flame_1, {  0,   0,  236, 250}, { 100, 236}},
-	{Tricky_Idle_Flame_2, {  0,   0,  240, 246}, { 100, 240}},
+	{Tricky_Idle_Flame_1, {  0,   0,  236, 250}, { 200, 472}},
+	{Tricky_Idle_Flame_2, {  0,   0,  240, 246}, { 200, 480}},
 	
 	{Tricky_Idle_Flame_1, {  0,   0,  236, 250}, { 49, 148}},
 	{Tricky_Idle_Flame_2, {  0,   0,  240, 246}, { 49, 150}},
@@ -108,10 +108,10 @@ void Char_Tricky_Tick(Character *character)
 	
 	RECT idle_src = {1, 1, 90, 107};
 	RECT_FIXED idle_dst = {
-		FIXED_DEC(50 + (MUtil_Cos(sinanim) / 50),1) + character->x - fx,
-		FIXED_DEC(-130 + (MUtil_Sin(sinanim) / 60),1) + character->y - fy,
-		FIXED_DEC(idle_src.w,1),
-		FIXED_DEC(idle_src.h,1)
+		FIXED_DEC(100 + (MUtil_Cos(sinanim) / 50),1) + character->x - fx,
+		FIXED_DEC(-260 + (MUtil_Sin(sinanim) / 60),1) + character->y - fy,
+		FIXED_DEC(idle_src.w * 2,1),
+		FIXED_DEC(idle_src.h * 2,1)
 	};
 	
 	Stage_DrawTexRotate(&this->tex_idle, &idle_src, &idle_dst, (MUtil_Cos(sinanim2) / 70), stage.camera.bzoom, 0, 0);
@@ -119,10 +119,10 @@ void Char_Tricky_Tick(Character *character)
 	//Draw Left Hand
 	RECT lefthand_src = {92, 1, 89, 92};
 	RECT_FIXED lefthand_dst = {
-		FIXED_DEC(-60 + (MUtil_Cos(sinanim) / 40),1) + character->x - fx,
-		FIXED_DEC(-40 + (MUtil_Sin(sinanim2) / 35),1) + character->y - fy,
-		FIXED_DEC(lefthand_src.w,1),
-		FIXED_DEC(lefthand_src.h,1)
+		FIXED_DEC(-120 + (MUtil_Cos(sinanim) / 40),1) + character->x - fx,
+		FIXED_DEC(-80 + (MUtil_Sin(sinanim2) / 35),1) + character->y - fy,
+		FIXED_DEC(lefthand_src.w * 2,1),
+		FIXED_DEC(lefthand_src.h * 2,1)
 	};
 	
 	Stage_DrawTexRotate(&this->tex_idle, &lefthand_src, &lefthand_dst, -(MUtil_Cos(sinanim) / 50), stage.camera.bzoom, 0, 0);
@@ -130,10 +130,10 @@ void Char_Tricky_Tick(Character *character)
 	//Draw Right Hand
 	RECT righthand_src = {182, 1, 64, 80};
 	RECT_FIXED righthand_dst = {
-		FIXED_DEC(120 + (MUtil_Cos(sinanim2) / 50),1) + character->x - fx,
-		FIXED_DEC(-40 - (MUtil_Sin(sinanim) / 50),1) + character->y - fy,
-		FIXED_DEC(righthand_src.w,1),
-		FIXED_DEC(righthand_src.h,1)
+		FIXED_DEC(240 + (MUtil_Cos(sinanim2) / 50),1) + character->x - fx,
+		FIXED_DEC(-80 - (MUtil_Sin(sinanim) / 50),1) + character->y - fy,
+		FIXED_DEC(righthand_src.w * 2,1),
+		FIXED_DEC(righthand_src.h * 2,1)
 	};
 	
 	Stage_DrawTexRotate(&this->tex_idle, &righthand_src, &righthand_dst, (MUtil_Sin(sinanim2) / 70), stage.camera.bzoom, 0, 0);
@@ -187,8 +187,10 @@ Character *Char_Tricky_New(fixed_t x, fixed_t y)
 	this->character.health_i = 1;
 	
 	this->character.focus_x = FIXED_DEC(45,1);
-	this->character.focus_y = FIXED_DEC(-95,1);
-	this->character.focus_zoom = FIXED_DEC(8,10);
+	this->character.focus_y = FIXED_DEC(-200,1);
+	this->character.focus_zoom = FIXED_DEC(5,10);
+	
+	this->character.size = FIXED_DEC(2,1);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\TRICKY.ARC;1");

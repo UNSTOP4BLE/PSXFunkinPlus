@@ -145,6 +145,8 @@ Character *Char_Cuphead_New(fixed_t x, fixed_t y)
 	this->character.focus_y = FIXED_DEC(-95,1);
 	this->character.focus_zoom = FIXED_DEC(1,1);
 	
+	this->character.size = FIXED_DEC(1,1);
+	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\CUPHEAD.ARC;1");
 	

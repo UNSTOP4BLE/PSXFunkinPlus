@@ -41,6 +41,10 @@ void Character_DrawParallax(Character *this, Gfx_Tex *tex, const CharFrame *cfra
 	
 	RECT src = {cframe->src[0], cframe->src[1], cframe->src[2], cframe->src[3]};
 	RECT_FIXED dst = {x, y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
+	
+	dst.w = dst.w * FIXED_MUL(this->size,1);
+	dst.h = dst.h * FIXED_MUL(this->size,1);
+	
 	Stage_DrawTex(tex, &src, &dst, stage.camera.bzoom);
 }
 
