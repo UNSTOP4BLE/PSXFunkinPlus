@@ -109,12 +109,34 @@ void Char_Tricky_Tick(Character *character)
 	RECT idle_src = {1, 1, 90, 107};
 	RECT_FIXED idle_dst = {
 		FIXED_DEC(50 + (MUtil_Cos(sinanim) / 50),1) + character->x - fx,
-		FIXED_DEC(-120 + (MUtil_Sin(sinanim) / 40),1) + character->y - fy,
+		FIXED_DEC(-130 + (MUtil_Sin(sinanim) / 60),1) + character->y - fy,
 		FIXED_DEC(idle_src.w,1),
 		FIXED_DEC(idle_src.h,1)
 	};
 	
-	Stage_DrawTexRotate(&this->tex_idle, &idle_src, &idle_dst, (MUtil_Cos(sinanim2) / 50), stage.camera.bzoom, 0, 0);
+	Stage_DrawTexRotate(&this->tex_idle, &idle_src, &idle_dst, (MUtil_Cos(sinanim2) / 70), stage.camera.bzoom, 0, 0);
+	
+	//Draw Left Hand
+	RECT lefthand_src = {92, 1, 89, 92};
+	RECT_FIXED lefthand_dst = {
+		FIXED_DEC(-60 + (MUtil_Cos(sinanim) / 40),1) + character->x - fx,
+		FIXED_DEC(-40 + (MUtil_Sin(sinanim2) / 35),1) + character->y - fy,
+		FIXED_DEC(lefthand_src.w,1),
+		FIXED_DEC(lefthand_src.h,1)
+	};
+	
+	Stage_DrawTexRotate(&this->tex_idle, &lefthand_src, &lefthand_dst, -(MUtil_Cos(sinanim) / 50), stage.camera.bzoom, 0, 0);
+	
+	//Draw Right Hand
+	RECT righthand_src = {182, 1, 64, 80};
+	RECT_FIXED righthand_dst = {
+		FIXED_DEC(120 + (MUtil_Cos(sinanim2) / 50),1) + character->x - fx,
+		FIXED_DEC(-40 - (MUtil_Sin(sinanim) / 50),1) + character->y - fy,
+		FIXED_DEC(righthand_src.w,1),
+		FIXED_DEC(righthand_src.h,1)
+	};
+	
+	Stage_DrawTexRotate(&this->tex_idle, &righthand_src, &righthand_dst, (MUtil_Sin(sinanim2) / 70), stage.camera.bzoom, 0, 0);
 	
 	//Perform idle dance
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
