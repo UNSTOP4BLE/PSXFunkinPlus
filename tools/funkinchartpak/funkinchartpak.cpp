@@ -125,6 +125,8 @@ int main(int argc, char *argv[])
 			if (j[1] >= 104)
 				if (j[1] <= 111)
 					new_note.type |= NOTE_FLAG_MINE;
+			if (j[3] == "Ice Note")
+				new_note.type |= NOTE_FLAG_MINE;
 			
 			if (note_fudge.count(*((uint32_t*)&new_note)))
 			{

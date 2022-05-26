@@ -62,10 +62,10 @@
 		
 		StageId_1_4, 0
 	},
-	{ //StageId_1_5 (Devils-Gambit)
+	{ //StageId_DevilGambit (Devils-Gambit)
 		//Characters
 		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Tricky_New, FIXED_DEC(-280,1),  FIXED_DEC(100,1)},
+		{Char_Cuphead_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
 		{NULL,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
@@ -73,8 +73,24 @@
 		
 		//Song info
 		{FIXED_DEC(13,10),FIXED_DEC(15,10),FIXED_DEC(23,10)},
-		1, 5,
+		0x80, 1,
 		"\\SONGS\\DEVIL.MUS;1",
 		
-		StageId_1_5, 0
+		StageId_DevilGambit, 0
+	},
+	{ //StageId_TooSlow (Devils-Gambit)
+		//Characters
+		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
+		{Char_Mighty_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{NULL,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		
+		//Stage background
+		Back_Week1_New,
+		
+		//Song info
+		{FIXED_DEC(13,10),FIXED_DEC(15,10),FIXED_DEC(23,10)},
+		0x80, 2,
+		"\\SONGS\\TOOSLOW.MUS;1",
+		
+		StageId_TooSlow, 0
 	}

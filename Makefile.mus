@@ -7,6 +7,7 @@ all: \
 	iso/songs/dadbattle/dadbattle.mus \
 	iso/songs/tutorial/tutorial.mus \
 	iso/songs/devils-gambit/devils-gambit.mus \
+	iso/songs/too-slow/too-slow.mus \
 
 iso/%.mus: iso/%.txt
 	tools/funkinmuspak/funkinmuspak $@ $<

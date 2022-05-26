@@ -115,6 +115,7 @@ static const u8 note_anims[4][3] = {
 #include "character/gf.h"
 #include "character/cuphead.h"
 #include "character/tricky.h"
+#include "character/mighty.h"
 
 #include "stage/dummy.h"
 #include "stage/week1.h"
@@ -1073,13 +1074,8 @@ static void Stage_LoadChart(void)
 	char chart_path[64];
 	if (stage.stage_def->week & 0x80)
 	{
-		//Use mod path convention
-		static const char *mod_format[] = {
-			"\\KAPI\\KAPI.%d%c.CHT;1", //Kapi
-			"\\CLWN\\CLWN.%d%c.CHT;1" //Tricky
-		};
-		
-		sprintf(chart_path, mod_format[stage.stage_def->week & 0x7F], stage.stage_def->week_song, "ENH"[stage.stage_diff]);
+		//Use custom path convention
+		sprintf(chart_path, "\\CUSTOM\\CUSTOM.%d.CHT;1", stage.stage_def->week_song);
 	}
 	else
 	{
@@ -1474,7 +1470,7 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
-			if (stage.stage_id == StageId_1_5)
+			if (stage.stage_id == StageId_DevilGambit)
 			{
 				if ((stage.song_step & 0xF) == 0 && stage.song_step >= 128 && stage.song_step <= 1346)
 					stage.camera.zoom += FIXED_DEC(1,20);

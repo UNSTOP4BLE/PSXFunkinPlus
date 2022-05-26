@@ -502,7 +502,7 @@ void Menu_Tick(void)
 			static const char *menu_options[] = {
 				"STORY MODE",
 				"FREEPLAY",
-				"MODS",
+				"CUSTOM SONGS",
 				"OPTIONS",
 			};
 			
@@ -746,8 +746,7 @@ void Menu_Tick(void)
 				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
 				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
 				{StageId_1_2, 0xFF9271FD, "FRESH"},
-				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
-				{StageId_1_5, 0xFF9271FD, "DEVIL'S GAMBIT"}
+				{StageId_1_3, 0xFF9271FD, "DADBATTLE"}
 			};
 			
 			//Initialize page
@@ -854,10 +853,11 @@ void Menu_Tick(void)
 			static const struct
 			{
 				StageId stage;
+				u32 col;
 				const char *text;
-				boolean difficulty;
 			} menu_options[] = {
-				{StageId_1_1, "VS KAPI", false}
+				{StageId_DevilGambit, 0xFF9271FD, "DEVIL'S GAMBIT"},
+				{StageId_TooSlow, 0xFF9271FD, "TOO SLOW"}
 			};
 			
 			//Initialize page
@@ -865,19 +865,21 @@ void Menu_Tick(void)
 			{
 				menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
 				menu.page_param.stage.diff = StageDiff_Normal;
+				menu.page_state.freeplay.back_r = FIXED_DEC(255,1);
+				menu.page_state.freeplay.back_g = FIXED_DEC(255,1);
+				menu.page_state.freeplay.back_b = FIXED_DEC(255,1);
 			}
 			
 			//Draw page label
 			menu.font_bold.draw(&menu.font_bold,
-				"CREDITS",
+				"CUSTOM SONGS",
 				16,
 				SCREEN_HEIGHT - 32,
 				FontAlign_Left
 			);
 			
 			//Draw difficulty selector
-			if (menu_options[menu.select].difficulty)
-				Menu_DifficultySelector(SCREEN_WIDTH - 100, SCREEN_HEIGHT2 - 48);
+			Menu_DifficultySelector(SCREEN_WIDTH - 100, SCREEN_HEIGHT2 - 48);
 			
 			//Handle option and selection
 			if (menu.next_page == menu.page && Trans_Idle())
@@ -903,9 +905,7 @@ void Menu_Tick(void)
 				{
 					menu.next_page = MenuPage_Stage;
 					menu.page_param.stage.id = menu_options[menu.select].stage;
-					menu.page_param.stage.story = true;
-					if (!menu_options[menu.select].difficulty)
-						menu.page_param.stage.diff = StageDiff_Hard;
+					menu.page_param.stage.story = false;
 					Trans_Start();
 				}
 				
@@ -941,10 +941,20 @@ void Menu_Tick(void)
 			}
 			
 			//Draw background
+			fixed_t tgt_r = (fixed_t)((menu_options[menu.select].col >> 16) & 0xFF) << FIXED_SHIFT;
+			fixed_t tgt_g = (fixed_t)((menu_options[menu.select].col >>  8) & 0xFF) << FIXED_SHIFT;
+			fixed_t tgt_b = (fixed_t)((menu_options[menu.select].col >>  0) & 0xFF) << FIXED_SHIFT;
+			
+			menu.page_state.freeplay.back_r += (tgt_r - menu.page_state.freeplay.back_r) >> 4;
+			menu.page_state.freeplay.back_g += (tgt_g - menu.page_state.freeplay.back_g) >> 4;
+			menu.page_state.freeplay.back_b += (tgt_b - menu.page_state.freeplay.back_b) >> 4;
+			
 			Menu_DrawBack(
 				true,
 				8,
-				197 >> 1, 240 >> 1, 95 >> 1,
+				menu.page_state.freeplay.back_r >> (FIXED_SHIFT + 1),
+				menu.page_state.freeplay.back_g >> (FIXED_SHIFT + 1),
+				menu.page_state.freeplay.back_b >> (FIXED_SHIFT + 1),
 				0, 0, 0
 			);
 			break;

@@ -41,7 +41,9 @@ typedef enum
 	StageId_1_2, //Fresh
 	StageId_1_3, //Dadbattle
 	StageId_1_4, //Tutorial
-	StageId_1_5, //Devil's Gambit
+	
+	StageId_DevilGambit, //Devil's Gambit
+	StageId_TooSlow, //Too Slow (D-side)
 	
 	StageId_Max
 } StageId;

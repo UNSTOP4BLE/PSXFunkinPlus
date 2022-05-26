@@ -60,10 +60,6 @@
 				<file name = "1.4e.cht" type = "data" source = "iso/data/tutorial-easy.json.cht"/>
 				<file name = "1.4n.cht" type = "data" source = "iso/data/tutorial.json.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/data/tutorial-hard.json.cht"/>
-				<!-- Devil's Gambit charts -->
-				<file name = "1.5e.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
-				<file name = "1.5n.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
-				<file name = "1.5h.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
 				
 			</dir>
 			
@@ -71,6 +67,13 @@
 			<dir name = "week2">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/stages/week2/back.arc"/>
+			</dir>
+			
+			<dir name = "custom">
+				<!-- Devil's Gambit charts -->
+				<file name = "custom.1.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
+				<!-- Devil's Gambit charts -->
+				<file name = "custom.2.cht" type = "data" source = "iso/data/too-slow-hard.json.cht"/>
 			</dir>
 			
 			<!-- Characters assets -->
@@ -91,6 +94,9 @@
 				
 				<!-- Tricky assets -->
 				<file name = "tricky.arc" type = "data" source = "iso/characters/tricky/main.arc"/>
+				
+				<!-- Mighty assets -->
+				<file name = "mighty.arc" type = "data" source = "iso/characters/mightyzip/main.arc"/>
 			</dir>
 			
 			<!-- Songs -->
@@ -100,6 +106,7 @@
 				<file name = "fresh.mus" type = "data" source = "iso/songs/fresh/fresh.mus"/>
 				<file name = "dadbattl.mus" type = "data" source = "iso/songs/dadbattle/dadbattle.mus"/>
 				<file name = "devil.mus" type = "data" source = "iso/songs/devils-gambit/devils-gambit.mus"/>
+				<file name = "tooslow.mus" type = "data" source = "iso/songs/too-slow/too-slow.mus"/>
 			</dir>
 			
 			<!-- Music -->

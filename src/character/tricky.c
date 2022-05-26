@@ -205,10 +205,10 @@ Character *Char_Tricky_New(fixed_t x, fixed_t y)
 	for (; *pathp != NULL; pathp++)
 		*arc_ptr++ = Archive_Find(this->arc_main, *pathp);
 	
+	Gfx_LoadTex(&this->tex_idle, this->arc_ptr[0], GFX_LOADTEX_FREE);
+	
 	//Initialize render state
 	this->tex_id = this->frame = 0xFF;
-	
-	Gfx_LoadTex(&this->tex_idle, this->arc_ptr[0], GFX_LOADTEX_FREE);
 	
 	return (Character*)this;
 }
