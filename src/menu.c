@@ -462,8 +462,8 @@ void Menu_Tick(void)
 			
 			RECT logo_src = {0, 0, 255, 150};
 			RECT logo_dst = {
-				300 - x_rad + (SCREEN_WIDEADD2 >> 1),
-				190 - y_rad,
+				160 + (SCREEN_WIDEADD2 >> 1),
+				120,
 				x_rad << 1,
 				y_rad << 1
 			};
