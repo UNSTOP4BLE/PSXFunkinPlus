@@ -15,6 +15,7 @@ all: \
 	iso/characters/cuphead/main.arc \
 	iso/characters/tricky/main.arc \
 	iso/characters/mightyzip/main.arc \
+	iso/characters/goon/main.arc \
 
 iso/%.tim: iso/%.png
 	tools/funkintimconv/funkintimconv $@ $<
@@ -36,7 +37,7 @@ iso/gf/main.arc: iso/characters/gf/gf0.tim iso/characters/gf/gf1.tim iso/charact
 iso/characters/gf/tut.arc: iso/characters/gf/tut0.tim iso/characters/gf/tut1.tim
 
 # Week 1
-iso/stages/week1/back.arc: iso/stages/week1/back0.tim iso/stages/week1/back1.tim
+iso/stages/week1/back.arc: iso/stages/week1/back0.tim
 
 # Week 2
 iso/stages/week2/back.arc: iso/stages/week2/back0.tim iso/stages/week2/back1.tim iso/stages/week2/back2.tim
@@ -49,3 +50,10 @@ iso/characters/tricky/main.arc: iso/characters/tricky/idle.tim iso/characters/tr
 
 # Mighty.ZIP
 iso/characters/mightyzip/main.arc: iso/characters/mightyzip/idle0.tim iso/characters/mightyzip/idle1.tim iso/characters/mightyzip/left0.tim iso/characters/mightyzip/left1.tim iso/characters/mightyzip/down.tim iso/characters/mightyzip/up.tim iso/characters/mightyzip/right0.tim iso/characters/mightyzip/right1.tim
+
+# Goon
+iso/characters/goon/main.arc: iso/characters/goon/idle0.tim iso/characters/goon/idle1.tim iso/characters/goon/idle2.tim iso/characters/goon/idle3.tim iso/characters/goon/idle4.tim iso/characters/goon/idle5.tim \
+iso/characters/goon/left0.tim iso/characters/goon/left1.tim \
+iso/characters/goon/down0.tim iso/characters/goon/down1.tim iso/characters/goon/down2.tim \
+iso/characters/goon/up0.tim iso/characters/goon/up1.tim iso/characters/goon/up2.tim iso/characters/goon/up3.tim \
+iso/characters/goon/right0.tim iso/characters/goon/right1.tim iso/characters/goon/right2.tim 

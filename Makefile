@@ -29,6 +29,7 @@ SRCS = src/main.c \
        src/character/cuphead.c \
        src/character/tricky.c \
        src/character/mighty.c \
+       src/character/goon.c \
        src/object.c \
        src/object/combo.c \
        src/object/splash.c \

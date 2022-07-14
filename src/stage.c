@@ -116,6 +116,7 @@ static const u8 note_anims[4][3] = {
 #include "character/cuphead.h"
 #include "character/tricky.h"
 #include "character/mighty.h"
+#include "character/goon.h"
 
 #include "stage/dummy.h"
 #include "stage/week1.h"
@@ -289,8 +290,8 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	
 	//Create combo object telling of our combo
 	Obj_Combo *combo = Obj_Combo_New(
-		this->character->focus_x,
-		this->character->focus_y,
+		FIXED_DEC(-100,1),
+		FIXED_DEC(0,1),
 		hit_type,
 		this->combo >= 10 ? this->combo : 0xFFFF
 	);
@@ -1312,6 +1313,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	
 	//Test offset
 	stage.offset = 0;
+	Gfx_SetClear(0, 0, 0);
 }
 
 void Stage_Unload(void)

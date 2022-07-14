@@ -18,7 +18,6 @@ typedef struct
 	
 	//Textures
 	Gfx_Tex tex_back0; //Stage and back
-	Gfx_Tex tex_back1; //Curtains
 } Back_Week1;
 
 //Week 1 background functions
@@ -28,27 +27,7 @@ void Back_Week1_DrawBG(StageBack *back)
 	
 	fixed_t fx, fy;
 	
-	//Draw curtains
-	fx = (stage.camera.x * 5) >> 2;
-	fy = (stage.camera.y * 5) >> 2;
-	
-	RECT curtainl_src = {0, 0, 107, 221};
-	RECT_FIXED curtainl_dst = {
-		FIXED_DEC(-250,1) - FIXED_DEC(SCREEN_WIDEOADD,2) - fx,
-		FIXED_DEC(-150,1) - fy,
-		FIXED_DEC(107,1),
-		FIXED_DEC(221,1)
-	};
-	RECT curtainr_src = {122, 0, 134, 256};
-	RECT_FIXED curtainr_dst = {
-		FIXED_DEC(110,1) + FIXED_DEC(SCREEN_WIDEOADD,2) - fx,
-		FIXED_DEC(-150,1) - fy,
-		FIXED_DEC(134,1),
-		FIXED_DEC(256,1)
-	};
-	
-	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, stage.camera.bzoom);
+	stage.camera.zoom -= FIXED_DEC(1,100);
 	
 	//Draw stage
 	fx = stage.camera.x * 3 / 2;
@@ -56,11 +35,11 @@ void Back_Week1_DrawBG(StageBack *back)
 	
 	POINT_FIXED stage_d2 = {
 		FIXED_DEC(-230,1) - fx,
-		FIXED_DEC(50,1) + FIXED_DEC(123,1) - fy,
+		FIXED_DEC(50,1) + FIXED_DEC(100,1) - fy,
 	};
 	POINT_FIXED stage_d3 = {
 		FIXED_DEC(-230,1) + FIXED_DEC(410,1) - fx,
-		FIXED_DEC(50,1) + FIXED_DEC(123,1) - fy,
+		FIXED_DEC(50,1) + FIXED_DEC(100,1) - fy,
 	};
 	
 	fx = stage.camera.x >> 1;
@@ -80,34 +59,55 @@ void Back_Week1_DrawBG(StageBack *back)
 	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, stage.camera.bzoom);
 	
 	//Draw back
-	//fx = stage.camera.x * 2 / 3;
-	//fy = stage.camera.y * 2 / 3;
+	fx = stage.camera.x * 3 / 6;
+	fy = stage.camera.y * 3 / 6;
 	
-	RECT backl_src = {0, 59, 121, 105};
-	RECT_FIXED backl_dst = {
-		FIXED_DEC(-190,1) - fx,
-		FIXED_DEC(-100,1) - fy,
-		FIXED_DEC(121,1),
-		FIXED_DEC(105,1)
-	};
-	RECT backr_src = {121, 59, 136, 120};
-	RECT_FIXED backr_dst = {
-		FIXED_DEC(60,1) - fx,
-		FIXED_DEC(-110,1) - fy,
-		FIXED_DEC(136,1),
-		FIXED_DEC(120,1)
-	};
-	RECT backf_src = {0, 59, 1, 1};
-	RECT backf_dst = {
-		0,
-		0,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+	RECT back_src = {1, 60, 71, 195};
+	
+	RECT_FIXED back1_dst = {
+		FIXED_DEC(-140,1),
+		FIXED_DEC(20,1),
+		FIXED_DEC(back_src.w,1),
+		FIXED_DEC(back_src.h,1)
 	};
 	
-	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, stage.camera.bzoom);
-	Gfx_DrawTex(&this->tex_back0, &backf_src, &backf_dst);
+	RECT_FIXED back2_dst = {
+		FIXED_DEC(70,1),
+		FIXED_DEC(0,1),
+		FIXED_DEC(back_src.w,1),
+		FIXED_DEC(back_src.h,1)
+	};
+	
+	Stage_DrawTexRotate(&this->tex_back0, &back_src, &back1_dst, -5, stage.camera.bzoom, fx, fy);
+	Stage_DrawTexRotate(&this->tex_back0, &back_src, &back2_dst,  5, stage.camera.bzoom, fx, fy);
+	
+	fx = stage.camera.x * 3 / 10;
+	fy = stage.camera.y * 3 / 10;
+	
+	RECT_FIXED back3_dst = {
+		FIXED_DEC(-60,1),
+		FIXED_DEC(50,1),
+		FIXED_DEC(back_src.w,1),
+		FIXED_DEC(back_src.h,1)
+	};
+	
+	RECT_FIXED back4_dst = {
+		FIXED_DEC(160,1),
+		FIXED_DEC(60,1),
+		FIXED_DEC(back_src.w,1),
+		FIXED_DEC(back_src.h,1)
+	};
+	
+	RECT_FIXED back5_dst = {
+		FIXED_DEC(-160,1),
+		FIXED_DEC(90,1),
+		FIXED_DEC(back_src.w,1),
+		FIXED_DEC(back_src.h,1)
+	};
+	
+	Stage_DrawTexRotate(&this->tex_back0, &back_src, &back3_dst, -2, stage.camera.bzoom, fx, fy);
+	Stage_DrawTexRotate(&this->tex_back0, &back_src, &back4_dst,  2, stage.camera.bzoom, fx, fy);
+	Stage_DrawTexRotate(&this->tex_back0, &back_src, &back5_dst,  -2, stage.camera.bzoom, fx, fy);
 }
 
 void Back_Week1_Free(StageBack *back)
@@ -134,7 +134,6 @@ StageBack *Back_Week1_New(void)
 	//Load background textures
 	IO_Data arc_back = IO_Read("\\WEEK1\\BACK.ARC;1");
 	Gfx_LoadTex(&this->tex_back0, Archive_Find(arc_back, "back0.tim"), 0);
-	Gfx_LoadTex(&this->tex_back1, Archive_Find(arc_back, "back1.tim"), 0);
 	Mem_Free(arc_back);
 	
 	return (StageBack*)this;

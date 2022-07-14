@@ -1,5 +1,5 @@
 all: \
-  $(addsuffix .cht, $(wildcard iso/data/*.json)) \
+	$(addsuffix .cht, $(wildcard iso/songs/*/*.json)) \
 
-iso/data/%.json.cht: iso/data/%.json
+iso/%.json.cht: iso/%.json
 	tools/funkinchartpak/funkinchartpak $<

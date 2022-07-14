@@ -857,7 +857,8 @@ void Menu_Tick(void)
 				const char *text;
 			} menu_options[] = {
 				{StageId_DevilGambit, 0xFF9271FD, "DEVIL'S GAMBIT"},
-				{StageId_TooSlow, 0xFF9271FD, "TOO SLOW"}
+				{StageId_TooSlow, 0xFF9271FD, "TOO SLOW"},
+				{StageId_NightLights, 0xFF9271FD, "NIGHT LIGHTS"}
 			};
 			
 			//Initialize page

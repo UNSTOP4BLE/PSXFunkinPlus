@@ -43,24 +43,6 @@
 			<dir name = "week1">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/stages/week1/back.arc"/>
-				
-				<!-- Bopeebo charts -->
-				<file name = "1.1e.cht" type = "data" source = "iso/data/bopeebo-easy.json.cht"/>
-				<file name = "1.1n.cht" type = "data" source = "iso/data/bopeebo.json.cht"/>
-				<file name = "1.1h.cht" type = "data" source = "iso/data/bopeebo-hard.json.cht"/>
-				<!-- Fresh charts -->
-				<file name = "1.2e.cht" type = "data" source = "iso/data/fresh-easy.json.cht"/>
-				<file name = "1.2n.cht" type = "data" source = "iso/data/fresh.json.cht"/>
-				<file name = "1.2h.cht" type = "data" source = "iso/data/fresh-hard.json.cht"/>
-				<!-- Dadbattle charts -->
-				<file name = "1.3e.cht" type = "data" source = "iso/data/dadbattle-easy.json.cht"/>
-				<file name = "1.3n.cht" type = "data" source = "iso/data/dadbattle.json.cht"/>
-				<file name = "1.3h.cht" type = "data" source = "iso/data/dadbattle-hard.json.cht"/>
-				<!-- Tutorial charts -->
-				<file name = "1.4e.cht" type = "data" source = "iso/data/tutorial-easy.json.cht"/>
-				<file name = "1.4n.cht" type = "data" source = "iso/data/tutorial.json.cht"/>
-				<file name = "1.4h.cht" type = "data" source = "iso/data/tutorial-hard.json.cht"/>
-				
 			</dir>
 			
 			<!-- Week 2 assets -->
@@ -71,9 +53,11 @@
 			
 			<dir name = "custom">
 				<!-- Devil's Gambit charts -->
-				<file name = "custom.1.cht" type = "data" source = "iso/data/devils-gambit-hard.json.cht"/>
-				<!-- Devil's Gambit charts -->
-				<file name = "custom.2.cht" type = "data" source = "iso/data/too-slow-hard.json.cht"/>
+				<file name = "custom.1.cht" type = "data" source = "iso/songs/devils-gambit/devils-gambit-hard.json.cht"/>
+				<!-- Too Slow charts -->
+				<file name = "custom.2.cht" type = "data" source = "iso/songs/too-slow/too-slow-hard.json.cht"/>
+				<!-- Too Slow charts -->
+				<file name = "custom.3.cht" type = "data" source = "iso/songs/night-lights/night-lights-hard.json.cht"/>
 			</dir>
 			
 			<!-- Characters assets -->
@@ -97,16 +81,16 @@
 				
 				<!-- Mighty assets -->
 				<file name = "mighty.arc" type = "data" source = "iso/characters/mightyzip/main.arc"/>
+				
+				<!-- Goon assets -->
+				<file name = "goon.arc" type = "data" source = "iso/characters/goon/main.arc"/>
 			</dir>
 			
 			<!-- Songs -->
 			<dir name = "songs">
-				<file name = "tutorial.mus" type = "data" source = "iso/songs/tutorial/tutorial.mus"/>
-				<file name = "bopeebo.mus" type = "data" source = "iso/songs/bopeebo/bopeebo.mus"/>
-				<file name = "fresh.mus" type = "data" source = "iso/songs/fresh/fresh.mus"/>
-				<file name = "dadbattl.mus" type = "data" source = "iso/songs/dadbattle/dadbattle.mus"/>
 				<file name = "devil.mus" type = "data" source = "iso/songs/devils-gambit/devils-gambit.mus"/>
 				<file name = "tooslow.mus" type = "data" source = "iso/songs/too-slow/too-slow.mus"/>
+				<file name = "goon.mus" type = "data" source = "iso/songs/night-lights/night-lights.mus"/>
 			</dir>
 			
 			<!-- Music -->

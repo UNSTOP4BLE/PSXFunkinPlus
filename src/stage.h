@@ -42,8 +42,9 @@ typedef enum
 	StageId_1_3, //Dadbattle
 	StageId_1_4, //Tutorial
 	
-	StageId_DevilGambit, //Devil's Gambit
+	StageId_DevilGambit, //Devil's Gambit (Indie Cross)
 	StageId_TooSlow, //Too Slow (D-side)
+	StageId_NightLights, //Night Lights (Vs. Cassette Goon)
 	
 	StageId_Max
 } StageId;
