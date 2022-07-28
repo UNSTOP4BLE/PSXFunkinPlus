@@ -28,7 +28,8 @@
 			</dir>
 			
 			<!-- Fonts -->
-			<dir name = "font">
+			<dir name = "fonts">
+				<file name = "cdr.tim" type = "data" source = "iso/images/font/cdr.tim"/>
 				<file name = "boldfont.tim" type = "data" source = "iso/images/font/boldfont.tim"/>
 				<file name = "arial.tim" type = "data" source = "iso/images/font/arial.tim"/>
 			</dir>
@@ -40,24 +41,9 @@
 			</dir>
 			
 			<!-- Week 1 assets -->
-			<dir name = "week1">
+			<dir name = "stages">
 				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/stages/week1/back.arc"/>
-			</dir>
-			
-			<!-- Week 2 assets -->
-			<dir name = "week2">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/stages/week2/back.arc"/>
-			</dir>
-			
-			<dir name = "custom">
-				<!-- Devil's Gambit charts -->
-				<file name = "custom.1.cht" type = "data" source = "iso/songs/devils-gambit/devils-gambit-hard.json.cht"/>
-				<!-- Too Slow charts -->
-				<file name = "custom.2.cht" type = "data" source = "iso/songs/too-slow/too-slow-hard.json.cht"/>
-				<!-- Too Slow charts -->
-				<file name = "custom.3.cht" type = "data" source = "iso/songs/night-lights/night-lights-hard.json.cht"/>
+				<file name = "stage1.arc" type = "data" source = "iso/stages/stage1/back.arc"/>
 			</dir>
 			
 			<!-- Characters assets -->
@@ -72,25 +58,30 @@
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
 				<file name = "speaker.tim" type = "data" source = "iso/characters/gf/speaker.tim"/>
-				
-				<!-- Cuphead assets -->
-				<file name = "cuphead.arc" type = "data" source = "iso/characters/cuphead/main.arc"/>
-				
-				<!-- Tricky assets -->
-				<file name = "tricky.arc" type = "data" source = "iso/characters/tricky/main.arc"/>
-				
-				<!-- Mighty assets -->
-				<file name = "mighty.arc" type = "data" source = "iso/characters/mightyzip/main.arc"/>
-				
-				<!-- Goon assets -->
-				<file name = "goon.arc" type = "data" source = "iso/characters/goon/main.arc"/>
 			</dir>
 			
 			<!-- Songs -->
 			<dir name = "songs">
-				<file name = "devil.mus" type = "data" source = "iso/songs/devils-gambit/devils-gambit.mus"/>
-				<file name = "tooslow.mus" type = "data" source = "iso/songs/too-slow/too-slow.mus"/>
-				<file name = "goon.mus" type = "data" source = "iso/songs/night-lights/night-lights.mus"/>
+				<!-- Bopeebo charts -->
+				<file name = "bopeebo.mus" type = "data" source = "iso/songs/bopeebo/bopeebo.mus"/>
+				<file name = "1.1e.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-easy.json.cht"/>
+				<file name = "1.1n.cht" type = "data" source = "iso/songs/bopeebo/bopeebo.json.cht"/>
+				<file name = "1.1h.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-hard.json.cht"/>
+				<!-- Fresh charts -->
+				<file name = "fresh.mus" type = "data" source = "iso/songs/fresh/fresh.mus"/>
+				<file name = "1.2e.cht" type = "data" source = "iso/songs/fresh/fresh-easy.json.cht"/>
+				<file name = "1.2n.cht" type = "data" source = "iso/songs/fresh/fresh.json.cht"/>
+				<file name = "1.2h.cht" type = "data" source = "iso/songs/fresh/fresh-hard.json.cht"/>
+				<!-- Dadbattle charts -->
+				<file name = "dadbattl.mus" type = "data" source = "iso/songs/dadbattle/dadbattle.mus"/>
+				<file name = "1.3e.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-easy.json.cht"/>
+				<file name = "1.3n.cht" type = "data" source = "iso/songs/dadbattle/dadbattle.json.cht"/>
+				<file name = "1.3h.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-hard.json.cht"/>
+				<!-- Tutorial charts -->
+				<file name = "tutorial.mus" type = "data" source = "iso/songs/tutorial/tutorial.mus"/>
+				<file name = "1.4e.cht" type = "data" source = "iso/songs/tutorial/tutorial-easy.json.cht"/>
+				<file name = "1.4n.cht" type = "data" source = "iso/songs/tutorial/tutorial.json.cht"/>
+				<file name = "1.4h.cht" type = "data" source = "iso/songs/tutorial/tutorial-hard.json.cht"/>
 			</dir>
 			
 			<!-- Music -->
@@ -101,7 +92,7 @@
 			</dir>
 			<!-- Sound -->
 			<dir name = "sounds">
-				<file name = "micdrop.mus" type = "data" source = "iso/sounds/fnf_loss_sfx/fnf_loss_sfx.mus"/>
+				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.vag"/>
 			</dir>
 			
 			<!-- Dummy sectors -->

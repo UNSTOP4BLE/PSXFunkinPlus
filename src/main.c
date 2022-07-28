@@ -1,20 +1,13 @@
-/*
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
-
 #include "main.h"
 
-#include "timer.h"
-#include "io.h"
-#include "gfx.h"
-#include "audio.h"
-#include "pad.h"
-#include "network.h"
+#include "psx/timer.h"
+#include "psx/io.h"
+#include "psx/gfx.h"
+#include "psx/audio.h"
+#include "psx/pad.h"
 
-#include "menu.h"
-#include "stage.h"
+#include "menu/menu.h"
+#include "stage/stage.h"
 
 //Game loop
 GameLoop gameloop;
@@ -37,10 +30,10 @@ void ErrorLock(void)
 }
 
 //Memory heap
-#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
+//#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
 
 #define MEM_IMPLEMENTATION
-#include "mem.h"
+#include "psx/mem.h"
 #undef MEM_IMPLEMENTATION
 
 #ifndef PSXF_STDMEM
@@ -63,7 +56,6 @@ int main(int argc, char **argv)
 	Audio_Init();
 	Gfx_Init();
 	Pad_Init();
-	Network_Init();
 	
 	Timer_Init();
 	
@@ -88,7 +80,6 @@ int main(int argc, char **argv)
 		#endif
 		
 		//Tick and draw game
-		Network_Process();
 		switch (gameloop)
 		{
 			case GameLoop_Menu:
@@ -104,7 +95,6 @@ int main(int argc, char **argv)
 	}
 	
 	//Deinitialize system
-	Network_Quit();
 	Pad_Quit();
 	Gfx_Quit();
 	Audio_Quit();

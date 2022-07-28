@@ -2,14 +2,42 @@ TARGET = funkin
 TYPE = ps-exe
 
 SRCS = src/main.c \
-       src/mutil.c \
-       src/random.c \
-       src/archive.c \
-       src/font.c \
-       src/trans.c \
-       src/loadscr.c \
-       src/menu.c \
-       src/stage.c \
+	   \
+	   \
+       src/characters/bf/bf.c \
+	   \
+	   \
+       src/characters/dad/dad.c \
+	   \
+	   \
+       src/characters/gf/gf.c \
+       src/characters/gf/speaker.c \
+	   \
+	   \
+	   \
+       src/stages/stage1/stage1.c \
+	   \
+	   \
+       \
+       src/menu/menu.c \
+	   \
+	   \
+       src/stage/stage.c \
+	   src/stage/animation.c \
+       src/stage/character.c \
+       src/stage/object.c \
+       src/stage/object/combo.c \
+       src/stage/object/splash.c \
+	   \
+	   \
+	   \
+       src/fonts/font.c \
+	   \
+       src/psx/mutil.c \
+       src/psx/random.c \
+       src/psx/archive.c \
+       src/psx/trans.c \
+       src/psx/loadscr.c \
        src/psx/psx.c \
        src/psx/io.c \
        src/psx/gfx.c \
@@ -17,22 +45,6 @@ SRCS = src/main.c \
        src/psx/pad.c \
        src/psx/timer.c \
        src/psx/movie.c \
-       src/stage/dummy.c \
-       src/stage/week1.c \
-       src/stage/week2.c \
-       src/animation.c \
-       src/character.c \
-       src/character/bf.c \
-       src/character/speaker.c \
-       src/character/dad.c \
-       src/character/gf.c \
-       src/character/cuphead.c \
-       src/character/tricky.c \
-       src/character/mighty.c \
-       src/character/goon.c \
-       src/object.c \
-       src/object/combo.c \
-       src/object/splash.c \
        mips/common/crt0/crt0.s
 
 CPPFLAGS += -Wall -Wextra -pedantic -mno-check-zero-division

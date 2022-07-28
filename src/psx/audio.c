@@ -1,28 +1,26 @@
 /*
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
-
-/*
   The bulk of this code was written by spicyjpeg
   (C) 2021 spicyjpeg
 */
 
-#include "../audio.h"
+#include "audio.h"
 
-#include "../timer.h"
-#include "../io.h"
+#include "timer.h"
+#include "io.h"
 
 //Audio constants
 #define SAMPLE_RATE 0x1000 //44100 Hz
 
 #define BUFFER_SIZE (13 << 11) //13 sectors
 #define CHUNK_SIZE (BUFFER_SIZE * audio_streamcontext.header.s.channels)
+#define CHUNK_SIZE_MAX (BUFFER_SIZE * 4) // there are never more than 4 channels
 
 #define BUFFER_TIME FIXED_DEC(((BUFFER_SIZE * 28) / 16), 44100)
 
 #define BUFFER_START_ADDR 0x1010
+
+#define DUMMY_ADDR (BUFFER_START_ADDR + (CHUNK_SIZE_MAX * 2))
+#define ALLOC_START_ADDR (BUFFER_START_ADDR + (CHUNK_SIZE_MAX * 2) + 64)
 
 //SPU registers
 typedef struct
@@ -83,6 +81,7 @@ typedef struct
 } Audio_StreamContext;
 
 static volatile Audio_StreamContext audio_streamcontext;
+static volatile u32 audio_alloc_ptr = 0;
 
 void Audio_StreamIRQ_SPU(void)
 {
@@ -389,4 +388,64 @@ fixed_t Audio_GetTime(void)
 boolean Audio_IsPlaying(void)
 {
 	return audio_streamcontext.state != Audio_StreamState_Stopped;
+}
+
+/* .VAG file loader */
+#define VAG_HEADER_SIZE 48
+static u8 lastChannelUsed = 0;
+
+static u8 getFreeChannel(void) {
+    u8 channel = lastChannelUsed;
+    lastChannelUsed = (channel + 1) % 20;
+    printf("le channel is %d", channel);
+    return channel + 4;
+}
+
+void Audio_ClearAlloc(void) {
+	audio_alloc_ptr = ALLOC_START_ADDR;
+}
+
+u32 Audio_LoadVAGData(u32 *sound, u32 sound_size) {
+	// subtract size of .vag header (48 bytes), round to 64 bytes
+	u32 xfer_size = ((sound_size - VAG_HEADER_SIZE) + 63) & 0xffffffc0;
+	u8  *data = (u8 *) sound;
+
+	// modify sound data to ensure sound "loops" to dummy sample
+	// https://psx-spx.consoledev.net/soundprocessingunitspu/#flag-bits-in-2nd-byte-of-adpcm-header
+	data[sound_size - 15] = 1; // end + mute
+
+	// allocate SPU memory for sound
+	u32 addr = audio_alloc_ptr;
+	audio_alloc_ptr += xfer_size;
+
+	if (audio_alloc_ptr > 0x80000) {
+		// TODO: add proper error handling code
+		printf("FATAL: SPU RAM overflow! (%d bytes overflowing)\n", audio_alloc_ptr - 0x80000);
+		while (1);
+	}
+
+	SpuSetTransferStartAddr(addr); // set transfer starting address to malloced area
+	SpuSetTransferMode(SPU_TRANSFER_BY_DMA); // set transfer mode to DMA
+	SpuWrite(data + VAG_HEADER_SIZE, xfer_size); // perform actual transfer
+	SpuIsTransferCompleted(SPU_TRANSFER_WAIT); // wait for DMA to complete
+
+	printf("Allocated new sound (addr=%08x, size=%d)\n", addr, xfer_size);
+	return addr;
+}
+
+void Audio_PlaySoundOnChannel(u32 addr, u32 channel, int volume) {
+	SPU_KEY_OFF = (1 << channel);
+
+	SPU_CHANNELS[channel].vol_left   = volume;
+	SPU_CHANNELS[channel].vol_right  = volume;
+	SPU_CHANNELS[channel].addr       = SPU_RAM_ADDR(addr);
+	SPU_CHANNELS[channel].loop_addr  = SPU_RAM_ADDR(DUMMY_ADDR);
+	SPU_CHANNELS[channel].freq       = 0x1000; // 44100 Hz
+	SPU_CHANNELS[channel].adsr_param = 0x1fc080ff;
+
+	SPU_KEY_ON = (1 << channel);
+}
+
+void Audio_PlaySound(u32 addr, int volume) {
+    Audio_PlaySoundOnChannel(addr, getFreeChannel(), volume);
 }

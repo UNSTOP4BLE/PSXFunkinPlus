@@ -4,7 +4,7 @@
   file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "../movie.h"
+#include "movie.h"
 
 //Movie interface
 void Movie_Play(const char *path, u32 length)

@@ -1,13 +1,17 @@
-# PSXFunkin
-Friday Night Funkin' on the PSX LOL
+# PSXFunkin-Lucky
+A Clean fork of PSXFunkin that helps in modding!
 
-## Compilation
-Refer to [COMPILE.md](/COMPILE.md) here
+## Features, Differents
 
-For those who just want to see the newest updates:
-[Nightly Builds](https://drive.google.com/drive/folders/14HS19JOxp1DeQ2tYhkvwEZ8JYgA84b12)
+- Files/Folders are more cleaner
+- 2-7 Weeks removed
+- Better HUD
+- Miss and Accuracy System
+- Able to change Character's size
+- Widescreen relative to 16:9 in 320x240 (WIP)
 
-## Disclaimer
-This project is not endorsed by the original Friday Night Funkin' devs, this is just an unofficial fan project because I was bored.
+## Upcoming Features in the Future
 
-Assets such as Week 7, VS Kapi, VS Tricky are used with permission from their respective owners.
+- Support to Video Cutscenes
+- Better Camera System
+- 
