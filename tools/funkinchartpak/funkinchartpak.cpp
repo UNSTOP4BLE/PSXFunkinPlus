@@ -27,13 +27,19 @@ struct Section
 #define NOTE_FLAG_SUSTAIN_END (1 << 4) //Is either end of sustain
 #define NOTE_FLAG_ALT_ANIM    (1 << 5) //Note plays alt animation
 #define NOTE_FLAG_MINE        (1 << 6) //Note is a mine
-#define NOTE_FLAG_HIT         (1 << 7) //Note has been hit
+#define NOTE_FLAG_BULLET      (1 << 7) //Note is a bullet
+#define NOTE_FLAG_HIT         (1 << 8) //Note has been hit
 
 struct Note
 {
 	uint16_t pos; //1/12 steps
-	uint8_t type, pad = 0;
+	uint16_t type, pad = 0;
 };
+
+typedef int32_t fixed_t;
+
+#define FIXED_SHIFT (10)
+#define FIXED_UNIT  (1 << FIXED_SHIFT)
 
 uint16_t PosRound(double pos, double crochet)
 {
@@ -44,6 +50,14 @@ void WriteWord(std::ostream &out, uint16_t word)
 {
 	out.put(word >> 0);
 	out.put(word >> 8);
+}
+
+void WriteLong(std::ostream &out, uint32_t word)
+{
+	out.put(word >> 0);
+	out.put(word >> 8);
+	out.put(word >> 16);
+	out.put(word >> 24);
 }
 
 int main(int argc, char *argv[])
@@ -118,15 +132,14 @@ int main(int argc, char *argv[])
 			new_note.type = (uint8_t)j[1] & (3 | NOTE_FLAG_OPPONENT);
 			if (is_opponent)
 				new_note.type ^= NOTE_FLAG_OPPONENT;
+			if (j[3] == true)
+				new_note.type |= NOTE_FLAG_ALT_ANIM;
 			else if ((new_note.type & NOTE_FLAG_OPPONENT) && is_alt)
 				new_note.type |= NOTE_FLAG_ALT_ANIM;
 			if (sustain >= 0)
 				new_note.type |= NOTE_FLAG_SUSTAIN_END;
-			if (j[1] >= 104)
-				if (j[1] <= 111)
-					new_note.type |= NOTE_FLAG_MINE;
-			if (j[3] == "Ice Note")
-				new_note.type |= NOTE_FLAG_MINE;
+			if (j[3] == "Bullet_Note")
+				new_note.type |= NOTE_FLAG_BULLET;
 			
 			if (note_fudge.count(*((uint32_t*)&new_note)))
 			{
@@ -180,8 +193,11 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	
+	//Write header
+	WriteLong(out, (fixed_t)(speed * FIXED_UNIT));
+	WriteWord(out, 6 + (sections.size() << 2));
+	
 	//Write sections
-	WriteWord(out, 2 + (sections.size() << 2));
 	for (auto &i : sections)
 	{
 		WriteWord(out, i.end);

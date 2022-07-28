@@ -82,6 +82,10 @@
 				<file name = "1.4e.cht" type = "data" source = "iso/songs/tutorial/tutorial-easy.json.cht"/>
 				<file name = "1.4n.cht" type = "data" source = "iso/songs/tutorial/tutorial.json.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/songs/tutorial/tutorial-hard.json.cht"/>
+
+				<!-- Blammed charts -->
+				<file name = "blaerect.mus" type = "data" source = "iso/songs/blammed/blammed.mus"/>
+				<file name = "2.1h.cht" type = "data" source = "iso/songs/blammed/blammed.json.cht"/>
 			</dir>
 			
 			<!-- Music -->

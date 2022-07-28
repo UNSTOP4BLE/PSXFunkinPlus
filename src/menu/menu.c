@@ -740,7 +740,8 @@ void Menu_Tick(void)
 				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
 				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
 				{StageId_1_2, 0xFF9271FD, "FRESH"},
-				{StageId_1_3, 0xFF9271FD, "DADBATTLE"}
+				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
+				{StageId_2_1, 0xFF9271FD, "BLAMMED ERECT"}
 			};
 			
 			//Initialize page
@@ -844,119 +845,11 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Mods:
 		{
-			static const struct
-			{
-				StageId stage;
-				u32 col;
-				const char *text;
-			} menu_options[] = {
-				{StageId_DevilGambit, 0xFF9271FD, "DEVIL'S GAMBIT"},
-				{StageId_TooSlow, 0xFF9271FD, "TOO SLOW"},
-				{StageId_NightLights, 0xFF9271FD, "NIGHT LIGHTS"}
-			};
-			
-			//Initialize page
-			if (menu.page_swap)
-			{
-				menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
-				menu.page_param.stage.diff = StageDiff_Normal;
-				menu.page_state.freeplay.back_r = FIXED_DEC(255,1);
-				menu.page_state.freeplay.back_g = FIXED_DEC(255,1);
-				menu.page_state.freeplay.back_b = FIXED_DEC(255,1);
-			}
-			
-			//Draw page label
-			menu.font_bold.draw(&menu.font_bold,
-				"CUSTOM SONGS",
-				16,
-				SCREEN_HEIGHT - 32,
-				FontAlign_Left
-			);
-			
-			//Draw difficulty selector
-			Menu_DifficultySelector(SCREEN_WIDTH - 100, SCREEN_HEIGHT2 - 48);
-			
-			//Handle option and selection
-			if (menu.next_page == menu.page && Trans_Idle())
-			{
-				//Change option
-				if (pad_state.press & PAD_UP)
-				{
-					if (menu.select > 0)
-						menu.select--;
-					else
-						menu.select = COUNT_OF(menu_options) - 1;
-				}
-				if (pad_state.press & PAD_DOWN)
-				{
-					if (menu.select < COUNT_OF(menu_options) - 1)
-						menu.select++;
-					else
-						menu.select = 0;
-				}
-				
-				//Select option if cross is pressed
-				if (pad_state.press & (PAD_START | PAD_CROSS))
-				{
-					menu.next_page = MenuPage_Stage;
-					menu.page_param.stage.id = menu_options[menu.select].stage;
-					menu.page_param.stage.story = false;
-					Trans_Start();
-				}
-				
-				//Return to main menu if circle is pressed
-				if (pad_state.press & PAD_CIRCLE)
-				{
-					menu.next_page = MenuPage_Main;
-					menu.next_select = 2; //Mods
-					Trans_Start();
-				}
-			}
-			
-			//Draw options
-			s32 next_scroll = menu.select * FIXED_DEC(24,1);
-			menu.scroll += (next_scroll - menu.scroll) >> 4;
-			
-			for (u8 i = 0; i < COUNT_OF(menu_options); i++)
-			{
-				//Get position on screen
-				s32 y = (i * 24) - 8 - (menu.scroll >> FIXED_SHIFT);
-				if (y <= -SCREEN_HEIGHT2 - 8)
-					continue;
-				if (y >= SCREEN_HEIGHT2 + 8)
-					break;
-				
-				//Draw text
-				menu.font_bold.draw(&menu.font_bold,
-					Menu_LowerIf(menu_options[i].text, menu.select != i),
-					48 + (y >> 2),
-					SCREEN_HEIGHT2 + y - 8,
-					FontAlign_Left
-				);
-			}
-			
-			//Draw background
-			fixed_t tgt_r = (fixed_t)((menu_options[menu.select].col >> 16) & 0xFF) << FIXED_SHIFT;
-			fixed_t tgt_g = (fixed_t)((menu_options[menu.select].col >>  8) & 0xFF) << FIXED_SHIFT;
-			fixed_t tgt_b = (fixed_t)((menu_options[menu.select].col >>  0) & 0xFF) << FIXED_SHIFT;
-			
-			menu.page_state.freeplay.back_r += (tgt_r - menu.page_state.freeplay.back_r) >> 4;
-			menu.page_state.freeplay.back_g += (tgt_g - menu.page_state.freeplay.back_g) >> 4;
-			menu.page_state.freeplay.back_b += (tgt_b - menu.page_state.freeplay.back_b) >> 4;
-			
-			Menu_DrawBack(
-				true,
-				8,
-				menu.page_state.freeplay.back_r >> (FIXED_SHIFT + 1),
-				menu.page_state.freeplay.back_g >> (FIXED_SHIFT + 1),
-				menu.page_state.freeplay.back_b >> (FIXED_SHIFT + 1),
-				0, 0, 0
-			);
-			break;
+
 		}
 		case MenuPage_Options:
 		{
-			static const char *gamemode_strs[] = {"NORMAL", "SWAP", "TWO PLAYER"};
+			static const char *gamemode_strs[] = {"NORMAL", "SWAP", "MULTIPLAYER"};
 			static const struct
 			{
 				enum
@@ -984,7 +877,8 @@ void Menu_Tick(void)
 				{OptType_Boolean, "DOWNSCROLL", &stage.downscroll, {.spec_boolean = {0}}},
 				{OptType_Boolean, "MIDDLESCROLL", &stage.middlescroll, {.spec_boolean = {0}}},
 				{OptType_Boolean, "INSTAKILL", &stage.instakill, {.spec_boolean = {0}}},
-				{OptType_Boolean, "WIDESCREEN", &stage.widescreen, {.spec_boolean = {0}}}
+				{OptType_Boolean, "WIDESCREEN", &stage.widescreen, {.spec_boolean = {0}}},
+				{OptType_Boolean, "CAM FOLLOW CHAR", &stage.followcamera, {.spec_boolean = {0}}}
 			};
 			
 			//Initialize page

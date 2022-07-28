@@ -35,9 +35,7 @@ typedef enum
 	StageId_1_3, //Dadbattle
 	StageId_1_4, //Tutorial
 	
-	StageId_DevilGambit, //Devil's Gambit (Indie Cross)
-	StageId_TooSlow, //Too Slow (D-side)
-	StageId_NightLights, //Night Lights (Vs. Cassette Goon)
+	StageId_2_1, //Blammed Erect
 	
 	StageId_Max
 } StageId;
@@ -89,12 +87,12 @@ typedef struct
 	StageBack* (*back)();
 	
 	//Song info
-	fixed_t speed[3];
 	
 	u8 week, week_song;
 	
 	//Mus file
 	const char *mus_path;
+	const char credits[40];
 	
 	StageId next_stage;
 	u8 next_load;
@@ -115,7 +113,8 @@ typedef struct
 #define NOTE_FLAG_SUSTAIN_END (1 << 4) //Is either end of sustain
 #define NOTE_FLAG_ALT_ANIM    (1 << 5) //Note plays alt animation
 #define NOTE_FLAG_MINE        (1 << 6) //Note is a mine
-#define NOTE_FLAG_HIT         (1 << 7) //Note has been hit
+#define NOTE_FLAG_BULLET      (1 << 7) //Note is a bullet
+#define NOTE_FLAG_HIT         (1 << 8) //Note has been hit
 
 typedef struct
 {
@@ -155,7 +154,7 @@ typedef struct
 {
 	//Stage settings
 	boolean ghost, downscroll, middlescroll, expsync;
-	boolean widescreen, instakill;
+	boolean widescreen, instakill, followcamera;
 	s32 mode;
 	
 	u32 offset;
@@ -172,6 +171,7 @@ typedef struct
 	const StageDef *stage_def;
 	StageId stage_id;
 	StageDiff stage_diff;
+	char credits[40];
 	
 	IO_Data chart_data;
 	Section *sections;

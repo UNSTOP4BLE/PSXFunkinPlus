@@ -8,6 +8,8 @@ all: \
 	iso/songs/fresh/fresh.mus \
 	iso/songs/dadbattle/dadbattle.mus \
 	iso/songs/tutorial/tutorial.mus \
+	\
+	iso/songs/blammed/blammed.mus \
 
 iso/%.mus: iso/%.txt
 	tools/funkinmuspak/funkinmuspak $@ $<
