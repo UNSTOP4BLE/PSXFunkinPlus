@@ -291,23 +291,21 @@ void Gfx_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT *dst)
 	Gfx_DrawTexCol(tex, src, dst, 0x80, 0x80, 0x80);
 }
 
-void Gfx_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle)
+void Gfx_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle, u8 hx, u8 hy)
 {	
 	s16 sin = MUtil_Sin(angle);
 	s16 cos = MUtil_Cos(angle);
-	int pw = dst->w / 2;
-	int ph = dst->h / 2;
 	
-	POINT p0 = {-pw, -ph};
+	POINT p0 = {0 - hx, 0 - hy};
 	MUtil_RotatePoint(&p0, sin, cos);
 	
-	POINT p1 = { pw, -ph};
+	POINT p1 = { dst->w - hx, 0 - hy};
 	MUtil_RotatePoint(&p1, sin, cos);
 	
-	POINT p2 = {-pw,  ph};
+	POINT p2 = {0 - hx,  dst->h - hy};
 	MUtil_RotatePoint(&p2, sin, cos);
 	
-	POINT p3 = { pw,  ph};
+	POINT p3 = { dst->w - hx,  dst->h - hy};
 	MUtil_RotatePoint(&p3, sin, cos);
 	
 	POINT d0 = {

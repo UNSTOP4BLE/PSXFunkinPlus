@@ -28,6 +28,7 @@ SRCS = src/main.c \
        src/stage/object.c \
        src/stage/object/combo.c \
        src/stage/object/splash.c \
+       src/events/event.c \
 	   \
 	   \
 	   \

@@ -462,7 +462,7 @@ void Menu_Tick(void)
 				y_rad << 1
 			};
 			
-			Gfx_DrawTexRotate(&menu.tex_title, &logo_src, &logo_dst, MUtil_Sin(menu.animcounter - 50) / 30);
+			Gfx_DrawTexRotate(&menu.tex_title, &logo_src, &logo_dst, MUtil_Sin(menu.animcounter - 50) / 30, logo_dst.w / 2, logo_dst.h / 2);
 			
 			if (menu.page_state.title.logo_bump > 0)
 				if ((menu.page_state.title.logo_bump -= timer_dt) < 0)

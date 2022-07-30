@@ -16,6 +16,8 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
+#include "../events/event.h"
+
 //Stage constants
 //#define STAGE_PERFECT //Play all notes perfectly
 //#define STAGE_NOHUD //Disable the HUD
@@ -116,13 +118,6 @@ static void Stage_ScrollCamera(void)
 		stage.camera.x += FIXED_MUL(dx, stage.camera.td);
 		stage.camera.y += FIXED_MUL(dy, stage.camera.td);
 		stage.camera.zoom += FIXED_MUL(dz, stage.camera.td);
-		
-		//Shake in Week 4
-		//if (stage.stage_id >= StageId_4_1 && stage.stage_id <= StageId_4_3)
-		//{
-		//	stage.camera.x += RandomRange(FIXED_DEC(-1,10),FIXED_DEC(1,10));
-		//	stage.camera.y += RandomRange(FIXED_DEC(-25,100),FIXED_DEC(25,100));
-		//}
 	#endif
 	
 	//Update other camera stuff
@@ -300,6 +295,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			note->type |= NOTE_FLAG_HIT;
 			
 			//if (stage.stage_id == StageId_Clwn_4)
+			NoteHitEvent(note->type);
 			if (false)
 				this->health = -0x7000;
 			else
@@ -313,11 +309,6 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 		}
 		else
 		{
-			if (note->type & NOTE_FLAG_BULLET)
-			{
-				stage.camera.zoom += FIXED_DEC(200,1000);
-				stage.bump += FIXED_DEC(100,1000);
-			}
 			//Check if note can be hit
 			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
 			if (note_fp - stage.early_safe > stage.note_scroll)
@@ -330,6 +321,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			//Hit the note
 			note->type |= NOTE_FLAG_HIT;
 			
+			NoteHitEvent(note->type);
 			this->character->set_anim(this->character, note_anims[type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0]);
 			u8 hit_type = Stage_HitNote(this, type, stage.note_scroll - note_fp);
 			this->arrow_hitan[type & 0x3] = stage.step_time;
@@ -486,49 +478,10 @@ void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
 	fixed_t wz = dst->w;
 	fixed_t hz = dst->h;
 	
-	//if (stage.stage_id >= StageId_6_1 && stage.stage_id <= StageId_6_3)
-	if (false)
-	{
-		//Handle HUD drawing
-		if (tex == &stage.tex_hud0)
-		{
-			#ifdef STAGE_NOHUD
-				return;
-			#endif
-			if (src->y >= 128 && src->y < 224)
-			{
-				//Pixel perfect scrolling
-				xz &= FIXED_UAND;
-				yz &= FIXED_UAND;
-				wz &= FIXED_UAND;
-				hz &= FIXED_UAND;
-			}
-		}
-		if (tex == &stage.tex_hud1)
-		{
-			#ifdef STAGE_NOHUD
-				return;
-			#endif
-		}
-		else
-		{
-			//Pixel perfect scrolling
-			xz &= FIXED_UAND;
-			yz &= FIXED_UAND;
-			wz &= FIXED_UAND;
-			hz &= FIXED_UAND;
-		}
-	}
-	else
-	{
-		//Don't draw if HUD and is disabled
+	#ifdef STAGE_NOHUD
 		if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-		{
-			#ifdef STAGE_NOHUD
-				return;
-			#endif
-		}
-	}
+			return;
+	#endif
 	
 	fixed_t l = (SCREEN_WIDTH2  << FIXED_SHIFT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
 	fixed_t t = (SCREEN_HEIGHT2 << FIXED_SHIFT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
@@ -627,22 +580,11 @@ void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u
     Stage_DrawTexArb(tex, src, &d0, &d1, &d2, &d3, zoom);
 }
 
-u8 iconscroll = 0;
-
 //Stage HUD functions
 static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 {
 	u8 status;
 	//Check if we should use 'dying' frame
-	if ((stage.song_step & 0xF) == 0)
-		iconscroll = 10;
-	
-	if (iconscroll > 0)
-		iconscroll -= 1;
-	else
-		iconscroll = 0;
-	
-	
 	if (ox < 0)
 	{
 		if (health >= 18000)
@@ -801,13 +743,11 @@ static void Stage_DrawNotes(void)
 			//Miss note if player's note
 			if (!(note->type & (bot | NOTE_FLAG_HIT | NOTE_FLAG_MINE)))
 			{
-				//Missed note
-				if (note->type & NOTE_FLAG_BULLET)
-					this->health = -0x7000;
 				Stage_CutVocal();
 				if (!(note->type & NOTE_FLAG_SUSTAIN))
 				{
 					Stage_MissNote(this);
+					NoteMissEvent(note->type,i);
 					this->refresh_accuracy = true;
 					this->max_accuracy += 3;
 					if (stage.instakill)
@@ -1383,31 +1323,7 @@ static boolean Stage_NextLoad(void)
 	}
 }
 
-static void FollowCharCamera(void)
-{
-			if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
-			{
-				if (stage.opponent->animatable.anim == CharAnim_Up)
-					stage.camera.y -= FIXED_DEC(5,10);
-				if (stage.opponent->animatable.anim == CharAnim_Down)
-					stage.camera.y += FIXED_DEC(5,10);
-				if (stage.opponent->animatable.anim == CharAnim_Left)
-					stage.camera.x -= FIXED_DEC(5,10);
-				if (stage.opponent->animatable.anim == CharAnim_Right)
-					stage.camera.x += FIXED_DEC(5,10);
-			}
-			else
-			{
-				if (stage.player->animatable.anim == CharAnim_Up)
-					stage.camera.y -= FIXED_DEC(5,10);
-				if (stage.player->animatable.anim == CharAnim_Down)
-					stage.camera.y += FIXED_DEC(5,10);
-				if (stage.player->animatable.anim == CharAnim_Left)
-					stage.camera.x -= FIXED_DEC(5,10);
-				if (stage.player->animatable.anim == CharAnim_Right)
-					stage.camera.x += FIXED_DEC(5,10);
-			}
-}
+fixed_t song_time2;
 
 void Stage_Tick(void)
 {
@@ -1471,15 +1387,13 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
-			stage.font_cdr.draw(&stage.font_cdr,
-				stage.credits,
-				FIXED_DEC(-157,1),
-				FIXED_DEC(-111,1),
-				FontAlign_Right
-			);
-			
-			if(stage.followcamera)
-				FollowCharCamera();
+			Events();
+			//stage.font_cdr.draw(&stage.font_cdr,
+			//	stage.credits,
+			//	FIXED_DEC(-157,1),
+			//	FIXED_DEC(-111,1),
+			//	FontAlign_Right
+			//);
 			
 			//Clear per-frame flags
 			stage.flag &= ~(STAGE_FLAG_JUST_STEP | STAGE_FLAG_SCORE_REFRESH);
@@ -1488,68 +1402,67 @@ void Stage_Tick(void)
 			boolean playing;
 			fixed_t next_scroll;
 			
+
+			if (stage.note_scroll < 0)
 			{
-				if (stage.note_scroll < 0)
+				//Play countdown sequence
+				stage.song_time += timer_dt;
+				
+				//Update song
+				if (stage.song_time >= 0)
 				{
-					//Play countdown sequence
-					stage.song_time += timer_dt;
+					//Start song
+					playing = true;
 					
-					//Update song
-					if (stage.song_time >= 0)
-					{
-						//Start song
-						playing = true;
-						
-						Audio_PlayMus(false);
-						Audio_SetVolume(0, 0x3FFF, 0x0000);
-						Audio_SetVolume(1, 0x0000, 0x3FFF);
-						
-						//Update song time
-						stage.interp_ms = Audio_GetTime();
-						stage.interp_time = 0;
-						stage.song_time = stage.interp_ms;
-					}
-					else
-					{
-						//Still scrolling
-						playing = false;
-					}
+					Audio_PlayMus(false);
+					Audio_SetVolume(0, 0x3FFF, 0x0000);
+					Audio_SetVolume(1, 0x0000, 0x3FFF);
 					
-					//Update scroll
-					next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
-				}
-				else if (Audio_IsPlaying())
-				{
-					//Sync to audio
+					//Update song time
 					stage.interp_ms = Audio_GetTime();
 					stage.interp_time = 0;
 					stage.song_time = stage.interp_ms;
-					
-					playing = true;
-					
-					//Update scroll
-					next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
 				}
 				else
 				{
-					//Song has ended
+					//Still scrolling
 					playing = false;
-					stage.song_time += timer_dt;
+				}
+				
+				//Update scroll
+				next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
+			}
+			else if (Audio_IsPlaying())
+			{
+				//Sync to audio
+				stage.interp_ms = Audio_GetTime();
+				stage.interp_time = 0;
+				stage.song_time = stage.interp_ms;
+				
+				playing = true;
+				
+				//Update scroll
+				next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
+			}
+			else
+			{
+				//Song has ended
+				playing = false;
+				stage.song_time += timer_dt;
 					
-					//Update scroll
-					next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
-					
-					//Transition to menu or next song
-					if (stage.story && stage.stage_def->next_stage != stage.stage_id)
-					{
-						if (Stage_NextLoad())
-							goto SeamLoad;
-					}
-					else
-					{
-						stage.trans = StageTrans_Menu;
-						Trans_Start();
-					}
+				//Update scroll
+				next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
+				
+				//Transition to menu or next song
+				if (stage.story && stage.stage_def->next_stage != stage.stage_id)
+				{
+					if (Stage_NextLoad())
+						goto SeamLoad;
+				}
+				else
+				{
+					stage.trans = StageTrans_Menu;
+					Trans_Start();
 				}
 			}
 			
