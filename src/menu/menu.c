@@ -253,11 +253,7 @@ void Menu_Load(MenuPage page)
 		case MenuPage_Opening:
 			//Get funny message to use
 			//Do this here so timing is less reliant on VSync
-			#ifdef PSXF_PC
-				menu.page_state.opening.funny_message = time(NULL) % COUNT_OF(funny_messages);
-			#else
-				menu.page_state.opening.funny_message = ((*((volatile u32*)0xBF801120)) >> 3) % COUNT_OF(funny_messages); //sysclk seeding
-			#endif
+			menu.page_state.opening.funny_message = ((*((volatile u32*)0xBF801120)) >> 3) % COUNT_OF(funny_messages); //sysclk seeding
 			break;
 		default:
 			break;
@@ -270,10 +266,8 @@ void Menu_Load(MenuPage page)
 	stage.song_step = 0;
 	
 	//Play menu music
-	Audio_LoadMus("\\MUSIC\\MENU.MUS;1");
-	Audio_PlayMus(true);
-	Audio_SetVolume(0, 0x3FFF, 0x0000);
-	Audio_SetVolume(1, 0x0000, 0x3FFF);
+	//Audio_PlayXA_Track(XA_GettinFreaky, 0x40, 0, 1);
+	//Audio_WaitPlayXA();
 	
 	//Set background colour
 	Gfx_SetClear(0, 0, 0);
@@ -300,7 +294,7 @@ void Menu_Tick(void)
 	stage.flag &= ~STAGE_FLAG_JUST_STEP;
 	
 	//Get song position
-	u16 next_step = Audio_GetTime() / FIXED_DEC(15, 102);
+	u16 next_step = Audio_TellXA_Milli() / 147; //100 BPM
 	if (next_step != stage.song_step)
 	{
 		if (next_step >= stage.song_step)

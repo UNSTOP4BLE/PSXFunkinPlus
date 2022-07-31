@@ -63,42 +63,46 @@
 			<!-- Songs -->
 			<dir name = "songs">
 				<!-- Bopeebo charts -->
-				<file name = "bopeebo.mus" type = "data" source = "iso/songs/bopeebo/bopeebo.mus"/>
 				<file name = "1.1e.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-easy.json.cht"/>
 				<file name = "1.1n.cht" type = "data" source = "iso/songs/bopeebo/bopeebo.json.cht"/>
 				<file name = "1.1h.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-hard.json.cht"/>
 				<!-- Fresh charts -->
-				<file name = "fresh.mus" type = "data" source = "iso/songs/fresh/fresh.mus"/>
 				<file name = "1.2e.cht" type = "data" source = "iso/songs/fresh/fresh-easy.json.cht"/>
 				<file name = "1.2n.cht" type = "data" source = "iso/songs/fresh/fresh.json.cht"/>
 				<file name = "1.2h.cht" type = "data" source = "iso/songs/fresh/fresh-hard.json.cht"/>
 				<!-- Dadbattle charts -->
-				<file name = "dadbattl.mus" type = "data" source = "iso/songs/dadbattle/dadbattle.mus"/>
 				<file name = "1.3e.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-easy.json.cht"/>
 				<file name = "1.3n.cht" type = "data" source = "iso/songs/dadbattle/dadbattle.json.cht"/>
 				<file name = "1.3h.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-hard.json.cht"/>
 				<!-- Tutorial charts -->
-				<file name = "tutorial.mus" type = "data" source = "iso/songs/tutorial/tutorial.mus"/>
 				<file name = "1.4e.cht" type = "data" source = "iso/songs/tutorial/tutorial-easy.json.cht"/>
 				<file name = "1.4n.cht" type = "data" source = "iso/songs/tutorial/tutorial.json.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/songs/tutorial/tutorial-hard.json.cht"/>
 
 				<!-- Blammed charts -->
-				<file name = "blaerect.mus" type = "data" source = "iso/songs/blammed/blammed.mus"/>
 				<file name = "2.1h.cht" type = "data" source = "iso/songs/blammed/blammed.json.cht"/>
 			</dir>
 			
-			<!-- Music -->
-			<dir name = "music">
-				<file name = "menu.mus" type = "data" source = "iso/music/freakyMenu/freakyMenu.mus"/>
-				<file name = "gameover.mus" type = "data" source = "iso/music/gameover/gameover.mus"/>
-
-			</dir>
 			<!-- Sound -->
 			<dir name = "sounds">
 				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.vag"/>
 			</dir>
 			
+			<!-- Music -->
+			<dir name = "music">
+				<file name = "menu.xa" type = "xa" source = "iso/music/menu.xa"/>
+				<dummy sectors="128"/>
+				<file name = "bopeebo.xa" type = "xa" source = "iso/songs/bopeebo/song.xa"/>
+				<dummy sectors="128"/>
+				<file name = "fresh.xa" type = "xa" source = "iso/songs/fresh/song.xa"/>
+				<dummy sectors="128"/>
+				<file name = "dadbattl.xa" type = "xa" source = "iso/songs/dadbattle/song.xa"/>
+				<dummy sectors="128"/>
+				<file name = "tutorial.xa" type = "xa" source = "iso/songs/tutorial/song.xa"/>
+				<dummy sectors="128"/>
+				<file name = "blaerect.xa" type = "xa" source = "iso/songs/blammed/song.xa"/>
+				<dummy sectors="128"/>
+			</dir>
 			<!-- Dummy sectors -->
 			<dummy sectors="1024"/>
 		</directory_tree>
