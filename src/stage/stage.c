@@ -911,7 +911,7 @@ static void Stage_DrawNotes(void)
 					continue;
 				
 				//Draw note body
-				note_src.x = 192 + ((note->type & 0x1) << 5);
+				note_src.x = 0 + ((note->type & 0x1) << 5);
 				note_src.y = (note->type & 0x2) << 4;
 				note_src.w = 32;
 				note_src.h = 32;
@@ -926,7 +926,7 @@ static void Stage_DrawNotes(void)
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
-				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				Stage_DrawTex(&stage.tex_note, &note_src, &note_dst, stage.bump);
 			}
 			else
 			{
@@ -1186,6 +1186,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//if (id >= StageId_6_1 && id <= StageId_6_3)
 	Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
 	Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\HUD1.TIM;1"), GFX_LOADTEX_FREE);
+	Gfx_LoadTex(&stage.tex_note, IO_Read("\\STAGE\\NOTE.TIM;1"), GFX_LOADTEX_FREE);
 	
 	//Load stage background
 	Stage_LoadStage();

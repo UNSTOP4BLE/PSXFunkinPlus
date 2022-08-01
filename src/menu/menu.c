@@ -240,11 +240,6 @@ void Menu_Load(MenuPage page)
 	FontData_Load(&menu.font_bold, Font_Bold);
 	FontData_Load(&menu.font_arial, Font_Arial);
 	
-	menu.gf = Char_GF_New(FIXED_DEC(62,1), FIXED_DEC(-12,1));
-	stage.camera.x = stage.camera.y = FIXED_DEC(0,1);
-	stage.camera.bzoom = FIXED_UNIT;
-	stage.gf_speed = 4;
-	
 	//Initialize menu state
 	menu.select = menu.next_select = 0;
 	
@@ -484,9 +479,6 @@ void Menu_Tick(void)
 				RECT press_src = {0, (animf_count & 1) ? 151 : 169, 207, 18};
 				Gfx_BlitTex(&menu.tex_title, &press_src, (SCREEN_WIDTH - 256) / 2, SCREEN_HEIGHT - 48);
 			}
-			
-			//Draw Girlfriend
-			menu.gf->tick(menu.gf);
 			break;
 		}
 		case MenuPage_Main:
