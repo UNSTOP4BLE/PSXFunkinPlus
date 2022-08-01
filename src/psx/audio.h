@@ -3,47 +3,18 @@
 
 #include "psx.h"
 
-//XA enumerations
-typedef enum
-{
-	FL_Menu, //Menu
-	FL_Bopeebo, //Bopeebo
-	FL_Fresh,   //Fresh
-	FL_Dadbattle, //DadBattle
-	FL_Tutorial,  //Tutorial
-	FL_Blammed, //Blammed
-	
-	XA_Max,
-} XA_File;
+#include "fixed.h"
 
-typedef enum
-{
-	XA_GettinFreaky, //Gettin' Freaky
-	XA_GameOver,     //Game Over
-	XA_Bopeebo, //Bopeebo
-	XA_Fresh,   //Fresh
-	XA_Dadbattle, //DadBattle
-	XA_Tutorial,  //Tutorial
-	XA_Blammed, //Blammed
-	
-	XA_TrackMax,
-} XA_Track;
-
-//Audio functions
-u32 Audio_GetLength(XA_Track lengthtrack);
+//Audio interface
 void Audio_Init(void);
 void Audio_Quit(void);
-void Audio_PlayXA_Track(XA_Track track, u8 volume, u8 channel, boolean loop);
-void Audio_SeekXA_Track(XA_Track track);
-void Audio_PauseXA(void);
-void Audio_StopXA(void);
-void Audio_ChannelXA(u8 channel);
-s32 Audio_TellXA_Sector(void);
-s32 Audio_TellXA_Milli(void);
-boolean Audio_PlayingXA(void);
-void Audio_WaitPlayXA(void);
-void Audio_ProcessXA(void);
-void findFreeChannel(void);
+void Audio_LoadMusFile(CdlFILE *file);
+void Audio_LoadMus(const char *path);
+void Audio_PlayMus(boolean loops);
+void Audio_StopMus(void);
+void Audio_SetVolume(u8 i, u16 vol_left, u16 vol_right);
+fixed_t Audio_GetTime(void);
+boolean Audio_IsPlaying(void);
 u32 Audio_LoadVAGData(u32 *sound, u32 sound_size);
 void AudioPlayVAG(int channel, u32 addr);
 void Audio_PlaySoundOnChannel(u32 addr, u32 channel, int volume);

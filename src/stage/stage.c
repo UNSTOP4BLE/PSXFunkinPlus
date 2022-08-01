@@ -75,20 +75,12 @@ Stage stage;
 //Stage music functions
 static void Stage_StartVocal(void)
 {
-	if (!(stage.flag & STAGE_FLAG_VOCAL_ACTIVE))
-	{
-		Audio_ChannelXA(stage.stage_def->music_channel);
-		stage.flag |= STAGE_FLAG_VOCAL_ACTIVE;
-	}
+	Audio_SetVolume(2, 0x3FFF, 0x3FFF);
 }
 
 static void Stage_CutVocal(void)
 {
-	if (stage.flag & STAGE_FLAG_VOCAL_ACTIVE)
-	{
-		Audio_ChannelXA(stage.stage_def->music_channel + 1);
-		stage.flag &= ~STAGE_FLAG_VOCAL_ACTIVE;
-	}
+	Audio_SetVolume(2, 0x0000, 0x0000);
 }
 
 //Stage camera functions
@@ -1078,8 +1070,8 @@ static void Stage_LoadMusic(void)
 	if (stage.gf != NULL)
 		stage.gf->sing_end -= stage.note_scroll;
 	
-	//Find music file and begin seeking to it
-	Audio_SeekXA_Track(stage.stage_def->music_track);
+	//Begin reading mus
+	Audio_LoadMus(stage.stage_def->mus_path);
 	
 	//Initialize music state
 	stage.note_scroll = FIXED_DEC(-5 * 4 * 12,1);
@@ -1410,7 +1402,7 @@ void Stage_Tick(void)
 			boolean playing;
 			fixed_t next_scroll;
 			
-			const fixed_t interp_int = FIXED_UNIT * 8 / 75;
+
 			if (stage.note_scroll < 0)
 			{
 				//Play countdown sequence
@@ -1421,13 +1413,13 @@ void Stage_Tick(void)
 				{
 					//Start song
 					playing = true;
-					Audio_PlayXA_Track(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, 0);
+					
+					Audio_PlayMus(false);
+					Audio_SetVolume(0, 0x3FFF, 0x0000);
+					Audio_SetVolume(1, 0x0000, 0x3FFF);
 					
 					//Update song time
-					fixed_t audio_time = (fixed_t)Audio_TellXA_Milli() - stage.offset;
-					if (audio_time < 0)
-						audio_time = 0;
-					stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
+					stage.interp_ms = Audio_GetTime();
 					stage.interp_time = 0;
 					stage.song_time = stage.interp_ms;
 				}
@@ -1440,49 +1432,12 @@ void Stage_Tick(void)
 				//Update scroll
 				next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
 			}
-			else if (Audio_PlayingXA())
+			else if (Audio_IsPlaying())
 			{
-				fixed_t audio_time_pof = (fixed_t)Audio_TellXA_Milli();
-				fixed_t audio_time = (audio_time_pof > 0) ? (audio_time_pof - stage.offset) : 0;
-
-				if (stage.expsync)
-				{
-					//Get playing song position
-					if (audio_time_pof > 0)
-					{
-						stage.song_time += timer_dt;
-						stage.interp_time += timer_dt;
-					}
-
-					if (stage.interp_time >= interp_int)
-					{
-						//Update interp state
-						while (stage.interp_time >= interp_int)
-							stage.interp_time -= interp_int;
-						stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
-					}
-
-					//Resync
-					fixed_t next_time = stage.interp_ms + stage.interp_time;
-					if (stage.song_time >= next_time + FIXED_DEC(25,1000) || stage.song_time <= next_time - FIXED_DEC(25,1000))
-					{
-						stage.song_time = next_time;
-					}
-					else
-					{
-						if (stage.song_time < next_time - FIXED_DEC(1,1000))
-							stage.song_time += FIXED_DEC(1,1000);
-						if (stage.song_time > next_time + FIXED_DEC(1,1000))
-							stage.song_time -= FIXED_DEC(1,1000);
-					}
-				}
-				else
-				{
-						//Old sync
-						stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
-						stage.interp_time = 0;
-						stage.song_time = stage.interp_ms;
-				}
+				//Sync to audio
+				stage.interp_ms = Audio_GetTime();
+				stage.interp_time = 0;
+				stage.song_time = stage.interp_ms;
 				
 				playing = true;
 				
@@ -1846,7 +1801,7 @@ void Stage_Tick(void)
 		}
 		case StageState_Dead: //Start BREAK animation and reading extra data from CD
 		{
-			Audio_StopXA();
+			Audio_StopMus();
 			Audio_PlaySound(stage.sound[0], 0x3fff);
 			
 			//Unload stage data
@@ -1915,7 +1870,10 @@ void Stage_Tick(void)
 			if (stage.player->animatable.anim == PlayerAnim_Dead3)
 			{
 				stage.state = StageState_DeadRetry;
-				Audio_PlayXA_Track(XA_GameOver, 0x40, 1, false);
+				Audio_LoadMus("\\MUSIC\\GAMEOVER.MUS;1");
+				Audio_PlayMus(true);
+				Audio_SetVolume(0, 0x3FFF, 0x0000);
+				Audio_SetVolume(1, 0x0000, 0x3FFF);
 			}
 			break;
 		}

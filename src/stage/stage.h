@@ -91,7 +91,7 @@ typedef struct
 	u8 week, week_song;
 	
 	//Mus file
-	u8 music_track, music_channel;
+	const char *mus_path;
 	const char credits[40];
 	
 	StageId next_stage;

@@ -9,7 +9,7 @@
 		
 		//Song info
 		1, 1,
-		XA_Bopeebo, 0,
+		"\\SONGS\\BOPEEBO.MUS;1",
 		"Bopeebo - Kawai Sprite",
 		
 		StageId_1_2, STAGE_LOAD_FLAG
@@ -25,7 +25,7 @@
 		
 		//Song info
 		1, 2,
-		XA_Fresh, 2,
+		"\\SONGS\\FRESH.MUS;1",
 		"Fresh - Kawai Sprite",
 		
 		StageId_1_3, STAGE_LOAD_FLAG
@@ -41,7 +41,7 @@
 		
 		//Song info
 		1, 3,
-		XA_Dadbattle, 2,
+		"\\SONGS\\DADBATTL.MUS;1",
 		"Dadbattle - Kawai Sprite",
 		
 		StageId_1_3, 0
@@ -57,7 +57,7 @@
 		
 		//Song info
 		1, 4,
-		XA_Tutorial, 0,
+		"\\SONGS\\TUTORIAL.MUS;1",
 		"Tutorial - Kawai Sprite",
 		
 		StageId_1_4, 0
@@ -73,7 +73,7 @@
 		
 		//Song info
 		2, 1,
-		XA_Blammed, 0,
+		"\\SONGS\\BLAERECT.MUS;1",
 		"Blammed Erect Remix - Leebert",
 		
 		StageId_2_1, 0

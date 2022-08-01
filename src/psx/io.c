@@ -20,8 +20,8 @@ void IO_FindFile(CdlFILE *file, const char *path)
 {
 	printf("[IO_FindFile] Searching for %s\n", path);
 	
-	//Stop XA playback
-	Audio_StopXA();
+	//Stop playing mus
+	Audio_StopMus();
 	
 	//Search for file
 	if (!CdSearchFile(file, (char*)path))
@@ -33,8 +33,8 @@ void IO_FindFile(CdlFILE *file, const char *path)
 
 void IO_SeekFile(CdlFILE *file)
 {
-	//Stop XA playback
-	Audio_StopXA();
+	//Stop playing mus
+	Audio_StopMus();
 	
 	//Seek to file position
 	CdControlB(CdlSeekL, (u8*)&file->pos, NULL);
@@ -42,8 +42,8 @@ void IO_SeekFile(CdlFILE *file)
 
 IO_Data IO_ReadFile(CdlFILE *file)
 {
-	//Stop XA playback
-	Audio_StopXA();
+	//Stop playing mus
+	Audio_StopMus();
 	
 	//Get number of sectors then bytes for the file
 	size_t sects = (file->size + 0x7FF) >> 11;
