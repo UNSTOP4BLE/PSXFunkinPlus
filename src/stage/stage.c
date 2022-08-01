@@ -260,10 +260,18 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	return hit_type;
 }
 
-static void Stage_MissNote(PlayerState *this)
+static void Stage_MissNote(PlayerState *this, u8 type)
 {
+	this->max_accuracy += 3;
+	this->refresh_accuracy = true;
 	this->miss += 1;
 	this->refresh_miss = true;
+	
+	if (this->character->spec & CHAR_SPEC_MISSANIM)
+		this->character->set_anim(this->character, note_anims[type & 0x3][2]);
+	else
+		this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	
 	if (this->combo)
 	{
 		//Kill combo
@@ -342,11 +350,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 	
 	if (!stage.ghost)
 	{
-		if (this->character->spec & CHAR_SPEC_MISSANIM)
-			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
-		else
-			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
-		Stage_MissNote(this);
+		Stage_MissNote(this, type);
 		
 		this->health -= 400;
 		this->score -= 1;
@@ -752,17 +756,12 @@ static void Stage_DrawNotes(void)
 			if (!(note->type & (bot | NOTE_FLAG_HIT | NOTE_FLAG_MINE)))
 			{
 				Stage_CutVocal();
-				if (!(note->type & NOTE_FLAG_SUSTAIN))
-				{
-					Stage_MissNote(this);
-					NoteMissEvent(note->type,i);
-					this->refresh_accuracy = true;
-					this->max_accuracy += 3;
-					if (stage.instakill)
-						this->health = -0x7000;
-					else
-						this->health -= 1000;
-				}
+				Stage_MissNote(this, note->type);
+				NoteMissEvent(note->type,i);
+				if (stage.instakill)
+					this->health = -0x7000;
+				else
+					this->health -= 1000;
 			}
 			
 			//Update current note

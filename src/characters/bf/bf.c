@@ -135,15 +135,15 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){11, 12, ASCR_BACK, 1}},             //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
 	
-	{1, (const u8[]){ 5, 20, 20, 21, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
-	{1, (const u8[]){ 7, 22, 22, 23, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
-	{1, (const u8[]){ 9, 24, 24, 25, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
-	{1, (const u8[]){11, 26, 26, 27, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
+	{1, (const u8[]){ 20, 20, 21, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
+	{1, (const u8[]){ 22, 22, 23, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
+	{1, (const u8[]){ 24, 24, 25, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
+	{1, (const u8[]){ 26, 26, 27, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
 	
 	{2, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
 	{2, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat
 	
-	{3, (const u8[]){28, 29, 30, 31, 31, 31, 31, 31, 31, 31, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
+	{2, (const u8[]){28, 29, 30, 31, 31, 31, 31, 31, 31, 31, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
 	{2, (const u8[]){31, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
 	{3, (const u8[]){32, 33, 34, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
 	{2, (const u8[]){35, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
