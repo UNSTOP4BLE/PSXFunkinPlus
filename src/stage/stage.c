@@ -75,12 +75,20 @@ Stage stage;
 //Stage music functions
 static void Stage_StartVocal(void)
 {
-	Audio_SetVolume(2, 0x3FFF, 0x3FFF);
+	if (!(stage.flag & STAGE_FLAG_VOCAL_ACTIVE))
+	{
+		Audio_ChannelXA(stage.stage_def->music_channel);
+		stage.flag |= STAGE_FLAG_VOCAL_ACTIVE;
+	}
 }
 
 static void Stage_CutVocal(void)
 {
-	Audio_SetVolume(2, 0x0000, 0x0000);
+	if (stage.flag & STAGE_FLAG_VOCAL_ACTIVE)
+	{
+		Audio_ChannelXA(stage.stage_def->music_channel + 1);
+		stage.flag &= ~STAGE_FLAG_VOCAL_ACTIVE;
+	}
 }
 
 //Stage camera functions
@@ -1070,11 +1078,11 @@ static void Stage_LoadMusic(void)
 	if (stage.gf != NULL)
 		stage.gf->sing_end -= stage.note_scroll;
 	
-	//Begin reading mus
-	Audio_LoadMus(stage.stage_def->mus_path);
+	//Find music file and begin seeking to it
+	Audio_SeekXA_Track(stage.stage_def->music_track);
 	
 	//Initialize music state
-	stage.note_scroll = FIXED_DEC(-5 * 4 * 12,1);
+	stage.note_scroll = FIXED_DEC(-5 * 6 * 12,1);
 	stage.song_time = FIXED_DIV(stage.note_scroll, stage.step_crochet);
 	stage.interp_time = 0;
 	stage.interp_ms = 0;
@@ -1402,24 +1410,24 @@ void Stage_Tick(void)
 			boolean playing;
 			fixed_t next_scroll;
 			
-
 			if (stage.note_scroll < 0)
 			{
 				//Play countdown sequence
 				stage.song_time += timer_dt;
-				
+					
 				//Update song
 				if (stage.song_time >= 0)
 				{
-					//Start song
+					//Song has started
 					playing = true;
-					
-					Audio_PlayMus(false);
-					Audio_SetVolume(0, 0x3FFF, 0x0000);
-					Audio_SetVolume(1, 0x0000, 0x3FFF);
-					
+
+					Audio_PlayXA_Track(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, 0);
+						
 					//Update song time
-					stage.interp_ms = Audio_GetTime();
+					fixed_t audio_time = (fixed_t)Audio_TellXA_Milli() - stage.offset;
+					if (audio_time < 0)
+						audio_time = 0;
+					stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
 					stage.interp_time = 0;
 					stage.song_time = stage.interp_ms;
 				}
@@ -1432,10 +1440,13 @@ void Stage_Tick(void)
 				//Update scroll
 				next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
 			}
-			else if (Audio_IsPlaying())
+			else if (Audio_PlayingXA())
 			{
-				//Sync to audio
-				stage.interp_ms = Audio_GetTime();
+				fixed_t audio_time_pof = (fixed_t)Audio_TellXA_Milli();
+				fixed_t audio_time = (audio_time_pof > 0) ? (audio_time_pof - stage.offset) : 0;
+				
+				//Old sync
+				stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
 				stage.interp_time = 0;
 				stage.song_time = stage.interp_ms;
 				
@@ -1464,8 +1475,8 @@ void Stage_Tick(void)
 					stage.trans = StageTrans_Menu;
 					Trans_Start();
 				}
-			}
-			
+			}	
+
 			RecalcScroll:;
 			//Update song scroll and step
 			if (next_scroll > stage.note_scroll)
@@ -1801,7 +1812,8 @@ void Stage_Tick(void)
 		}
 		case StageState_Dead: //Start BREAK animation and reading extra data from CD
 		{
-			Audio_StopMus();
+			//Stop music immediately
+			Audio_StopXA();
 			Audio_PlaySound(stage.sound[0], 0x3fff);
 			
 			//Unload stage data
@@ -1867,13 +1879,11 @@ void Stage_Tick(void)
 			//Enter next state once mic has been dropped
 			if (stage.player->animatable.anim == PlayerAnim_Dead1)
 				stage.player->set_anim(stage.player, PlayerAnim_Dead2);
+			//Enter next state once mic has been dropped
 			if (stage.player->animatable.anim == PlayerAnim_Dead3)
 			{
 				stage.state = StageState_DeadRetry;
-				Audio_LoadMus("\\MUSIC\\GAMEOVER.MUS;1");
-				Audio_PlayMus(true);
-				Audio_SetVolume(0, 0x3FFF, 0x0000);
-				Audio_SetVolume(1, 0x0000, 0x3FFF);
+				Audio_PlayXA_Track(XA_GameOver, 0x40, 1, true);
 			}
 			break;
 		}
