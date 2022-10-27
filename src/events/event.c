@@ -11,7 +11,7 @@
 
 void Events()
 {		
-	if(stage.followcamera)
+	if(stage.prefs.followcamera)
 		FollowCharCamera();
 }
 

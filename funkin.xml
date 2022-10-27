@@ -55,6 +55,9 @@
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>
 				
+				<!-- LordX assets -->
+				<file name = "lordx.arc" type = "data" source = "iso/characters/lordx/main.arc"/>
+				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
@@ -79,9 +82,10 @@
 				<file name = "1.4e.cht" type = "data" source = "iso/songs/tutorial/tutorial-easy.json.cht"/>
 				<file name = "1.4n.cht" type = "data" source = "iso/songs/tutorial/tutorial.json.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/songs/tutorial/tutorial-hard.json.cht"/>
-
-				<!-- Blammed charts -->
-				<file name = "2.1h.cht" type = "data" source = "iso/songs/blammed/blammed.json.cht"/>
+				<!-- Tutorial charts -->
+				<file name = "2.1e.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
+				<file name = "2.1n.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
+				<file name = "2.1h.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
 			</dir>
 			
 			<!-- Music -->
@@ -92,7 +96,7 @@
 				<dummy sectors="128"/>
 				<file name = "week1b.xa" type = "xa" source = "iso/songs/week1b.xa"/>
 				<dummy sectors="128"/>
-				<file name = "week3a.xa" type = "xa" source = "iso/songs/week3a.xa"/>
+				<file name = "cycles.xa" type = "xa" source = "iso/songs/cycles.xa"/>
 				<dummy sectors="128"/>
 			</dir>
 			

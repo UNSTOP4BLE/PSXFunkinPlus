@@ -62,10 +62,10 @@
 		
 		StageId_1_4, 0
 	},
-	{ //StageId_2_1 (Blammed Erect)
+	{ //StageId_1_5 (Bopeebo)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{Char_BF_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
+		{Char_LordX_New, FIXED_DEC(-90,1),  FIXED_DEC(100,1)},
 		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
@@ -73,8 +73,8 @@
 		
 		//Song info
 		2, 1,
-		XA_Blammed, 0,
-		"Blammed Erect Remix - Leebert",
+		XA_LordX, 0,
+		"Bopeebo - Kawai Sprite",
 		
 		StageId_2_1, 0
 	}

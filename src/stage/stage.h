@@ -133,17 +133,16 @@ typedef struct
 	
 	boolean refresh_miss;
 	s32 miss;
-	char miss_text[13];
+	u16 antispam;
 	
 	boolean refresh_accuracy;
 	s32 min_accuracy;
 	u8 accuracy;
 	s32 max_accuracy;
-	char accuracy_text[14];
 	
 	boolean refresh_score;
 	s32 score, max_score;
-	char score_text[15];
+	char score_text[50];
 	
 	char P2_text[30];
 	
@@ -153,9 +152,18 @@ typedef struct
 typedef struct
 {
 	//Stage settings
-	boolean ghost, downscroll, middlescroll, expsync;
-	boolean widescreen, instakill, followcamera;
-	s32 mode;
+	struct
+	{
+		//Visuals & UI settings
+		boolean splash, hidehud, timebar, flashing, camerazoom, combostack, followcamera;
+		
+		//Gameplay settings
+		s32 mode;
+		boolean downscroll, middlescroll, ghost, vibrate, botplay;
+	} prefs;
+	
+	//Song settings
+	boolean instakill;
 	
 	u32 offset;
 	
@@ -189,6 +197,7 @@ typedef struct
 	
 	struct
 	{
+		boolean force;
 		fixed_t x, y, zoom;
 		fixed_t tx, ty, tz, td;
 		fixed_t bzoom;
@@ -200,6 +209,8 @@ typedef struct
 	Character *player;
 	Character *opponent;
 	Character *gf;
+	
+	boolean hidegf;
 	
 	Section *cur_section; //Current section
 	Note *cur_note; //First visible and hittable note, used for drawing and hit detection
@@ -235,9 +246,7 @@ typedef struct
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
 	
 	//Animations
-	fixed_t iconangle;
-	boolean iconanim;
-	boolean iconact;
+	
 } Stage;
 
 extern Stage stage;
