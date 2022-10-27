@@ -172,9 +172,9 @@ Character *Char_LordX_New(fixed_t x, fixed_t y)
 	
 	this->character.focus_x = FIXED_DEC(20,1);
 	this->character.focus_y = FIXED_DEC(-90,1);
-	this->character.focus_zoom = FIXED_DEC(4,10);
+	this->character.focus_zoom = FIXED_DEC(7,10);
 	
-	this->character.size = FIXED_DEC(3,2);
+	this->character.size = FIXED_DEC(5,4);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\LORDX.ARC;1");
