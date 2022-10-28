@@ -1,4 +1,4 @@
 1 xa cycles/Merged.xa 1 0
 1 xa cycles/Inst.xa 1 1
-1 null
-1 null
+1 xa safety-lullaby/Merged.xa 1 2
+1 xa safety-lullaby/Inst.xa 1 3

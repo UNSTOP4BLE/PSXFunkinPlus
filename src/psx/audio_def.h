@@ -18,6 +18,7 @@ static const XA_TrackDef xa_tracks[] = {
 	{XA_Week1B, XA_LENGTH(6800)}, //XA_Tutorial
 	//WEEK1B.XA
 	{XA_Cycles, XA_LENGTH(13143)}, //XA_LordX
+	{XA_Cycles, XA_LENGTH(15148)}, //XA_Lullaby
 };
 
 static const char *xa_paths[] = {
@@ -46,6 +47,7 @@ static const XA_Mp3 xa_mp3s[] = {
 	{"tutorial", false}, //XA_Tutorial
 	//CYCLES.XA
 	{"lordx", true}, //XA_Cycless
+	{"lullaby", true}, //XA_Lullaby
 	
 	{NULL, false}
 };

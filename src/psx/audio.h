@@ -33,6 +33,7 @@ typedef enum
 	XA_Tutorial,  //Tutorial
 	
 	XA_LordX,
+	XA_Lullaby,
 	
 	XA_TrackMax,
 } XA_Track;

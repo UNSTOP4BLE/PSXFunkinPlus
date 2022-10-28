@@ -73,6 +73,7 @@ static const u8 note_anims[4][3] = {
 
 #include "../characters/dad/dad.h"
 #include "../characters/lordx/lordx.h"
+#include "../characters/hypno/hypno.h"
 
 #include "../stages/stage1/stage1.h"
 

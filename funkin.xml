@@ -58,6 +58,9 @@
 				<!-- LordX assets -->
 				<file name = "lordx.arc" type = "data" source = "iso/characters/lordx/main.arc"/>
 				
+				<!-- Hypno assets -->
+				<file name = "hypno.arc" type = "data" source = "iso/characters/hypno/main.arc"/>
+				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
@@ -86,6 +89,10 @@
 				<file name = "2.1e.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
 				<file name = "2.1n.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
 				<file name = "2.1h.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
+				<!-- Tutorial charts -->
+				<file name = "2.2e.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
+				<file name = "2.2n.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
+				<file name = "2.2h.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
 			</dir>
 			
 			<!-- Music -->

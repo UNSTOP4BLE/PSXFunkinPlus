@@ -35,7 +35,8 @@ typedef enum
 	StageId_1_3, //Dadbattle
 	StageId_1_4, //Tutorial
 	
-	StageId_2_1, //Blammed Erect
+	StageId_2_1,
+	StageId_2_2,
 	
 	StageId_Max
 } StageId;
