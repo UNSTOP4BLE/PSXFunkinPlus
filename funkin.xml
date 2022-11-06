@@ -60,6 +60,7 @@
 				
 				<!-- Hypno assets -->
 				<file name = "hypno.arc" type = "data" source = "iso/characters/hypno/main.arc"/>
+				<file name = "peled.tim" type = "data" source = "iso/characters/hypno/peled.tim"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
@@ -93,6 +94,10 @@
 				<file name = "2.2e.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
 				<file name = "2.2n.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
 				<file name = "2.2h.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
+				<!-- Tutorial charts -->
+				<file name = "2.3e.cht" type = "data" source = "iso/songs/bygone-purpose/bygone-purpose.json.cht"/>
+				<file name = "2.3n.cht" type = "data" source = "iso/songs/bygone-purpose/bygone-purpose.json.cht"/>
+				<file name = "2.3h.cht" type = "data" source = "iso/songs/bygone-purpose/bygone-purpose.json.cht"/>
 			</dir>
 			
 			<!-- Music -->
@@ -103,7 +108,9 @@
 				<dummy sectors="128"/>
 				<file name = "week1b.xa" type = "xa" source = "iso/songs/week1b.xa"/>
 				<dummy sectors="128"/>
-				<file name = "cycles.xa" type = "xa" source = "iso/songs/cycles.xa"/>
+				<file name = "bonus1.xa" type = "xa" source = "iso/songs/bonus1.xa"/>
+				<dummy sectors="128"/>
+				<file name = "bonus2.xa" type = "xa" source = "iso/songs/bonus2.xa"/>
 				<dummy sectors="128"/>
 			</dir>
 			

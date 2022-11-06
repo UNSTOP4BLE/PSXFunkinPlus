@@ -730,7 +730,8 @@ void Menu_Tick(void)
 				{StageId_1_2, 0xFF9271FD, "FRESH"},
 				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
 				{StageId_2_1, 0xFF9271FD, "CYCLES"},
-				{StageId_2_2, 0xFF9271FD, "SAFETY LULLABY"}
+				{StageId_2_2, 0xFF9271FD, "SAFETY LULLABY"},
+				{StageId_2_3, 0xFF9271FD, "BYGONE PURPOSE"}
 			};
 			
 			//Initialize page

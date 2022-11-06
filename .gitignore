@@ -38,4 +38,8 @@ build/
 *.xa
 *.cht
 
-# Big Chungus
+# Don't remove these bitch
+!makefile.cht
+!makefile.tim
+!makefile.xa
+!makefile.vag

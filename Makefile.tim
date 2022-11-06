@@ -3,7 +3,9 @@ all: \
 	\
 	iso/characters/dad/main.arc \
 	iso/characters/lordx/main.arc \
+	\
 	iso/characters/hypno/main.arc \
+	iso/characters/hypno/peled.tim \
 	\
 	iso/characters/gf/main.arc \
 	iso/characters/gf/tut.arc \

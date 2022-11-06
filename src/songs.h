@@ -93,4 +93,20 @@
 		"Bopeebo - Kawai Sprite",
 		
 		StageId_2_2, 0
+	},
+	{ //StageId_2_2 (Bopeebo)
+		//Characters
+		{Char_BF_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
+		{Char_Hypno_New, FIXED_DEC(-90,1),  FIXED_DEC(100,1)},
+		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		
+		//Stage background
+		Back_Stage1_New,
+		
+		//Song info
+		2, 3,
+		XA_Bygone_Purpose, 0,
+		"Bopeebo - Kawai Sprite",
+		
+		StageId_2_3, 0
 	}

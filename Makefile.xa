@@ -1,0 +1,27 @@
+all: \
+	iso/music/menu.xa \
+	iso/songs/week1a.xa \
+	iso/songs/week1b.xa \
+	iso/songs/bonus1.xa \
+	iso/songs/bonus2.xa \
+
+iso/%.xa: iso/%.ogg
+	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C 0 $< $@ 
+
+iso/%.xa:
+	tools/xainterleave/xainterleave $@ $^
+
+# Menu
+iso/music/menu.xa: iso/music/freakymenu.xa iso/music/gameover.xa
+
+# Week1a
+iso/songs/week1a.xa: iso/songs/bopeebo/Inst.xa iso/songs/bopeebo/Merged.xa iso/songs/fresh/Inst.xa iso/songs/fresh/Merged.xa
+
+# Week1b
+iso/songs/week1b.xa: iso/songs/dadbattle/Inst.xa iso/songs/dadbattle/Merged.xa iso/songs/tutorial/Inst.xa
+
+# Bonus1
+iso/songs/bonus1.xa: iso/songs/cycles/Inst.xa iso/songs/cycles/Merged.xa iso/songs/safety-lullaby/Inst.xa iso/songs/safety-lullaby/Merged.xa
+
+# Bonus2
+iso/songs/bonus2.xa: iso/songs/bygone-purpose/Inst.xa iso/songs/bygone-purpose/Merged.xa 
