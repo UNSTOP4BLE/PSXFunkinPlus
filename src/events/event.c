@@ -1,16 +1,17 @@
 #include "event.h"
-#include "../stage/stage.h"
+#include "../scenes/stage/stage.h"
 
+#include "../audio.h"
 #include "../psx/mem.h"
 #include "../psx/timer.h"
-#include "../psx/audio.h"
 #include "../psx/pad.h"
 #include "../psx/random.h"
 #include "../psx/movie.h"
 #include "../psx/mutil.h"
 
 void Events()
-{		
+{
+	FntPrint("steps: %d", stage.song_step);
 	if(stage.prefs.followcamera)
 		FollowCharCamera();
 }

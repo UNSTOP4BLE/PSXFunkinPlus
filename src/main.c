@@ -3,11 +3,11 @@
 #include "psx/timer.h"
 #include "psx/io.h"
 #include "psx/gfx.h"
-#include "psx/audio.h"
+#include "audio.h"
 #include "psx/pad.h"
 
-#include "menu/menu.h"
-#include "stage/stage.h"
+#include "scenes/menu/menu.h"
+#include "scenes/stage/stage.h"
 
 //Game loop
 GameLoop gameloop;

@@ -44,7 +44,8 @@
 			<!-- Week 1 assets -->
 			<dir name = "stages">
 				<!-- Background art -->
-				<file name = "stage1.arc" type = "data" source = "iso/stages/stage1/back.arc"/>
+				<file name = "default.arc" type = "data" source = "iso/stages/default/back.arc"/>
+				<file name = "house.arc" type = "data" source = "iso/stages/house/back.arc"/>
 			</dir>
 			
 			<!-- Characters assets -->
@@ -55,12 +56,8 @@
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>
 				
-				<!-- LordX assets -->
-				<file name = "lordx.arc" type = "data" source = "iso/characters/lordx/main.arc"/>
-				
-				<!-- Hypno assets -->
-				<file name = "hypno.arc" type = "data" source = "iso/characters/hypno/main.arc"/>
-				<file name = "peled.tim" type = "data" source = "iso/characters/hypno/peled.tim"/>
+				<!-- Morde assets -->
+				<file name = "morde.arc" type = "data" source = "iso/characters/morde/main.arc"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
@@ -70,53 +67,43 @@
 			
 			<!-- Songs -->
 			<dir name = "songs">
-				<!-- Bopeebo charts -->
-				<file name = "1.1e.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-easy.json.cht"/>
-				<file name = "1.1n.cht" type = "data" source = "iso/songs/bopeebo/bopeebo.json.cht"/>
-				<file name = "1.1h.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-hard.json.cht"/>
-				<!-- Fresh charts -->
-				<file name = "1.2e.cht" type = "data" source = "iso/songs/fresh/fresh-easy.json.cht"/>
-				<file name = "1.2n.cht" type = "data" source = "iso/songs/fresh/fresh.json.cht"/>
-				<file name = "1.2h.cht" type = "data" source = "iso/songs/fresh/fresh-hard.json.cht"/>
-				<!-- Dadbattle charts -->
-				<file name = "1.3e.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-easy.json.cht"/>
-				<file name = "1.3n.cht" type = "data" source = "iso/songs/dadbattle/dadbattle.json.cht"/>
-				<file name = "1.3h.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-hard.json.cht"/>
-				<!-- Tutorial charts -->
-				<file name = "1.4e.cht" type = "data" source = "iso/songs/tutorial/tutorial-easy.json.cht"/>
-				<file name = "1.4n.cht" type = "data" source = "iso/songs/tutorial/tutorial.json.cht"/>
-				<file name = "1.4h.cht" type = "data" source = "iso/songs/tutorial/tutorial-hard.json.cht"/>
-				<!-- Tutorial charts -->
-				<file name = "2.1e.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
-				<file name = "2.1n.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
-				<file name = "2.1h.cht" type = "data" source = "iso/songs/cycles/cycles.json.cht"/>
-				<!-- Tutorial charts -->
-				<file name = "2.2e.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
-				<file name = "2.2n.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
-				<file name = "2.2h.cht" type = "data" source = "iso/songs/safety-lullaby/safety-lullaby.json.cht"/>
-				<!-- Tutorial charts -->
-				<file name = "2.3e.cht" type = "data" source = "iso/songs/bygone-purpose/bygone-purpose.json.cht"/>
-				<file name = "2.3n.cht" type = "data" source = "iso/songs/bygone-purpose/bygone-purpose.json.cht"/>
-				<file name = "2.3h.cht" type = "data" source = "iso/songs/bygone-purpose/bygone-purpose.json.cht"/>
+				<file name = "1.1.cht" type = "data" source = "iso/songs/exhilaration/exhilaration-hard.json.cht"/>
+				
+				<file name = "1.2.cht" type = "data" source = "iso/songs/reckless/reckless-hard.json.cht"/>
+				
+				<file name = "1.3.cht" type = "data" source = "iso/songs/unemployed/unemployed-hard.json.cht"/>
+				
+				<file name = "1.4.cht" type = "data" source = "iso/songs/supercharge/supercharge-hard.json.cht"/>
+				
+				<file name = "1.5.cht" type = "data" source = "iso/songs/temper-break/temper-break-hard.json.cht"/>
+				
 			</dir>
 			
 			<!-- Music -->
 			<dir name = "music">
 				<file name = "menu.xa" type = "xa" source = "iso/music/menu.xa"/>
 				<dummy sectors="128"/>
-				<file name = "week1a.xa" type = "xa" source = "iso/songs/week1a.xa"/>
+				
+				<file name = "exhila.xa" type = "xa" source = "iso/songs/exhilaration.xa"/>
 				<dummy sectors="128"/>
-				<file name = "week1b.xa" type = "xa" source = "iso/songs/week1b.xa"/>
+				
+				<file name = "reckle.xa" type = "xa" source = "iso/songs/reckless.xa"/>
 				<dummy sectors="128"/>
-				<file name = "bonus1.xa" type = "xa" source = "iso/songs/bonus1.xa"/>
+				
+				<file name = "unempl.xa" type = "xa" source = "iso/songs/unemployed.xa"/>
 				<dummy sectors="128"/>
-				<file name = "bonus2.xa" type = "xa" source = "iso/songs/bonus2.xa"/>
+				
+				<file name = "superc.xa" type = "xa" source = "iso/songs/supercharge.xa"/>
 				<dummy sectors="128"/>
+				
+				<file name = "temper.xa" type = "xa" source = "iso/songs/temper-break.xa"/>
+				<dummy sectors="128"/>
+				
 			</dir>
 			
 			<!-- Sound -->
 			<dir name = "sounds">
-				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.vag"/>
+				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.wav.vag"/>
 			</dir>
 			
 			<!-- Dummy sectors -->

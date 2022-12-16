@@ -1,10 +1,4 @@
-/*
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
-
-#include "audio.h"
+#include "../audio.h"
 
 #include "io.h"
 #include "../main.h"
@@ -54,7 +48,7 @@ static volatile u32 audio_alloc_ptr = 0;
 //XA files and tracks
 static CdlFILE xa_files[XA_Max];
 
-#include "audio_def.h"
+#include "../audio_def.h"
 
 u32 Audio_GetLength(XA_Track lengthtrack)
 {

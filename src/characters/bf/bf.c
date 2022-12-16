@@ -3,7 +3,7 @@
 #include "../../psx/mem.h"
 #include "../../psx/archive.h"
 #include "../../psx/random.h"
-#include "../../stage/stage.h"
+#include "../../scenes/stage/stage.h"
 #include "../../main.h"
 
 //Boyfriend skull fragments

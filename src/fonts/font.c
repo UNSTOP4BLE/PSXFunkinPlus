@@ -2,7 +2,7 @@
 
 #include "../main.h"
 #include "../psx/timer.h"
-#include "../stage/stage.h"
+#include "../scenes/stage/stage.h"
 
 #include <string.h>
 

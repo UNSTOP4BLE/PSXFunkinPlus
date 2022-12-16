@@ -1,16 +1,16 @@
 	{ //StageId_1_1 (Bopeebo)
 		//Characters
 		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{Char_Morde_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
 		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
-		Back_Stage1_New,
+		Back_House_New,
 		
 		//Song info
 		1, 1,
-		XA_Bopeebo, 0,
-		"Bopeebo - Kawai Sprite",
+		XA_Exhilaration, 0,
+		"Exhilaration",
 		
 		StageId_1_2, STAGE_LOAD_FLAG
 	},
@@ -21,12 +21,12 @@
 		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
-		Back_Stage1_New,
+		Back_Default_New,
 		
 		//Song info
 		1, 2,
-		XA_Fresh, 2,
-		"Fresh - Kawai Sprite",
+		XA_Reckless, 0,
+		"Reckless",
 		
 		StageId_1_3, STAGE_LOAD_FLAG
 	},
@@ -37,76 +37,44 @@
 		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
-		Back_Stage1_New,
+		Back_Default_New,
 		
 		//Song info
 		1, 3,
-		XA_Dadbattle, 0,
-		"Dadbattle - Kawai Sprite",
+		XA_Unemployed, 0,
+		"Unemployed",
 		
-		StageId_1_3, 0
+		StageId_1_4, STAGE_LOAD_FLAG
 	},
 	{ //StageId_1_4 (Tutorial)
 		//Characters
-		{Char_BF_New, FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,  FIXED_DEC(0,1),  FIXED_DEC(-15,1)}, //TODO
-		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
+		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
-		Back_Stage1_New,
+		Back_Default_New,
 		
 		//Song info
 		1, 4,
-		XA_Tutorial, 2,
-		"Tutorial - Kawai Sprite",
+		XA_Supercharge, 0,
+		"Supercharge",
 		
-		StageId_1_4, 0
+		StageId_1_5, STAGE_LOAD_FLAG
 	},
-	{ //StageId_1_5 (Bopeebo)
+	{ //StageId_1_5
 		//Characters
-		{Char_BF_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
-		{Char_LordX_New, FIXED_DEC(-90,1),  FIXED_DEC(100,1)},
-		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
+		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
-		Back_Stage1_New,
+		Back_Default_New,
 		
 		//Song info
-		2, 1,
-		XA_LordX, 0,
-		"Bopeebo - Kawai Sprite",
+		1, 5,
+		XA_Temper_Break, 0,
+		"Temper Break",
 		
-		StageId_2_1, 0
-	},
-	{ //StageId_2_2 (Bopeebo)
-		//Characters
-		{Char_BF_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
-		{Char_Hypno_New, FIXED_DEC(-90,1),  FIXED_DEC(100,1)},
-		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
-		
-		//Stage background
-		Back_Stage1_New,
-		
-		//Song info
-		2, 2,
-		XA_Lullaby, 2,
-		"Bopeebo - Kawai Sprite",
-		
-		StageId_2_2, 0
-	},
-	{ //StageId_2_2 (Bopeebo)
-		//Characters
-		{Char_BF_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
-		{Char_Hypno_New, FIXED_DEC(-90,1),  FIXED_DEC(100,1)},
-		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
-		
-		//Stage background
-		Back_Stage1_New,
-		
-		//Song info
-		2, 3,
-		XA_Bygone_Purpose, 0,
-		"Bopeebo - Kawai Sprite",
-		
-		StageId_2_3, 0
+		StageId_1_5, STAGE_LOAD_FLAG
 	}

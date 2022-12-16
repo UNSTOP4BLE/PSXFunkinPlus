@@ -1,7 +1,7 @@
 #include "speaker.h"
 
 #include "../../psx/io.h"
-#include "../../stage/stage.h"
+#include "../../scenes/stage/stage.h"
 #include "../../psx/timer.h"
 
 //Speaker functions

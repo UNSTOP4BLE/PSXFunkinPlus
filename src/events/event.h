@@ -6,9 +6,9 @@
 #include "../psx/pad.h"
 
 #include "../psx/fixed.h"
-#include "../stage/character.h"
-#include "../stage/player.h"
-#include "../stage/object.h"
+#include "../scenes/stage/character.h"
+#include "../scenes/stage/player.h"
+#include "../scenes/stage/object.h"
 #include "../fonts/font.h"
 
 void FollowCharCamera();

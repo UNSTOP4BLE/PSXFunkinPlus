@@ -3,36 +3,27 @@ TYPE = ps-exe
 
 SRCS = src/main.c \
 	   \
-	   \
        src/characters/bf/bf.c \
 	   \
-	   \
        src/characters/dad/dad.c \
-       src/characters/lordx/lordx.c \
-       src/characters/hypno/hypno.c \
-	   \
+       src/characters/morde/morde.c \
 	   \
        src/characters/gf/gf.c \
        src/characters/gf/speaker.c \
 	   \
+       src/stages/default/default.c \
+       src/stages/house/house.c \
 	   \
+       src/scenes/menu/menu.c \
 	   \
-       src/stages/stage1/stage1.c \
+       src/scenes/stage/stage.c \
+	   src/scenes/stage/animation.c \
+       src/scenes/stage/character.c \
+       src/scenes/stage/object.c \
+       src/scenes/stage/object/combo.c \
+       src/scenes/stage/object/splash.c \
 	   \
-	   \
-       \
-       src/menu/menu.c \
-	   \
-	   \
-       src/stage/stage.c \
-	   src/stage/animation.c \
-       src/stage/character.c \
-       src/stage/object.c \
-       src/stage/object/combo.c \
-       src/stage/object/splash.c \
        src/events/event.c \
-	   \
-	   \
 	   \
        src/fonts/font.c \
 	   \

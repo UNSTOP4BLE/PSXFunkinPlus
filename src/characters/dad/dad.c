@@ -2,7 +2,7 @@
 
 #include "../../psx/mem.h"
 #include "../../psx/archive.h"
-#include "../../stage/stage.h"
+#include "../../scenes/stage/stage.h"
 #include "../../main.h"
 
 //Dad character structure

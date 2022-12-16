@@ -1,9 +1,10 @@
 all: \
 	iso/music/menu.xa \
-	iso/songs/week1a.xa \
-	iso/songs/week1b.xa \
-	iso/songs/bonus1.xa \
-	iso/songs/bonus2.xa \
+	iso/songs/exhilaration.xa \
+	iso/songs/reckless.xa \
+	iso/songs/unemployed.xa \
+	iso/songs/supercharge.xa \
+	iso/songs/temper-break.xa \
 
 iso/%.xa: iso/%.ogg
 	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C 0 $< $@ 
@@ -14,14 +15,17 @@ iso/%.xa:
 # Menu
 iso/music/menu.xa: iso/music/freakymenu.xa iso/music/gameover.xa
 
-# Week1a
-iso/songs/week1a.xa: iso/songs/bopeebo/Inst.xa iso/songs/bopeebo/Merged.xa iso/songs/fresh/Inst.xa iso/songs/fresh/Merged.xa
+# Exhilaration
+iso/songs/exhilaration.xa: iso/songs/exhilaration/Inst.xa iso/songs/exhilaration/Merged.xa iso/songs/exhilaration/InstErect.xa iso/songs/exhilaration/MergedErect.xa
 
-# Week1b
-iso/songs/week1b.xa: iso/songs/dadbattle/Inst.xa iso/songs/dadbattle/Merged.xa iso/songs/tutorial/Inst.xa
+# Reckless
+iso/songs/reckless.xa: iso/songs/reckless/Inst.xa iso/songs/reckless/Merged.xa iso/songs/reckless/InstErect.xa iso/songs/reckless/MergedErect.xa
 
-# Bonus1
-iso/songs/bonus1.xa: iso/songs/cycles/Inst.xa iso/songs/cycles/Merged.xa iso/songs/safety-lullaby/Inst.xa iso/songs/safety-lullaby/Merged.xa
+# Unemployed
+iso/songs/unemployed.xa: iso/songs/unemployed/Inst.xa iso/songs/unemployed/Merged.xa iso/songs/unemployed/InstErect.xa iso/songs/unemployed/MergedErect.xa
 
-# Bonus2
-iso/songs/bonus2.xa: iso/songs/bygone-purpose/Inst.xa iso/songs/bygone-purpose/Merged.xa 
+# SuperCharge
+iso/songs/supercharge.xa: iso/songs/supercharge/Inst.xa iso/songs/supercharge/Merged.xa iso/songs/supercharge/InstErect.xa iso/songs/supercharge/MergedErect.xa
+
+# Temper-Break
+iso/songs/temper-break.xa: iso/songs/temper-break/Inst.xa iso/songs/temper-break/Merged.xa iso/songs/temper-break/InstErect.xa iso/songs/temper-break/MergedErect.xa
