@@ -9,11 +9,22 @@
 #include "../psx/movie.h"
 #include "../psx/mutil.h"
 
+
+#include "../characters/benson/benson.h"
+
+static void Unemployed()
+{
+	if (stage.song_step == 250)
+		benson.angry = true;
+}
+
 void Events()
 {
-	FntPrint("steps: %d", stage.song_step);
+	//FntPrint("steps: %d", stage.song_step);
 	if(stage.prefs.followcamera)
 		FollowCharCamera();
+	if (stage.stage_id == StageId_1_3)
+		Unemployed();
 }
 
 void FollowCharCamera()
@@ -59,3 +70,4 @@ void NoteMissEvent(u8 type, u8 state)
 	if (type & NOTE_FLAG_BULLET)
 		this->health = -0x7000;
 }
+

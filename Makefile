@@ -7,12 +7,14 @@ SRCS = src/main.c \
 	   \
        src/characters/dad/dad.c \
        src/characters/morde/morde.c \
+       src/characters/benson/benson.c \
 	   \
        src/characters/gf/gf.c \
        src/characters/gf/speaker.c \
 	   \
        src/stages/default/default.c \
        src/stages/house/house.c \
+       src/stages/park/park.c \
 	   \
        src/scenes/menu/menu.c \
 	   \

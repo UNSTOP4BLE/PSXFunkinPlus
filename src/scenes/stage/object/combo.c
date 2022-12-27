@@ -15,22 +15,22 @@ boolean Obj_Combo_Tick(Object *obj)
 		//Get hit src and dst
 		u8 clipp = 12;
 		if (this->ht > 0)
-			clipp = 12 - ((this->ht * 45) >> FIXED_SHIFT);
+			clipp = 12 - ((this->ht * 30) >> FIXED_SHIFT);
 		
 		RECT hit_src = {
 			0,
-			128 + (this->hit_type << 5),
+			129 + (this->hit_type * 24),
 			60,
 			clipp << 1
 		};
 		RECT_FIXED hit_dst = {
 			this->x - FIXED_DEC(8,1),
 			this->hy - FIXED_DEC(16,1),
-			FIXED_DEC(60,1),
+			FIXED_DEC(50,1),
 			(FIXED_DEC(24,1) * clipp) >> 4
 		};
 		
-		Stage_DrawTex(&stage.tex_hud0, &hit_src, &hit_dst, stage.bump - FIXED_DEC(1,50));
+		Stage_DrawTex(&stage.tex_hud0, &hit_src, &hit_dst, stage.bump);
 		
 		//Apply gravity
 		this->hy += FIXED_MUL(this->hv, timer_dt);
@@ -39,37 +39,6 @@ boolean Obj_Combo_Tick(Object *obj)
 	
 	//Increment hit type timer
 	this->ht += timer_dt;
-	
-	//Tick combo
-	if (this->num[4] != 0xFF && this->ct < (FIXED_DEC(16,1) / 60))
-	{
-		//Get hit src and dst
-		u8 clipp = 16;
-		if (this->ct > 0)
-			clipp = 16 - ((this->ct * 60) >> FIXED_SHIFT);
-		
-		RECT combo_src = {
-			80,
-			128,
-			80,
-			clipp << 1
-		};
-		RECT_FIXED combo_dst = {
-			this->x + FIXED_DEC(48,1),
-			this->cy - FIXED_DEC(16,1),
-			FIXED_DEC(60,1),
-			(FIXED_DEC(24,1) * clipp) >> 4
-		};
-		
-		Stage_DrawTex(&stage.tex_hud0, &combo_src, &combo_dst, stage.bump - FIXED_DEC(1,50));
-		
-		//Apply gravity
-		this->cy += FIXED_MUL(this->cv, timer_dt);
-		this->cv += FIXED_MUL(FIXED_DEC(3,100) * 60 * 60, timer_dt);
-	}
-	
-	//Increment combo timer
-	this->ct += timer_dt;
 	
 	//Tick numbers
 	if (this->numt < (FIXED_DEC(16,1) / 60))
@@ -81,24 +50,24 @@ boolean Obj_Combo_Tick(Object *obj)
 				continue;
 			
 			//Get number src and dst
-			u8 clipp = 16;
+			u8 clipp = 12;
 			if (this->numt > 0)
-				clipp = 16 - ((this->numt * 60) >> FIXED_SHIFT);
+				clipp = 12 - ((this->numt * 45) >> FIXED_SHIFT);
 			
 			RECT num_src = {
-				80  + ((num % 5) << 5),
-				160 + ((num / 5) << 5),
-				32,
+				60  + ((num % 5) * 24),
+				129 + ((num / 5) * 24),
+				24,
 				clipp << 1
 			};
 			RECT_FIXED num_dst = {
-				this->x - FIXED_DEC(32,1) + (i * FIXED_DEC(16,1)) - FIXED_DEC(12,1),
-				this->numy[i] - FIXED_DEC(12,1),
-				FIXED_DEC(24,1),
+				this->x - FIXED_DEC(-16,1) + (i * FIXED_DEC(12,1)) - FIXED_DEC(12,1),
+				this->numy[i] - FIXED_DEC(44,1),
+				FIXED_DEC(20,1),
 				(FIXED_DEC(24,1) * clipp) >> 4
 			};
 			
-			Stage_DrawTex(&stage.tex_hud0, &num_src, &num_dst, stage.bump - FIXED_DEC(1,50));
+			Stage_DrawTex(&stage.tex_hud0, &num_src, &num_dst, stage.bump);
 			
 			//Apply gravity
 			this->numy[i] += FIXED_MUL(this->numv[i], timer_dt);
@@ -109,7 +78,7 @@ boolean Obj_Combo_Tick(Object *obj)
 	//Increment number timer
 	this->numt += timer_dt;
 	
-	return (this->numt >= FIXED_DEC(16,60)) && (this->ht >= FIXED_DEC(16,60)) && (this->ct >= FIXED_DEC(16,60));
+	return (this->numt >= FIXED_DEC(12,45)) && (this->ht >= FIXED_DEC(12,45)) && (this->ct >= FIXED_DEC(12,45));
 }
 
 void Obj_Combo_Free(Object *obj)

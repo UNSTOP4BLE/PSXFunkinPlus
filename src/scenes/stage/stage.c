@@ -5,10 +5,12 @@
 //Opponents
 #include "../../characters/dad/dad.h"
 #include "../../characters/morde/morde.h"
+#include "../../characters/benson/benson.h"
 
 //Stages
 #include "../../stages/default/default.h"
 #include "../../stages/house/house.h"
+#include "../../stages/park/park.h"
 
 //Middle Char (Girlfriend)
 #include "../../characters/gf/gf.h"
@@ -42,16 +44,6 @@
 //#define STAGE_NOHUD //Disable the HUD
 
 //#define STAGE_FREECAM //Freecam
-
-static const u8 charicon[3][3][4] = {
-	//BF
-	{
-		//Normal
-		{93,10,46,30},
-		//Low
-		{49,10,43,35}
-	}
-};
 
 static u32 note_x[8];
 static u32 note_y[8];
@@ -419,8 +411,6 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 	if (this->antispam > 0)
 		this->antispam -= 50;
 	
-	FntPrint("%d",this->antispam);
-	
 	if (stage.prefs.botplay == 1) {
 		//Do perfect note checks
 		if (playing)
@@ -596,15 +586,13 @@ void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u
 }
 
 //Stage HUD functions
-static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
+static void Stage_DrawHealth(s16 health, u16 health_i[2][4], s8 ox)
 {
 	u8 status;
 	//Check if we should use 'dying' frame
 	if (ox < 0)
 	{
 		if (health >= 18000)
-			status = 2;
-		else if (health <= 2000)
 			status = 1;
 		else
 			status = 0;
@@ -612,8 +600,6 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 	else
 	{
 		if (health <= 2000)
-			status = 2;
-		else if (health >= 18000)
 			status = 1;
 		else
 			status = 0;
@@ -622,10 +608,10 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 	//Get src and dst
 	fixed_t hx = (105 << FIXED_SHIFT) * (10000 - health) / 10000;
 	RECT src = {
-		charicon[i][status][0],
-		charicon[i][status][1],
-		charicon[i][status][2],
-		charicon[i][status][3]
+		health_i[status][0],
+		health_i[status][1],
+		health_i[status][2],
+		health_i[status][3]
 	};
 	RECT_FIXED dst = {
 		hx + ox * FIXED_DEC(20,1) + FIXED_DEC(4,1),
@@ -642,6 +628,32 @@ static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
 	
 	//Draw health icon
 	Stage_DrawTexRotate(&stage.tex_hud1, &src, &dst, 0, FIXED_MUL(stage.bump, stage.sbump), 0, 0);
+}
+
+static void Stage_DrawHealthBar(s16 x, s32 color)
+{	
+	//colors for health bar
+	u8 red = (color >> 16) & 0xFF;
+	u8 blue = (color >> 8) & 0xFF;
+	u8 green = (color) & 0xFF;
+	//Get src and dst
+	RECT src = {
+		0,
+	    228,
+		x,
+		8
+	};
+	RECT_FIXED dst = {
+		FIXED_DEC(-100,1), 
+		(SCREEN_HEIGHT2 - 36) << FIXED_SHIFT, 
+		FIXED_DEC(src.w,1), 
+		FIXED_DEC(8,1)
+	};
+
+	if (stage.prefs.downscroll)
+		dst.y = -dst.y - dst.h;
+	
+	Stage_DrawTexCol(&stage.tex_hud0, &src, &dst, stage.bump, red >> 1, blue >> 1, green >> 1);
 }
 
 static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
@@ -1070,6 +1082,10 @@ static void Stage_LoadState(void)
 	
 	stage.state = StageState_Play;
 	
+	timer.secondtimer = 0;
+	timer.timer = Audio_GetLength(stage.stage_def->music_track) - 1;
+	timer.timermin = 0;
+	
 	stage.player_state[0].character = stage.player;
 	stage.player_state[1].character = stage.opponent;
 	
@@ -1327,12 +1343,15 @@ void Stage_Tick(void)
 		case StageState_Play:
 		{
 			Events();
+			
 			stage.font_cdr.draw(&stage.font_cdr,
 				stage.credits,
 				FIXED_DEC(-159,1),
 				FIXED_DEC(108,1),
 				FontAlign_Left
 			);
+			
+			StageTimer_Draw();
 			
 			if (stage.prefs.botplay)
 			{
@@ -1612,31 +1631,16 @@ void Stage_Tick(void)
 					Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, -1);
 					
 					//Draw health bar
-					RECT health_border_src = {0, 0, 210, 8};
-					RECT_FIXED health_border_dst = {FIXED_DEC(-100,1), (SCREEN_HEIGHT2 - 36) << FIXED_SHIFT, FIXED_DEC(210,1), FIXED_DEC(8,1)};
-				
-					if (stage.prefs.downscroll)
-						health_border_dst.y = -health_border_dst.y;
-				
-					Stage_DrawTex(&stage.tex_hud1, &health_border_src, &health_border_dst, stage.bump);
-					
-					
-					RECT health_color_src = {210, 0, 1, 1};
-					RECT_FIXED health_color_dst = {FIXED_DEC(109 - (208 * stage.player_state[0].health / 20000),1), (SCREEN_HEIGHT2 - 36) << FIXED_SHIFT, FIXED_DEC(0 + (208 * stage.player_state[0].health / 20000),1), FIXED_DEC(8,1)};
-					
-					if (stage.prefs.downscroll)
-						health_color_dst.y = -health_color_dst.y;
-				
-					Stage_DrawTex(&stage.tex_hud1, &health_color_src, &health_color_dst, stage.bump);
-					
-					
-					RECT health_back_src = {210, 2, 1, 1};
-					RECT_FIXED health_back_dst = {FIXED_DEC(-99,1), (SCREEN_HEIGHT2 - 36) << FIXED_SHIFT, FIXED_DEC(208,1), FIXED_DEC(8,1)};
-					
-					if (stage.prefs.downscroll)
-						health_back_dst.y = -health_back_dst.y;
-					
-					Stage_DrawTex(&stage.tex_hud1, &health_back_src, &health_back_dst, stage.bump);
+					if (stage.prefs.mode == StageMode_Swap)
+					{
+						Stage_DrawHealthBar(210 - (210 * stage.player_state[0].health / 20000), stage.player->health_bar);
+						Stage_DrawHealthBar(210, stage.opponent->health_bar);
+					}
+					else
+					{
+						Stage_DrawHealthBar(210 - (210 * stage.player_state[0].health / 20000), stage.opponent->health_bar);
+						Stage_DrawHealthBar(210, stage.player->health_bar);
+					}
 				}
 			}
 			
@@ -1697,6 +1701,12 @@ void Stage_Tick(void)
 			//Draw stage background
 			if (stage.back->draw_bg != NULL)
 				stage.back->draw_bg(stage.back);
+			
+			if (stage.song_step > 0)
+				StageTimer_Tick();
+			else
+				StageTimer_Calculate();
+			
 			break;
 		}
 		case StageState_Dead: //Start BREAK animation and reading extra data from CD

@@ -377,10 +377,21 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = CHAR_SPEC_MISSANIM;
 	
-	this->character.health_i = 0;
+	this->character.health_i[0][0] = 0;
+	this->character.health_i[0][1] = 0;
+	this->character.health_i[0][2] = 46;
+	this->character.health_i[0][3] = 30;
 	
-	this->character.focus_x = FIXED_DEC(-20,1);
-	this->character.focus_y = (stage.stage_id == StageId_1_4) ? FIXED_DEC(-85,1) : FIXED_DEC(-80,1);
+	this->character.health_i[1][0] = 47;
+	this->character.health_i[1][1] = 0;
+	this->character.health_i[1][2] = 43;
+	this->character.health_i[1][3] = 35;
+	
+	//health bar color
+	this->character.health_bar = 0xFF29B5D6;
+	
+	this->character.focus_x = FIXED_DEC(-30,1);
+	this->character.focus_y = FIXED_DEC(-80,1);
 	this->character.focus_zoom = FIXED_DEC(1,1);
 	
 	this->character.size = FIXED_DEC(1,1);

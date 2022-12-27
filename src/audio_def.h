@@ -17,7 +17,7 @@ static const XA_TrackDef xa_tracks[] = {
 	{XA_Reckle, XA_LENGTH(8700)},
 	{XA_Reckle, XA_LENGTH(6800)},
 	
-	{XA_Unempl, XA_LENGTH(8700)},
+	{XA_Unempl, XA_LENGTH(11771)},
 	{XA_Unempl, XA_LENGTH(6800)},
 	
 	{XA_Superc, XA_LENGTH(8700)},

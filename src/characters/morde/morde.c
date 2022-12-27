@@ -141,7 +141,18 @@ Character *Char_Morde_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i = 1;
+	this->character.health_i[0][0] = 0;
+	this->character.health_i[0][1] = 0;
+	this->character.health_i[0][2] = 46;
+	this->character.health_i[0][3] = 30;
+	
+	this->character.health_i[1][0] = 47;
+	this->character.health_i[1][1] = 0;
+	this->character.health_i[1][2] = 43;
+	this->character.health_i[1][3] = 35;
+	
+	//health bar color
+	this->character.health_bar = 0xFFA5004A;
 	
 	this->character.focus_x = FIXED_DEC(65,1);
 	this->character.focus_y = FIXED_DEC(-80,1);

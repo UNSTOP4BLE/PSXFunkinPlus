@@ -1,8 +1,10 @@
 #include "timer.h"
+#include "../scenes/stage/stage.h"
 
 #define TIMER_BITS (3)
 
 //Timer state
+Timer timer;
 u32 frame_count, animf_count;
 u32 timer_count, timer_lcount, timer_countbase;
 u32 timer_persec;
@@ -19,13 +21,8 @@ void Timer_Callback(void) {
 	timer_count++;
 }
 
-void Timer_Init(void)
+void Timer_Init(boolean pal_console, boolean pal_video)
 {
-	//Check if system is PAL
-	u32 status = *((volatile const u32*)0x1f801814);
-	boolean pal_console = *((volatile const char*)0xbfc7ff52) == 'E';
-	boolean pal_video = (status & 0x00100000) != 0;
-	
 	//Initialize counters
 	frame_count = animf_count = timer_count = timer_lcount = timer_countbase = 0;
 	timer_sec = timer_dt = timer_secbase = 0;
@@ -96,4 +93,67 @@ void Timer_Reset(void)
 {
 	Timer_Tick();
 	timer_dt = 0;
+}
+
+void StageTimer_Calculate()
+{
+	//Calculate the minutes and seconds
+	if (timer.timer >= 60) {
+		timer.timermin ++;
+		timer.timer -= 60;
+	}	
+}
+
+void StageTimer_Tick()
+{
+	timer.secondtimer += timer_dt / 12;
+	if (stage.prefs.palmode ? timer.secondtimer >= 50 : timer.secondtimer >= 60)
+	{
+		timer.secondtimer = 0;
+		if (timer.timer <= 0)
+		{		
+			if (timer.timermin > 0)
+				timer.timermin --;
+			else
+				timer.timermin = 0;
+			timer.timer = 59;
+		}
+		else 
+			timer.timer --;
+	}
+}
+
+void StageTimer_Draw()
+{
+	//Draw timer
+	FntPrint("%d",timer.timer);
+	sprintf(timer.timer_display, "%d", timer.timermin);
+	stage.font_cdr.draw(&stage.font_cdr,
+		timer.timer_display,
+		FIXED_DEC(140 - 8,1), 
+		FIXED_DEC(109,1),
+		FontAlign_Left
+	);
+	sprintf(timer.timer_display, ":");
+	stage.font_cdr.draw(&stage.font_cdr,
+		timer.timer_display,
+		FIXED_DEC(140,1),
+		FIXED_DEC(109,1),
+		FontAlign_Left
+	);
+	if (timer.timer > 9)
+		sprintf(timer.timer_display, "%d", timer.timer);
+	else
+		sprintf(timer.timer_display, "0%d", timer.timer);
+
+	stage.font_cdr.draw(&stage.font_cdr,
+		timer.timer_display,
+		FIXED_DEC(140 + 5,1),
+		FIXED_DEC(109,1),
+		FontAlign_Left
+	);
+	
+	RECT bar_fill = {252, 252, 1, 1};
+	RECT_FIXED bar_dst = {FIXED_DEC(-70,1), FIXED_DEC(-110,1), FIXED_DEC(140,1), FIXED_DEC(11,1)};
+	Stage_DrawTex(&stage.tex_hud0, &bar_fill, &bar_dst, stage.bump);
 }

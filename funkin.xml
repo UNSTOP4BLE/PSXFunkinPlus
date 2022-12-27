@@ -29,9 +29,7 @@
 			
 			<!-- Fonts -->
 			<dir name = "fonts">
-				<file name = "cdr.tim" type = "data" source = "iso/images/font/cdr.tim"/>
-				<file name = "boldfont.tim" type = "data" source = "iso/images/font/boldfont.tim"/>
-				<file name = "arial.tim" type = "data" source = "iso/images/font/arial.tim"/>
+				<file name = "fonts.tim" type = "data" source = "iso/images/font/fonts.tim"/>
 			</dir>
 			
 			<!-- Stage assets -->
@@ -46,6 +44,7 @@
 				<!-- Background art -->
 				<file name = "default.arc" type = "data" source = "iso/stages/default/back.arc"/>
 				<file name = "house.arc" type = "data" source = "iso/stages/house/back.arc"/>
+				<file name = "park.arc" type = "data" source = "iso/stages/park/back.arc"/>
 			</dir>
 			
 			<!-- Characters assets -->
@@ -58,6 +57,9 @@
 				
 				<!-- Morde assets -->
 				<file name = "morde.arc" type = "data" source = "iso/characters/morde/main.arc"/>
+				
+				<!-- Benson assets -->
+				<file name = "benson.arc" type = "data" source = "iso/characters/benson/main.arc"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>

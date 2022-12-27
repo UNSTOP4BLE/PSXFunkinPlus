@@ -150,7 +150,11 @@ typedef struct
 
 typedef struct
 {
+	DISPENV disp[2];
+	DRAWENV draw[2];
+	
 	//Stage settings
+	int pal_i, wide_i;
 	struct
 	{
 		//Visuals & UI settings
@@ -159,6 +163,8 @@ typedef struct
 		//Gameplay settings
 		s32 mode;
 		boolean downscroll, middlescroll, ghost, vibrate, botplay;
+		
+		boolean palmode;
 	} prefs;
 	
 	//Song settings

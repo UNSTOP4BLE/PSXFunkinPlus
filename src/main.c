@@ -52,12 +52,13 @@ int main(int argc, char **argv)
 	
 	Mem_Init((void*)malloc_heap, sizeof(malloc_heap));
 	
+	stage.pal_i = 1;
 	IO_Init();
 	Audio_Init();
 	Gfx_Init();
 	Pad_Init();
 	
-	Timer_Init();
+	Timer_Init(false, false);
 	
 	//Start game
 	gameloop = GameLoop_Menu;
@@ -79,6 +80,30 @@ int main(int argc, char **argv)
 				FntPrint("mem: %08X/%08X (max %08X)\n", mem_used, mem_size, mem_max);
 			#endif
 		#endif
+		
+		//Set video mode
+		if (stage.prefs.palmode)
+		{
+			if (stage.pal_i == 1)
+			{
+				SetVideoMode(MODE_PAL);
+				SsSetTickMode(SS_TICK50);
+				stage.disp[0].screen.y = stage.disp[1].screen.y = 24;
+				Timer_Init(true, true);
+				stage.pal_i = 2;
+			}
+		}
+		else
+		{
+			if (stage.pal_i == 1)
+			{
+				SetVideoMode(MODE_NTSC);
+				SsSetTickMode(SS_TICK60);
+				stage.disp[0].screen.y = stage.disp[1].screen.y = 0;
+				Timer_Init(false, false);
+				stage.pal_i = 2;
+			}
+		}
 		
 		//Tick and draw game
 		switch (gameloop)

@@ -21,7 +21,7 @@
 		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
-		Back_Default_New,
+		Back_House_New,
 		
 		//Song info
 		1, 2,
@@ -32,12 +32,12 @@
 	},
 	{ //StageId_1_3 (Dadbattle)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BF_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
+		{Char_Benson_New, FIXED_DEC(-100,1),  FIXED_DEC(95,1)},
+		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(0,1)},
 		
 		//Stage background
-		Back_Default_New,
+		Back_Park_New,
 		
 		//Song info
 		1, 3,

@@ -158,10 +158,7 @@ void Char_GF_Tick(Character *character)
 	
 	//Get parallax
 	fixed_t parallax;
-	if (stage.stage_id >= StageId_1_1 && stage.stage_id <= StageId_1_4)
-		parallax = FIXED_DEC(7,10);
-	else
-		parallax = FIXED_UNIT;
+	parallax = FIXED_UNIT;
 	
 	//Animate and draw
 	Animatable_Animate(&character->animatable, (void*)this, Char_GF_SetFrame);
@@ -210,7 +207,18 @@ Character *Char_GF_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i = 1;
+	this->character.health_i[0][0] = 0;
+	this->character.health_i[0][1] = 0;
+	this->character.health_i[0][2] = 46;
+	this->character.health_i[0][3] = 30;
+	
+	this->character.health_i[1][0] = 47;
+	this->character.health_i[1][1] = 0;
+	this->character.health_i[1][2] = 43;
+	this->character.health_i[1][3] = 35;
+	
+	//health bar color
+	this->character.health_bar = 0xFFA5004A;
 	
 	this->character.focus_x = FIXED_DEC(2,1);
 	this->character.focus_y = FIXED_DEC(-40,1);
