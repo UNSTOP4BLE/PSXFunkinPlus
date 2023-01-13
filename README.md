@@ -14,4 +14,11 @@ A Clean fork of PSXFunkin that helps in modding!
 
 - Support to Video Cutscenes
 - Better Camera System
-- 
+
+## Credits
+
+- Friday Night Funkin by The Funkin' Crew
+- PSXFunkin by CuckyDev
+
+Special Thanks
+- UNSTOP4BLE, IgorSou3000, spicyjpeg
