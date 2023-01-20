@@ -5,6 +5,7 @@ all: \
 	iso/songs/unemployed.xa \
 	iso/songs/supercharge.xa \
 	iso/songs/temper-break.xa \
+	iso/songs/bonus3.xa \
 
 iso/%.xa: iso/%.ogg
 	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C 0 $< $@ 
@@ -29,3 +30,6 @@ iso/songs/supercharge.xa: iso/songs/supercharge/Inst.xa iso/songs/supercharge/Me
 
 # Temper-Break
 iso/songs/temper-break.xa: iso/songs/temper-break/Inst.xa iso/songs/temper-break/Merged.xa iso/songs/temper-break/InstErect.xa iso/songs/temper-break/MergedErect.xa
+
+# Bonus3
+iso/songs/bonus3.xa: iso/songs/cookies/Inst.xa iso/songs/cookies/Merged.xa iso/songs/new-management/Inst.xa iso/songs/new-management/Merged.xa

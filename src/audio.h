@@ -13,6 +13,7 @@ typedef enum
 	XA_Unempl,
 	XA_Superc,
 	XA_Temper,
+	XA_Bonus3,
 	
 	XA_Max,
 } XA_File;
@@ -37,6 +38,9 @@ typedef enum
 	
 	XA_Temper_Break,
 	XA_Temper_BreakErect,
+	
+	XA_Cookies,
+	XA_New_Management,
 	
 	XA_TrackMax,
 } XA_Track;

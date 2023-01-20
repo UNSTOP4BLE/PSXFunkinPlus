@@ -8,16 +8,17 @@
 //Morde character structure
 enum
 {
-	Morde_ArcMain_Idle0,
-	Morde_ArcMain_Idle1,
-	Morde_ArcMain_Left0,
-	Morde_ArcMain_Left1,
-	Morde_ArcMain_Down0,
-	Morde_ArcMain_Down1,
-	Morde_ArcMain_Up0,
-	Morde_ArcMain_Up1,
-	Morde_ArcMain_Right0,
-	Morde_ArcMain_Right1,
+  Morde_ArcMain_Idle0,
+  Morde_ArcMain_Idle1,
+  Morde_ArcMain_Idle2,
+  Morde_ArcMain_Left0,
+  Morde_ArcMain_Left1,
+  Morde_ArcMain_Down0,
+  Morde_ArcMain_Down1,
+  Morde_ArcMain_Up0,
+  Morde_ArcMain_Up1,
+  Morde_ArcMain_Right0,
+  Morde_ArcMain_Right1,
 	
 	Morde_Arc_Max,
 };
@@ -37,31 +38,31 @@ typedef struct
 
 //Morde character definitions
 static const CharFrame char_morde_frame[] = {
-	{Morde_ArcMain_Idle0,{0,0,85,166},{39,139}},
-	{Morde_ArcMain_Idle0,{87,0,85,166},{39,139}},
-	{Morde_ArcMain_Idle0,{175,0,81,166},{38,138}},
-	{Morde_ArcMain_Idle1,{0,0,81,168},{37,139}},
-	{Morde_ArcMain_Idle1,{87,0,81,168},{37,139}},
-	
-	{Morde_ArcMain_Left0,{0,0,86,166},{52,140}},
-	{Morde_ArcMain_Left0,{87,0,79,166},{45,140}},
-	{Morde_ArcMain_Left1,{0,0,76,166},{41,140}},
-	{Morde_ArcMain_Left1,{77,0,77,166},{41,140}},
-	
-	{Morde_ArcMain_Down0,{0,0,74,154},{36,129}},
-	{Morde_ArcMain_Down0,{75,0,76,154},{36,129}},
-	{Morde_ArcMain_Down1,{0,0,72,154},{32,130}},
-	{Morde_ArcMain_Down1,{76,0,72,154},{32,130}},
-	
-	{Morde_ArcMain_Up0,{0,0,89,176},{48,150}},
-	{Morde_ArcMain_Up0,{97,0,91,176},{46,151}},
-	{Morde_ArcMain_Up1,{0,0,89,170},{44,145}},
-	{Morde_ArcMain_Up1,{90,0,88,170},{44,145}},
-	
-	{Morde_ArcMain_Right0,{0,0,105,166},{37,138}},
-	{Morde_ArcMain_Right0,{106,0,100,166},{36,138}},
-	{Morde_ArcMain_Right1,{0,0,101,166},{37,138}},
-	{Morde_ArcMain_Right1,{102,0,101,166},{37,138}},
+  {Morde_ArcMain_Idle0, {  0,  0, 88,169}, {148,122}}, //0 idle 1
+  {Morde_ArcMain_Idle0, { 90,  0, 86,171}, {148,123}}, //1 idle 2
+  {Morde_ArcMain_Idle1, {  0,  0, 84,173}, {148,125}}, //2 idle 3
+  {Morde_ArcMain_Idle1, { 86,  0, 84,172}, {147,125}}, //3 idle 4
+  {Morde_ArcMain_Idle2, {  0,  0, 84,172}, {147,125}}, //4 idle 5
+
+  {Morde_ArcMain_Left0, {  0,  0, 89,171}, {171,124}}, //5 left 1
+  {Morde_ArcMain_Left0, { 91,  0, 83,172}, {163,125}}, //6 left 2
+  {Morde_ArcMain_Left1, {  0,  0, 80,173}, {160,125}}, //7 left 3
+  {Morde_ArcMain_Left1, { 82,  0, 80,173}, {159,125}}, //8 left 4
+
+  {Morde_ArcMain_Down0, {  0,  0, 74,155}, {142,111}}, //9 down 1
+  {Morde_ArcMain_Down0, { 76,  0, 76,160}, {142,116}}, //10 down 2
+  {Morde_ArcMain_Down0, {154,  0, 75,160}, {141,116}}, //11 down 3
+  {Morde_ArcMain_Down1, {  0,  0, 76,160}, {142,116}}, //12 down 4
+
+  {Morde_ArcMain_Up0, {  0,  0, 92,182}, {160,136}}, //13 up 1
+  {Morde_ArcMain_Up0, { 94,  0, 95,175}, {158,129}}, //14 up 2
+  {Morde_ArcMain_Up1, {  0,  0, 93,176}, {158,130}}, //15 up 3
+  {Morde_ArcMain_Up1, { 95,  0, 91,177}, {157,130}}, //16 up 4
+
+  {Morde_ArcMain_Right0, {  0,  0,110,170}, {146,123}}, //17 right 1
+  {Morde_ArcMain_Right0, {112,  0,104,172}, {146,125}}, //18 right 2
+  {Morde_ArcMain_Right1, {  0,  0,104,172}, {146,125}}, //19 right 3
+  {Morde_ArcMain_Right1, {106,  0,104,172}, {146,125}}, //20 right 4
 };
 
 static const Animation char_morde_anim[CharAnim_Max] = {
@@ -154,8 +155,8 @@ Character *Char_Morde_New(fixed_t x, fixed_t y)
 	//health bar color
 	this->character.health_bar = 0xFFA5004A;
 	
-	this->character.focus_x = FIXED_DEC(65,1);
-	this->character.focus_y = FIXED_DEC(-80,1);
+	this->character.focus_x = FIXED_DEC(-50,1);
+	this->character.focus_y = FIXED_DEC(-40,1);
 	this->character.focus_zoom = FIXED_DEC(1,1);
 	
 	this->character.size = FIXED_DEC(10,10);
@@ -164,16 +165,17 @@ Character *Char_Morde_New(fixed_t x, fixed_t y)
 	this->arc_main = IO_Read("\\CHAR\\MORDE.ARC;1");
 	
 	const char **pathp = (const char *[]){
-		"idle0.tim",
-		"idle1.tim",
-		"left0.tim",
-		"left1.tim",
-		"down0.tim",
-		"down1.tim",
-		"up0.tim",
-		"up1.tim",
-		"right0.tim",
-		"right1.tim",
+  "idle0.tim",
+  "idle1.tim",
+  "idle2.tim",
+  "left0.tim",
+  "left1.tim",
+  "down0.tim",
+  "down1.tim",
+  "up0.tim",
+  "up1.tim",
+  "right0.tim",
+  "right1.tim",
 		NULL
 	};
 	IO_Data *arc_ptr = this->arc_ptr;

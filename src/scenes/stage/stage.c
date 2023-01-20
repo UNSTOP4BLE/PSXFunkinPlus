@@ -1,11 +1,16 @@
 //Characters
 //Players
 #include "../../characters/bf/bf.h"
+#include "../../characters/bfa/bfa.h"
 
 //Opponents
 #include "../../characters/dad/dad.h"
 #include "../../characters/morde/morde.h"
+#include "../../characters/mordee/mordee.h"
+#include "../../characters/rigby/rigby.h"
 #include "../../characters/benson/benson.h"
+#include "../../characters/bensona/bensona.h"
+#include "../../characters/bensonp/bensonp.h"
 
 //Stages
 #include "../../stages/default/default.h"
@@ -14,7 +19,7 @@
 
 //Middle Char (Girlfriend)
 #include "../../characters/gf/gf.h"
-
+#include "../../characters/gfa/gfa.h"
 
 //Stage Codes
 #include "stage.h"
@@ -620,6 +625,9 @@ static void Stage_DrawHealth(s16 health, u16 health_i[2][4], s8 ox)
 		src.h << FIXED_SHIFT
 	};
 	
+	dst.x += FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1);
+	dst.y += FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1);
+	
 	//if (ox < 0)
 	//	dst.w = -dst.w;
 	
@@ -627,7 +635,7 @@ static void Stage_DrawHealth(s16 health, u16 health_i[2][4], s8 ox)
 		dst.y = -dst.y;
 	
 	//Draw health icon
-	Stage_DrawTexRotate(&stage.tex_hud1, &src, &dst, 0, FIXED_MUL(stage.bump, stage.sbump), 0, 0);
+	Stage_DrawTexRotate(&stage.tex_hud1, &src, &dst, RandomRange(-event.shake,event.shake) / 50, FIXED_MUL(stage.bump, stage.sbump), 0, 0);
 }
 
 static void Stage_DrawHealthBar(s16 x, s32 color)
@@ -1121,18 +1129,6 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	stage.stage_def = &stage_defs[stage.stage_id = id];
 	stage.stage_diff = difficulty;
 	stage.story = story;
-	
-	//Manage Notes Position
-	s16 note_def[3][8] = {
-		{-80,-80,-80,-80,-80,-80,-80,-80}, //Notes Y Position
-		{26,60,94,128,-128,-94,-60,-26}, //Notes X Position
-		{-51,-17,17,51,-128,-94,94,128} //Notes X Position with Middle Scroll
-	};
-	for (int i = 0; i < 8; i++)
-	{
-		note_x[i] = FIXED_DEC(note_def[(stage.prefs.middlescroll) ? 2 : 1][i],1);
-		note_y[i] = FIXED_DEC(note_def[0][i],1);
-	}
 
 	//Load HUD textures
 	Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
@@ -1344,6 +1340,18 @@ void Stage_Tick(void)
 		{
 			Events();
 			
+			//Manage Notes Position
+			s16 note_def[3][8] = {
+				{-80,-80,-80,-80,-80,-80,-80,-80}, //Notes Y Position
+				{26,60,94,128,-128,-94,-60,-26}, //Notes X Position
+				{-51,-17,17,51,-128,-94,94,128} //Notes X Position with Middle Scroll
+			};
+			for (int i = 0; i < 8; i++)
+			{
+				note_x[i] = FIXED_DEC(note_def[(stage.prefs.middlescroll) ? 2 : 1][i],1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1);
+				note_y[i] = FIXED_DEC(note_def[0][i],1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1);
+			}
+			
 			stage.font_cdr.draw(&stage.font_cdr,
 				stage.credits,
 				FIXED_DEC(-159,1),
@@ -1526,6 +1534,7 @@ void Stage_Tick(void)
 							else
 								opponent_anote = note_anims[note->type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0];
 							note->type |= NOTE_FLAG_HIT;
+							NoteHitEnemyEvent(note->type);
 						}
 					}
 					
@@ -1571,15 +1580,15 @@ void Stage_Tick(void)
 					if (i == 0)
 						stage.font_cdr.draw(&stage.font_cdr,
 							this->P2_text,
-							FIXED_DEC(11,1), 
-							FIXED_DEC(100,1),
+							FIXED_DEC(11,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1), 
+							FIXED_DEC(100,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
 							FontAlign_Left
 						);
 					else
 						stage.font_cdr.draw(&stage.font_cdr,
 							this->P2_text,
-							FIXED_DEC(-11,1),
-							FIXED_DEC(100,1),
+							FIXED_DEC(-11,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
+							FIXED_DEC(100,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
 							FontAlign_Right
 						);
 				}
@@ -1606,8 +1615,8 @@ void Stage_Tick(void)
 				
 				stage.font_cdr.draw(&stage.font_cdr,
 					this->score_text,
-					FIXED_DEC(20,1), 
-					FIXED_DEC(texty,1),
+					FIXED_DEC(20,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 50,1), 
+					FIXED_DEC(texty,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 50,1),
 					FontAlign_Center
 				);
 			}

@@ -35,6 +35,7 @@ typedef enum
 	StageId_1_3, //Dadbattle
 	StageId_1_4, //Tutorial
 	StageId_1_5, //Tutorial
+	StageId_1_6, //Tutorial
 	
 	StageId_Max
 } StageId;
@@ -154,7 +155,7 @@ typedef struct
 	DRAWENV draw[2];
 	
 	//Stage settings
-	int pal_i, wide_i;
+	int pal_i;
 	struct
 	{
 		//Visuals & UI settings

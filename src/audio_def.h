@@ -26,6 +26,8 @@ static const XA_TrackDef xa_tracks[] = {
 	{XA_Temper, XA_LENGTH(8700)},
 	{XA_Temper, XA_LENGTH(6800)},
 	
+	{XA_Bonus3, XA_LENGTH(11915)},
+	{XA_Bonus3, XA_LENGTH(12886)},
 };
 
 static const char *xa_paths[] = {
@@ -35,6 +37,7 @@ static const char *xa_paths[] = {
 	"\\MUSIC\\UNEMPL.XA;1",
 	"\\MUSIC\\SUPERC.XA;1",
 	"\\MUSIC\\TEMPER.XA;1",
+	"\\MUSIC\\BONUS3.XA;1",
 	NULL,
 };
 
@@ -63,6 +66,9 @@ static const XA_Mp3 xa_mp3s[] = {
 	
 	{"temper-break", true},
 	{"temper-breakerect", true},
+	
+	{"cookies", true},
+	{"new-management", true},
 	
 	{NULL, false}
 };

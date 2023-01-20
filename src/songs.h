@@ -1,7 +1,7 @@
 	{ //StageId_1_1 (Bopeebo)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Morde_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{Char_BF_New,    FIXED_DEC(110,1),  FIXED_DEC(110,1)},
+		{Char_MordeE_New, FIXED_DEC(-20,1),  FIXED_DEC(70,1)},
 		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
@@ -16,8 +16,8 @@
 	},
 	{ //StageId_1_2 (Fresh)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
+		{Char_BF_New,    FIXED_DEC(110,1),  FIXED_DEC(110,1)},
+		{Char_Rigby_New, FIXED_DEC(-20,1),  FIXED_DEC(70,1)},
 		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
@@ -48,12 +48,12 @@
 	},
 	{ //StageId_1_4 (Tutorial)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BFA_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
+		{Char_BensonA_New, FIXED_DEC(100,1),  FIXED_DEC(160,1)},
+		{Char_GFA_New,     FIXED_DEC(0,1),  FIXED_DEC(0,1)},
 		
 		//Stage background
-		Back_Default_New,
+		Back_Park_New,
 		
 		//Song info
 		1, 4,
@@ -64,12 +64,12 @@
 	},
 	{ //StageId_1_5
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BFA_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
+		{Char_BensonA_New, FIXED_DEC(100,1),  FIXED_DEC(160,1)},
+		{Char_GFA_New,     FIXED_DEC(0,1),  FIXED_DEC(0,1)},
 		
 		//Stage background
-		Back_Default_New,
+		Back_Park_New,
 		
 		//Song info
 		1, 5,
@@ -77,4 +77,20 @@
 		"Temper Break",
 		
 		StageId_1_5, STAGE_LOAD_FLAG
+	},
+	{ //StageId_1_6
+		//Characters
+		{Char_BF_New,    FIXED_DEC(90,1),  FIXED_DEC(100,1)},
+		{Char_BensonP_New, FIXED_DEC(-15,1),  FIXED_DEC(70,1)},
+		{NULL,     NULL,     NULL},
+		
+		//Stage background
+		Back_Park_New,
+		
+		//Song info
+		1, 6,
+		XA_New_Management, 2,
+		"New Management",
+		
+		StageId_1_6, STAGE_LOAD_FLAG
 	}

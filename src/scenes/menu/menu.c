@@ -723,7 +723,8 @@ void Menu_Tick(void)
 				{StageId_1_2, 0xFF9271FD, "RECKLESS"},
 				{StageId_1_3, 0xFF9271FD, "UNEMPLOYED"},
 				{StageId_1_4, 0xFF9271FD, "SUPERCHARGE"},
-				{StageId_1_5, 0xFF9271FD, "TEMPER BREAK"}
+				{StageId_1_5, 0xFF9271FD, "TEMPER BREAK"},
+				{StageId_1_6, 0xFF9271FD, "NEW MANAGEMENT"}
 			};
 			
 			//Initialize page
@@ -859,8 +860,12 @@ void Menu_Tick(void)
 				{OptType_Boolean, "DOWNSCROLL", &stage.prefs.downscroll, {.spec_boolean = {0}}},
 				{OptType_Boolean, "MIDDLESCROLL", &stage.prefs.middlescroll, {.spec_boolean = {0}}},
 				{OptType_Boolean, "INSTAKILL", &stage.instakill, {.spec_boolean = {0}}},
-				{OptType_Boolean, "CAM FOLLOW CHAR", &stage.prefs.followcamera, {.spec_boolean = {0}}}
+				{OptType_Boolean, "CAM FOLLOW CHAR", &stage.prefs.followcamera, {.spec_boolean = {0}}},
+				{OptType_Boolean, "PAL REFRESH RATE", &stage.prefs.palmode, {.spec_boolean = {0}}}
 			};
+			
+			if (menu.select == 6 && pad_state.press & (PAD_CROSS | PAD_LEFT | PAD_RIGHT))
+				stage.pal_i = 1;
 			
 			//Initialize page
 			if (menu.page_swap)

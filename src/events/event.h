@@ -11,9 +11,17 @@
 #include "../scenes/stage/object.h"
 #include "../fonts/font.h"
 
+typedef struct
+{
+	fixed_t shake;
+} Event;
+
+extern Event event;
+
 void FollowCharCamera();
 void Events();
 void NoteHitEvent(u8 type);
+void NoteHitEnemyEvent(u8 type);
 void NoteMissEvent(u8 type, u8 state);
 
 #endif

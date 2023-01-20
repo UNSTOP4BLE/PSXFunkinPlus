@@ -12,6 +12,8 @@
 
 #include "../characters/benson/benson.h"
 
+Event event;
+
 static void Unemployed()
 {
 	if (stage.song_step == 250)
@@ -20,6 +22,7 @@ static void Unemployed()
 
 void Events()
 {
+	event.shake = lerp(event.shake,0,FIXED_DEC(2,10));
 	//FntPrint("steps: %d", stage.song_step);
 	if(stage.prefs.followcamera)
 		FollowCharCamera();
@@ -29,7 +32,7 @@ void Events()
 
 void FollowCharCamera()
 {
-	u8 sensitivity = 5;
+	u8 sensitivity = 2;
 	if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
 	{
 		if (stage.opponent->animatable.anim == CharAnim_Up)
@@ -62,6 +65,16 @@ void NoteHitEvent(u8 type)
 		stage.camera.zoom += FIXED_DEC(200,1000);
 		stage.bump += FIXED_DEC(100,1000);
 	}
+}
+
+void NoteHitEnemyEvent(u8 type)
+{
+	if (type & NOTE_FLAG_BULLET)
+	{
+		stage.bump += FIXED_DEC(100,1000);
+	}
+	if (stage.stage_id == StageId_1_6)
+		event.shake = 1000;
 }
 
 void NoteMissEvent(u8 type, u8 state)

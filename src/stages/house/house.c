@@ -27,14 +27,14 @@ void Back_House_DrawBG(StageBack *back)
 	RECT backl_src = {0, 0, 256, 256};
 	RECT_FIXED backl_dst = {
 		FIXED_DEC(-256,1) - fx,
-		FIXED_DEC(-128,1) - fy,
+		FIXED_DEC(-100,1) - fy,
 		FIXED_DEC(256,1),
 		FIXED_DEC(256,1)
 	};
 	RECT backr_src = {0, 0, 256, 256};
 	RECT_FIXED backr_dst = {
-		FIXED_DEC(-1,1) - fx,
-		FIXED_DEC(-128,1) - fy,
+		FIXED_DEC(-2,1) - fx,
+		FIXED_DEC(-100,1) - fy,
 		FIXED_DEC(256,1),
 		FIXED_DEC(256,1)
 	};
