@@ -51,28 +51,14 @@
 			<dir name = "char">
 				<!-- Boyfriend assets -->
 				<file name = "bf.arc" type = "data" source = "iso/characters/bf/main.arc"/>
-				<file name = "bfa.arc" type = "data" source = "iso/characters/bfa/main.arc"/>
 				
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>
-				
-				<!-- Morde assets -->
-				<file name = "morde.arc" type = "data" source = "iso/characters/morde/main.arc"/>
-				<file name = "mordee.arc" type = "data" source = "iso/characters/mordee/main.arc"/>
-				
-				<!-- Rigby assets -->
-				<file name = "rigby.arc" type = "data" source = "iso/characters/rigby/main.arc"/>
-				
-				<!-- Benson assets -->
-				<file name = "benson.arc" type = "data" source = "iso/characters/benson/main.arc"/>
-				<file name = "bensona.arc" type = "data" source = "iso/characters/bensona/main.arc"/>
-				<file name = "bensonp.arc" type = "data" source = "iso/characters/bensonp/main.arc"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
 				<file name = "speaker.tim" type = "data" source = "iso/characters/gf/speaker.tim"/>
-				<file name = "gfa.arc" type = "data" source = "iso/characters/gfa/main.arc"/>
 			</dir>
 			
 			<!-- Songs -->

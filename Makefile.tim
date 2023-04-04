@@ -2,12 +2,6 @@ all: \
 	iso/characters/bf/main.arc \
 	\
 	iso/characters/dad/main.arc \
-	iso/characters/morde/main.arc \
-	iso/characters/mordee/main.arc \
-	iso/characters/rigby/main.arc \
-	iso/characters/benson/main.arc \
-	iso/characters/bensona/main.arc \
-	iso/characters/bensonp/main.arc \
 	\
 	iso/characters/gf/main.arc \
 	iso/characters/gfone/main.arc \
@@ -42,26 +36,9 @@ iso/characters/bfa/main.arc: iso/characters/bfa/idle0.tim iso/characters/bfa/idl
 # Dad
 iso/characters/dad/main.arc: iso/characters/dad/idle0.tim iso/characters/dad/idle1.tim iso/characters/dad/left.tim iso/characters/dad/down.tim iso/characters/dad/up.tim iso/characters/dad/right.tim
 
-# Morde
-iso/characters/morde/main.arc: iso/characters/morde/idle0.tim iso/characters/morde/idle1.tim iso/characters/morde/idle2.tim iso/characters/morde/left0.tim iso/characters/morde/left1.tim iso/characters/morde/down0.tim iso/characters/morde/down1.tim iso/characters/morde/up0.tim iso/characters/morde/up1.tim iso/characters/morde/right0.tim iso/characters/morde/right1.tim
-
-# MordeErect
-iso/characters/mordee/main.arc: iso/characters/mordee/idle0.tim iso/characters/mordee/idle1.tim iso/characters/mordee/idle2.tim iso/characters/mordee/left0.tim iso/characters/mordee/left1.tim iso/characters/mordee/down0.tim iso/characters/mordee/down1.tim iso/characters/mordee/up0.tim iso/characters/mordee/up1.tim iso/characters/mordee/right0.tim iso/characters/mordee/right1.tim 
-
-# Rigby
-iso/characters/rigby/main.arc: iso/characters/rigby/idle0.tim iso/characters/rigby/idle1.tim iso/characters/rigby/left0.tim iso/characters/rigby/down0.tim iso/characters/rigby/up0.tim iso/characters/rigby/up1.tim iso/characters/rigby/right0.tim iso/characters/rigby/right1.tim iso/characters/rigby/leftalt0.tim iso/characters/rigby/downalt0.tim iso/characters/rigby/upalt0.tim iso/characters/rigby/upalt1.tim iso/characters/rigby/rightalt0.tim iso/characters/rigby/rightalt1.tim
-
-# Benson
-iso/characters/benson/main.arc: iso/characters/benson/idle.tim iso/characters/benson/left.tim iso/characters/benson/down.tim iso/characters/benson/up.tim iso/characters/benson/right.tim iso/characters/benson/idleangry0.tim iso/characters/benson/idleangry1.tim iso/characters/benson/leftangry.tim iso/characters/benson/downangry.tim iso/characters/benson/upangry.tim iso/characters/benson/rightangry.tim 
-
-# BensonAngry
-iso/characters/bensona/main.arc: iso/characters/bensona/idle0.tim iso/characters/bensona/left0.tim iso/characters/bensona/down0.tim iso/characters/bensona/up0.tim iso/characters/bensona/right0.tim iso/characters/bensona/leftalt0.tim iso/characters/bensona/idlealt0.tim iso/characters/bensona/upalt0.tim iso/characters/bensona/rightalt0.tim
-
 # GF
 iso/characters/gf/main.arc: iso/characters/gf/gf0.tim iso/characters/gf/gf1.tim iso/characters/gf/gf2.tim
-iso/characters/gfone/main.arc: iso/characters/gfone/idle0.tim iso/characters/gfone/idle1.tim iso/characters/gfone/idle2.tim 
 iso/characters/gf/tut.arc: iso/characters/gf/tut0.tim iso/characters/gf/tut1.tim
-iso/characters/gfa/main.arc: iso/characters/gfa/gfa0.tim iso/characters/gfa/gfa1.tim iso/characters/gfa/gfa3.tim iso/characters/gfa/gfa4.tim iso/characters/gfa/gfa6.tim iso/characters/gfa/gfa7.tim iso/characters/gfa/gfa9.tim iso/characters/gfa/gfa10.tim iso/characters/gfa/gfa12.tim iso/characters/gfa/gfa13.tim 
 
 # Default
 iso/stages/default/back.arc: iso/stages/default/back0.tim iso/stages/default/back1.tim
@@ -71,6 +48,3 @@ iso/stages/house/back.arc: iso/stages/house/0.tim iso/stages/house/1.tim iso/sta
 
 # Park
 iso/stages/park/back.arc: iso/stages/park/0.tim iso/stages/park/1.tim iso/stages/park/2.tim iso/stages/park/3.tim
-
-# BensonPibby
-iso/characters/bensonp/main.arc: iso/characters/bensonp/idle0.tim iso/characters/bensonp/idle1.tim iso/characters/bensonp/idle2.tim iso/characters/bensonp/idle3.tim iso/characters/bensonp/idle4.tim iso/characters/bensonp/idle5.tim iso/characters/bensonp/left0.tim iso/characters/bensonp/left1.tim iso/characters/bensonp/left2.tim iso/characters/bensonp/left3.tim iso/characters/bensonp/down0.tim iso/characters/bensonp/down1.tim iso/characters/bensonp/down2.tim iso/characters/bensonp/down3.tim iso/characters/bensonp/down4.tim iso/characters/bensonp/up0.tim iso/characters/bensonp/up1.tim iso/characters/bensonp/up2.tim iso/characters/bensonp/right0.tim iso/characters/bensonp/right1.tim iso/characters/bensonp/right2.tim iso/characters/bensonp/right3.tim 
