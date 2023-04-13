@@ -17,40 +17,6 @@
 
 #include "../stage/stage.h"
 
-#include "../../characters/gf/gf.h"
-
-//Menu messages
-static const char *funny_messages[][2] = {
-	{"SHOUTOUTS TO TOM FULP", "LMAO"},
-	{"LUDUM DARE", "EXTRAORDINAIRE"},
-	{"CYBERZONE", "COMING SOON"},
-	{"LOVE TO THRIFTMAN", "SWAG"},
-	{"ULTIMATE RHYTHM GAMING", "PROBABLY"},
-	{"DOPE ASS GAME", "PLAYSTATION MAGAZINE"},
-	{"IN LOVING MEMORY OF", "HENRYEYES"},
-	{"DANCIN", "FOREVER"},
-	{"FUNKIN", "FOREVER"},
-	{"RITZ DX", "REST IN PEACE LOL"},
-	{"RATE FIVE", "PLS NO BLAM"},
-	{"RHYTHM GAMING", "ULTIMATE"},
-	{"GAME OF THE YEAR", "FOREVER"},
-	{"YOU ALREADY KNOW", "WE REALLY OUT HERE"},
-	{"RISE AND GRIND", "LOVE TO LUIS"},
-	{"LIKE PARAPPA", "BUT COOLER"},
-	{"ALBUM OF THE YEAR", "CHUCKIE FINSTER"},
-	{"FREE GITAROO MAN", "WITH LOVE TO WANDABOY"},
-	{"BETTER THAN GEOMETRY DASH", "FIGHT ME ROBTOP"},
-	{"KIDDBRUTE FOR PRESIDENT", "VOTE NOW"},
-	{"PLAY DEAD ESTATE", "ON NEWGROUNDS"},
-	{"THIS IS A GOD DAMN PROTOTYPE", "WE WORKIN ON IT OKAY"},
-	{"WOMEN ARE REAL", "THIS IS OFFICIAL"},
-	{"TOO OVER EXPOSED", "NEWGROUNDS CANT HANDLE US"},
-	{"HATSUNE MIKU", "BIGGEST INSPIRATION"},
-	{"TOO MANY PEOPLE", "MY HEAD HURTS"},
-	{"NEWGROUNDS", "FOREVER"},
-	{"REFINED TASTE IN MUSIC", "IF I SAY SO MYSELF"},
-};
-
 //Menu string type
 #define MENUSTR_CHARS 0x20
 typedef char MenuStr[MENUSTR_CHARS + 1];
@@ -70,10 +36,6 @@ static struct
 	//Page specific state
 	union
 	{
-		struct
-		{
-			u8 funny_message;
-		} opening;
 		struct
 		{
 			fixed_t logo_bump;
@@ -100,6 +62,7 @@ static struct
 	
 	//Menu assets
 	Gfx_Tex tex_back, tex_ng, tex_story, tex_title;
+	Gfx_Tex tex_titleback0, tex_titleback1;
 	FontData font_bold, font_arial;
 	
 	Character *gf; //Title Girlfriend
@@ -229,6 +192,8 @@ void Menu_Load(MenuPage page)
 	Gfx_LoadTex(&menu.tex_ng,    Archive_Find(menu_arc, "ng.tim"),    0);
 	Gfx_LoadTex(&menu.tex_story, Archive_Find(menu_arc, "story.tim"), 0);
 	Gfx_LoadTex(&menu.tex_title, Archive_Find(menu_arc, "title.tim"), 0);
+	Gfx_LoadTex(&menu.tex_titleback0, Archive_Find(menu_arc, "titleback0.tim"), 0);
+	Gfx_LoadTex(&menu.tex_titleback1, Archive_Find(menu_arc, "titleback1.tim"), 0);
 	Mem_Free(menu_arc);
 	
 	FontData_Load(&menu.font_bold, Font_Bold);
@@ -242,11 +207,6 @@ void Menu_Load(MenuPage page)
 		case MenuPage_Opening:
 			//Get funny message to use
 			//Do this here so timing is less reliant on VSync
-			#ifdef PSXF_PC
-				menu.page_state.opening.funny_message = time(NULL) % COUNT_OF(funny_messages);
-			#else
-				menu.page_state.opening.funny_message = ((*((volatile u32*)0xBF801120)) >> 3) % COUNT_OF(funny_messages); //sysclk seeding
-			#endif
 			break;
 		default:
 			break;
@@ -310,84 +270,12 @@ void Menu_Tick(void)
 	{
 		case MenuPage_Opening:
 		{
-			u16 beat = stage.song_step >> 2;
-			
-			if (pad_state.press & PAD_TRIANGLE)
-				{
-				stage.prefs.ghost = true;
-				stage.prefs.downscroll = true;
-				}
-			
-			//Start title screen if opening ended
-			if (beat >= 16)
-			{
-				menu.page = menu.next_page = MenuPage_Title;
-				menu.page_swap = true;
-				//Fallthrough
-			}
-			else
-			{
-				//Start title screen if start pressed
-				if (pad_state.held & PAD_START)
-					menu.page = menu.next_page = MenuPage_Title;
-				
-				//Draw different text depending on beat
-				RECT src_ng = {0, 0, 128, 128};
-				const char **funny_message = funny_messages[menu.page_state.opening.funny_message];
-				
-				switch (beat)
-				{
-					case 3:
-						menu.font_bold.draw(&menu.font_bold, "PRESENT", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 32, FontAlign_Center);
-				//Fallthrough
-					case 2:
-					case 1:
-						menu.font_bold.draw(&menu.font_bold, "NINJAMUFFIN",   SCREEN_WIDTH2, SCREEN_HEIGHT2 - 32, FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "PHANTOMARCADE", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 16, FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "KAWAISPRITE",   SCREEN_WIDTH2, SCREEN_HEIGHT2,      FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "EVILSKER",      SCREEN_WIDTH2, SCREEN_HEIGHT2 + 16, FontAlign_Center);
-						break;
-					
-					case 7:
-						menu.font_bold.draw(&menu.font_bold, "NEWGROUNDS",    SCREEN_WIDTH2, SCREEN_HEIGHT2 - 32, FontAlign_Center);
-						Gfx_BlitTex(&menu.tex_ng, &src_ng, (SCREEN_WIDTH - 128) >> 1, SCREEN_HEIGHT2 - 16);
-				//Fallthrough
-					case 6:
-					case 5:
-						menu.font_bold.draw(&menu.font_bold, "IN ASSOCIATION", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 64, FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "WITH",           SCREEN_WIDTH2, SCREEN_HEIGHT2 - 48, FontAlign_Center);
-						break;
-					
-					case 11:
-						menu.font_bold.draw(&menu.font_bold, funny_message[1], SCREEN_WIDTH2, SCREEN_HEIGHT2, FontAlign_Center);
-				//Fallthrough
-					case 10:
-					case 9:
-						menu.font_bold.draw(&menu.font_bold, funny_message[0], SCREEN_WIDTH2, SCREEN_HEIGHT2 - 16, FontAlign_Center);
-						break;
-					
-					case 15:
-						menu.font_bold.draw(&menu.font_bold, "FUNKIN", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 8, FontAlign_Center);
-				//Fallthrough
-					case 14:
-						menu.font_bold.draw(&menu.font_bold, "NIGHT", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 8, FontAlign_Center);
-				//Fallthrough
-					case 13:
-						menu.font_bold.draw(&menu.font_bold, "FRIDAY", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 24, FontAlign_Center);
-						break;
-				}
-				break;
-			}
+			menu.page = menu.next_page = MenuPage_Title;
+			menu.page_swap = true;
 		}
 	//Fallthrough
 		case MenuPage_Title:
 		{
-			if (pad_state.press & PAD_TRIANGLE)
-				{
-				stage.prefs.ghost = true;
-				stage.prefs.downscroll = true;
-				}
-			
 			//Initialize page
 			if (menu.page_swap)
 			{
@@ -419,58 +307,24 @@ void Menu_Tick(void)
 			}
 			
 			//Draw Friday Night Funkin' logo
-			if ((stage.flag & STAGE_FLAG_JUST_STEP) && (stage.song_step & 0x3) == 0 && menu.page_state.title.logo_bump == 0)
-				menu.page_state.title.logo_bump = (FIXED_DEC(7,1) / 24) - 1;
-			
-			static const fixed_t logo_scales[] = {
-				FIXED_DEC(1,1),
-				FIXED_DEC(101,100),
-				FIXED_DEC(102,100),
-				FIXED_DEC(103,100),
-				FIXED_DEC(105,100),
-				FIXED_DEC(110,100),
-				FIXED_DEC(97,100),
-			};
-			fixed_t logo_scale = logo_scales[(menu.page_state.title.logo_bump * 24) >> FIXED_SHIFT];
-			u32 x_rad = (logo_scale * (255 >> 1)) >> FIXED_SHIFT;
-			u32 y_rad = (logo_scale * (151 >> 1)) >> FIXED_SHIFT;
-			
-			menu.animcounter += 4;
-			if (menu.animcounter > 250)
-				menu.animcounter -= 250;
-			
-			RECT logo_src = {0, 0, 255, 150};
+			RECT logo_src = {0, 0, 212, 166};
 			RECT logo_dst = {
-				160 + (SCREEN_WIDEADD2 >> 1),
-				120,
-				x_rad << 1,
-				y_rad << 1
+				55,
+				44,
+				logo_src.w,
+				logo_src.h
 			};
 			
-			Gfx_DrawTexRotate(&menu.tex_title, &logo_src, &logo_dst, MUtil_Sin(menu.animcounter - 50) / 30, logo_dst.w / 2, logo_dst.h / 2);
-			
-			if (menu.page_state.title.logo_bump > 0)
-				if ((menu.page_state.title.logo_bump -= timer_dt) < 0)
-					menu.page_state.title.logo_bump = 0;
+			Gfx_DrawTex(&menu.tex_title, &logo_src, &logo_dst);
 			
 			//Draw "Press Start to Begin"
-			if (menu.next_page == menu.page)
-			{
-				//Blinking blue
-				s16 press_lerp = (MUtil_Cos(animf_count << 3) + 0x100) >> 1;
-				u8 press_r = 51 >> 1;
-				u8 press_g = (58  + ((press_lerp * (255 - 58))  >> 8)) >> 1;
-				u8 press_b = (206 + ((press_lerp * (255 - 206)) >> 8)) >> 1;
-				
-				RECT press_src = {0, 151, 207, 18};
-				Gfx_BlitTexCol(&menu.tex_title, &press_src, (SCREEN_WIDTH - 256) / 2, SCREEN_HEIGHT - 48, press_r, press_g, press_b);
-			}
-			else
-			{
-				//Flash white
-				RECT press_src = {0, (animf_count & 1) ? 151 : 169, 207, 18};
-				Gfx_BlitTex(&menu.tex_title, &press_src, (SCREEN_WIDTH - 256) / 2, SCREEN_HEIGHT - 48);
-			}
+			RECT press_src = {0, 167, 120, 13};
+			Gfx_BlitTex(&menu.tex_title, &press_src, 10, 10);
+			
+			RECT back0_src = {0, 0, 256, 240};
+			Gfx_BlitTex(&menu.tex_titleback0, &back0_src, 0, 0);
+			RECT back1_src = {0, 0, 64, 240};
+			Gfx_BlitTex(&menu.tex_titleback1, &back1_src, 256, 0);
 			break;
 		}
 		case MenuPage_Main:
@@ -719,12 +573,10 @@ void Menu_Tick(void)
 				const char *text;
 			} menu_options[] = {
 				//{StageId_4_4, 0xFFFC96D7, "TEST"},
-				{StageId_1_1, 0xFF9271FD, "EXHILARATION"},
-				{StageId_1_2, 0xFF9271FD, "RECKLESS"},
-				{StageId_1_3, 0xFF9271FD, "UNEMPLOYED"},
-				{StageId_1_4, 0xFF9271FD, "SUPERCHARGE"},
-				{StageId_1_5, 0xFF9271FD, "TEMPER BREAK"},
-				{StageId_1_6, 0xFF9271FD, "NEW MANAGEMENT"}
+				{StageId_1_1, 0xFF9271FD, "shotgun-shell"},
+				{StageId_1_2, 0xFF9271FD, "parasite"},
+				{StageId_1_3, 0xFF9271FD, "godrays"},
+				{StageId_1_4, 0xFF9271FD, "promenade"}
 			};
 			
 			//Initialize page

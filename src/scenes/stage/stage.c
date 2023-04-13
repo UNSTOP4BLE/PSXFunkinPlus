@@ -1,25 +1,28 @@
 //Characters
 //Players
 #include "../../characters/bf/bf.h"
-#include "../../characters/bfa/bfa.h"
+#include "../../characters/bfg/bfg.h"
+#include "../../characters/bfn/bfn.h"
 
 //Opponents
 #include "../../characters/dad/dad.h"
-#include "../../characters/morde/morde.h"
-#include "../../characters/mordee/mordee.h"
-#include "../../characters/rigby/rigby.h"
-#include "../../characters/benson/benson.h"
-#include "../../characters/bensona/bensona.h"
-#include "../../characters/bensonp/bensonp.h"
+#include "../../characters/aldryx/aldryx.h"
+#include "../../characters/agoti/agoti.h"
+#include "../../characters/sol/sol.h"
+#include "../../characters/niku/niku.h"
 
 //Stages
 #include "../../stages/default/default.h"
-#include "../../stages/house/house.h"
-#include "../../stages/park/park.h"
+#include "../../stages/bg1/bg1.h"
+#include "../../stages/bg2/bg2.h"
+#include "../../stages/bg3/bg3.h"
+#include "../../stages/bg4/bg4.h"
 
 //Middle Char (Girlfriend)
 #include "../../characters/gf/gf.h"
-#include "../../characters/gfa/gfa.h"
+#include "../../characters/gfb/gfb.h"
+#include "../../characters/gfg/gfg.h"
+
 
 //Stage Codes
 #include "stage.h"
@@ -27,6 +30,7 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
+#include "pause.h"
 #include "../menu/menu.h"
 
 #include "../../main.h"
@@ -49,6 +53,8 @@
 //#define STAGE_NOHUD //Disable the HUD
 
 //#define STAGE_FREECAM //Freecam
+
+u8 angletest;
 
 static u32 note_x[8];
 static u32 note_y[8];
@@ -94,7 +100,7 @@ static void Stage_FocusCharacter(Character *ch, fixed_t div)
 	//Use character focus settings to update target position and zoom
 	stage.camera.tx = ch->x + ch->focus_x;
 	stage.camera.ty = ch->y + ch->focus_y;
-	stage.camera.tz = ch->focus_zoom;
+	stage.camera.tz = FIXED_MUL(ch->focus_zoom,event.zoom);
 	stage.camera.td = div;
 }
 
@@ -115,9 +121,9 @@ static void Stage_ScrollCamera(void)
 			stage.camera.zoom += FIXED_DEC(1,100);
 	#else
 		//Scroll based off current divisor
-		stage.camera.x = lerp(stage.camera.x, stage.camera.tx, FIXED_DEC(5,100));
-		stage.camera.y = lerp(stage.camera.y, stage.camera.ty, FIXED_DEC(5,100));
-		stage.camera.zoom = lerp(stage.camera.zoom, stage.camera.tz, FIXED_DEC(5,100));
+		stage.camera.x = lerp(stage.camera.x, stage.camera.tx, event.speed);
+		stage.camera.y = lerp(stage.camera.y, stage.camera.ty, event.speed);
+		stage.camera.zoom = lerp(stage.camera.zoom, stage.camera.tz, event.speed);
 	#endif
 	
 	//Update other camera stuff
@@ -481,134 +487,131 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 }
 
 //Stage drawing functions
+void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, u8 cr, u8 cg, u8 cb, fixed_t zoom)
+{
+    fixed_t xz = dst->x;
+    fixed_t yz = dst->y;
+    fixed_t wz = dst->w;
+    fixed_t hz = dst->h;
+    
+    #ifdef STAGE_NOHUD
+        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+            return;
+    #endif
+    
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
+    fixed_t r = l + FIXED_MUL(wz, zoom);
+    fixed_t b = t + FIXED_MUL(hz, zoom);
+    
+    l /= FIXED_UNIT;
+    t /= FIXED_UNIT;
+    r /= FIXED_UNIT;
+    b /= FIXED_UNIT;
+    
+    RECT sdst = {
+        l,
+        t,
+        r - l,
+        b - t,
+    };
+    Gfx_DrawTexRotateCol(tex, src, &sdst, angle, hx, hy, cr, cg, cb);
+}
+
+void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, fixed_t zoom)
+{
+    Stage_DrawTexRotateCol(tex, src, dst, angle, hx, hy, 128, 128, 128, zoom);
+}
+
 void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb)
 {
-	fixed_t xz = dst->x;
-	fixed_t yz = dst->y;
-	fixed_t wz = dst->w;
-	fixed_t hz = dst->h;
-	
-	#ifdef STAGE_NOHUD
-		if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-			return;
-	#endif
-	
-	fixed_t l = (SCREEN_WIDTH2  << FIXED_SHIFT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
-	fixed_t t = (SCREEN_HEIGHT2 << FIXED_SHIFT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
-	fixed_t r = l + FIXED_MUL(wz, zoom);
-	fixed_t b = t + FIXED_MUL(hz, zoom);
-	
-	l >>= FIXED_SHIFT;
-	t >>= FIXED_SHIFT;
-	r >>= FIXED_SHIFT;
-	b >>= FIXED_SHIFT;
-	
-	RECT sdst = {
-		l,
-		t,
-		r - l,
-		b - t,
-	};
-	Gfx_DrawTexCol(tex, src, &sdst, cr, cg, cb);
+    fixed_t xz = dst->x;
+    fixed_t yz = dst->y;
+    fixed_t wz = dst->w;
+    fixed_t hz = dst->h;
+    
+    #ifdef STAGE_NOHUD
+        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+            return;
+    #endif
+    
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
+    fixed_t r = l + FIXED_MUL(wz, zoom);
+    fixed_t b = t + FIXED_MUL(hz, zoom);
+    
+    l /= FIXED_UNIT;
+    t /= FIXED_UNIT;
+    r /= FIXED_UNIT;
+    b /= FIXED_UNIT;
+    
+    RECT sdst = {
+        l,
+        t,
+        r - l,
+        b - t,
+    };
+    Gfx_DrawTexCol(tex, src, &sdst, cr, cg, cb);
 }
 
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom)
 {
-	Stage_DrawTexCol(tex, src, dst, zoom, 0x80, 0x80, 0x80);
+    Stage_DrawTexCol(tex, src, dst, zoom, 0x80, 0x80, 0x80);
+}
+
+void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom)
+{
+    //Don't draw if HUD and HUD is disabled
+    #ifdef STAGE_NOHUD
+        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+            return;
+    #endif
+    
+    //Get screen-space points
+    POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(p0->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p0->y, zoom) / FIXED_UNIT)};
+    POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(p1->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p1->y, zoom) / FIXED_UNIT)};
+    POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(p2->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p2->y, zoom) / FIXED_UNIT)};
+    POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(p3->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p3->y, zoom) / FIXED_UNIT)};
+    
+    Gfx_DrawTexArbCol(tex, src, &s0, &s1, &s2, &s3, r, g, b);
 }
 
 void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom)
 {
-	//Don't draw if HUD and HUD is disabled
-	#ifdef STAGE_NOHUD
-		if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-			return;
-	#endif
-	
-	//Get screen-space points
-	POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(p0->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p0->y, zoom) >> FIXED_SHIFT)};
-	POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(p1->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p1->y, zoom) >> FIXED_SHIFT)};
-	POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(p2->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p2->y, zoom) >> FIXED_SHIFT)};
-	POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(p3->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p3->y, zoom) >> FIXED_SHIFT)};
-	
-	Gfx_DrawTexArb(tex, src, &s0, &s1, &s2, &s3);
+    Stage_DrawTexArbCol(tex, src, p0, p1, p2, p3, 0x80, 0x80, 0x80, zoom);
+}
+
+void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, u8 r, u8 g, u8 b, u8 mode)
+{
+    //Don't draw if HUD and HUD is disabled
+    #ifdef STAGE_NOHUD
+        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+            return;
+    #endif
+    
+    //Get screen-space points
+    POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(p0->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p0->y, zoom) / FIXED_UNIT)};
+    POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(p1->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p1->y, zoom) / FIXED_UNIT)};
+    POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(p2->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p2->y, zoom) / FIXED_UNIT)};
+    POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(p3->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p3->y, zoom) / FIXED_UNIT)};
+    
+    Gfx_BlendTexArbCol(tex, src, &s0, &s1, &s2, &s3, r, g, b, mode);
 }
 
 void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, u8 mode)
 {
-	//Don't draw if HUD and HUD is disabled
-	#ifdef STAGE_NOHUD
-		if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-			return;
-	#endif
-	
-	//Get screen-space points
-	POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(p0->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p0->y, zoom) >> FIXED_SHIFT)};
-	POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(p1->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p1->y, zoom) >> FIXED_SHIFT)};
-	POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(p2->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p2->y, zoom) >> FIXED_SHIFT)};
-	POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(p3->x, zoom) >> FIXED_SHIFT), SCREEN_HEIGHT2 + (FIXED_MUL(p3->y, zoom) >> FIXED_SHIFT)};
-	
-	Gfx_BlendTexArb(tex, src, &s0, &s1, &s2, &s3, mode);
-}
-
-void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t zoom, fixed_t fx, fixed_t fy)
-{	
-	s16 sin = MUtil_Sin(angle);
-	s16 cos = MUtil_Cos(angle);
-	int pw = dst->w / 2000;
-	int ph = dst->h / 2000;
-	
-	POINT p0 = {-pw, -ph};
-	MUtil_RotatePoint(&p0, sin, cos);
-	
-	POINT p1 = { pw, -ph};
-	MUtil_RotatePoint(&p1, sin, cos);
-	
-	POINT p2 = {-pw,  ph};
-	MUtil_RotatePoint(&p2, sin, cos);
-	
-	POINT p3 = { pw,  ph};
-	MUtil_RotatePoint(&p3, sin, cos);
-	
-	POINT_FIXED d0 = {
-		dst->x + ((fixed_t)p0.x << FIXED_SHIFT) - fx,
-		dst->y + ((fixed_t)p0.y << FIXED_SHIFT) - fy
-	};
-	POINT_FIXED d1 = {
-		dst->x + ((fixed_t)p1.x << FIXED_SHIFT) - fx,
-		dst->y + ((fixed_t)p1.y << FIXED_SHIFT) - fy
-	};
-	POINT_FIXED d2 = {
-        dst->x + ((fixed_t)p2.x << FIXED_SHIFT) - fx,
-		dst->y + ((fixed_t)p2.y << FIXED_SHIFT) - fy
-	};
-	POINT_FIXED d3 = {
-        dst->x + ((fixed_t)p3.x << FIXED_SHIFT) - fx,
-		dst->y + ((fixed_t)p3.y << FIXED_SHIFT) - fy
-	};
-	
-    Stage_DrawTexArb(tex, src, &d0, &d1, &d2, &d3, zoom);
+    Stage_BlendTexArbCol(tex, src, p0, p1, p2, p3, zoom, 0x80, 0x80, 0x80, mode);
 }
 
 //Stage HUD functions
-static void Stage_DrawHealth(s16 health, u16 health_i[2][4], s8 ox)
+static void Stage_DrawHealth(s16 health, u16 health_i[2][4], boolean ox)
 {
 	u8 status;
 	//Check if we should use 'dying' frame
-	if (ox < 0)
-	{
-		if (health >= 18000)
-			status = 1;
-		else
-			status = 0;
-	}
+	if (ox)
+		status = ((health >= 18000) ? 1 : 0);
 	else
-	{
-		if (health <= 2000)
-			status = 1;
-		else
-			status = 0;
-	}
+		status = ((health <= 2000) ? 1 : 0);
 	
 	//Get src and dst
 	fixed_t hx = (105 << FIXED_SHIFT) * (10000 - health) / 10000;
@@ -619,23 +622,22 @@ static void Stage_DrawHealth(s16 health, u16 health_i[2][4], s8 ox)
 		health_i[status][3]
 	};
 	RECT_FIXED dst = {
-		hx + ox * FIXED_DEC(20,1) + FIXED_DEC(4,1),
+		hx + ox * FIXED_DEC(32,1) - FIXED_DEC(12,1),
 		(SCREEN_HEIGHT2 - 34) << FIXED_SHIFT,
 		src.w << FIXED_SHIFT,
 		src.h << FIXED_SHIFT
 	};
 	
-	dst.x += FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1);
-	dst.y += FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1);
-	
-	//if (ox < 0)
-	//	dst.w = -dst.w;
+	if (ox > 0)
+		dst.w = -dst.w;
 	
 	if (stage.prefs.downscroll)
 		dst.y = -dst.y;
 	
+	angletest++;
+	
 	//Draw health icon
-	Stage_DrawTexRotate(&stage.tex_hud1, &src, &dst, RandomRange(-event.shake,event.shake) / 50, FIXED_MUL(stage.bump, stage.sbump), 0, 0);
+	Stage_DrawTexRotate(&stage.tex_icons, &src, &dst, 0, src.w / 2, src.h / 2, FIXED_MUL(stage.bump, stage.sbump));
 }
 
 static void Stage_DrawHealthBar(s16 x, s32 color)
@@ -998,7 +1000,7 @@ static void Stage_LoadChart(void)
 	else
 	{
 		//Use standard path convention
-		sprintf(chart_path, "\\SONGS\\%d.%d.CHT;1", stage.stage_def->week, stage.stage_def->week_song);
+		sprintf(chart_path, "\\SONGS\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
 	}
 	
 	if (stage.chart_data != NULL)
@@ -1093,9 +1095,11 @@ static void Stage_LoadState(void)
 	timer.secondtimer = 0;
 	timer.timer = Audio_GetLength(stage.stage_def->music_track) - 1;
 	timer.timermin = 0;
+	stage.paused = false;
 	
 	stage.player_state[0].character = stage.player;
 	stage.player_state[1].character = stage.opponent;
+
 	
 	for (int i = 0; i < 2; i++)
 	{
@@ -1132,13 +1136,16 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 
 	//Load HUD textures
 	Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
-	Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\HUD1.TIM;1"), GFX_LOADTEX_FREE);
+	Gfx_LoadTex(&stage.tex_icons, IO_Read("\\STAGE\\ICONS.TIM;1"), GFX_LOADTEX_FREE);
 	
 	//Load Special Notes
 	Gfx_LoadTex(&stage.tex_note, IO_Read("\\STAGE\\NOTE.TIM;1"), GFX_LOADTEX_FREE);
 	
 	//Load stage background
 	Stage_LoadStage();
+	
+	//Load Events
+	Load_Events();
 	
 	//Load characters
 	Stage_LoadPlayer();
@@ -1182,6 +1189,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	
 	//load fonts
 	FontData_Load(&stage.font_cdr, Font_CDR);
+	FontData_Load(&stage.font_bold, Font_Bold);
 	
 	//Load music
 	stage.note_scroll = 0;
@@ -1283,16 +1291,12 @@ void Stage_Tick(void)
 {
 	SeamLoad:;
 	
-	//Return to menu when start is pressed
-	if (pad_state.press & PAD_START)
-	{
-		stage.trans = (stage.state == StageState_Play) ? StageTrans_Menu : StageTrans_Reload;
-		Trans_Start();
-	}
-	
 	//Tick transition
 	if (Trans_Tick())
 	{
+		stage.pause_select = 0;
+		stage.paused = false;
+		
 		switch (stage.trans)
 		{
 			case StageTrans_Menu:
@@ -1338,6 +1342,27 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
+			if (stage.song_step >= 0)
+			{
+				if (stage.paused == false && pad_state.press & PAD_START)
+				{
+					stage.pause_scroll = -1;
+					Audio_PauseXA();
+					stage.paused = true;
+					pad_state.press = 0;
+				}
+			}
+
+			if (stage.paused)
+			{
+				switch (stage.pause_state)
+				{
+					case 0:
+						PausedState();
+						break;
+				}
+			}
+			
 			Events();
 			
 			//Manage Notes Position
@@ -1352,19 +1377,10 @@ void Stage_Tick(void)
 				note_y[i] = FIXED_DEC(note_def[0][i],1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1);
 			}
 			
-			stage.font_cdr.draw(&stage.font_cdr,
-				stage.credits,
-				FIXED_DEC(-159,1),
-				FIXED_DEC(108,1),
-				FontAlign_Left
-			);
-			
-			StageTimer_Draw();
-			
 			if (stage.prefs.botplay)
 			{
 				//Draw botplay
-				RECT bot_src = {140, 224, 67, 16};
+				RECT bot_src = {61, 178, 67, 16};
 				RECT_FIXED bot_dst = {FIXED_DEC(-bot_src.w / 2,1), FIXED_DEC(-58,1), FIXED_DEC(bot_src.w,1), FIXED_DEC(bot_src.h,1)};
 
 				Stage_DrawTex(&stage.tex_hud0, &bot_src, &bot_dst, stage.bump);
@@ -1377,104 +1393,143 @@ void Stage_Tick(void)
 			boolean playing;
 			fixed_t next_scroll;
 			
-			if (stage.note_scroll < 0)
-			{
-				//Play countdown sequence
-				stage.song_time += timer_dt;
-					
-				//Update song
-				if (stage.song_time >= 0)
-				{
-					//Song has started
-					playing = true;
-
-					Audio_PlayXA_Track(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, 0);
-						
-					//Update song time
-					fixed_t audio_time = (fixed_t)Audio_TellXA_Milli() - stage.offset;
-					if (audio_time < 0)
-						audio_time = 0;
-					stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
-					stage.interp_time = 0;
-					stage.song_time = stage.interp_ms;
-				}
-				else
-				{
-					//Still scrolling
-					playing = false;
-				}
-				
-				//Update scroll
-				next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
-			}
-			else if (Audio_PlayingXA())
-			{
-				fixed_t audio_time_pof = (fixed_t)Audio_TellXA_Milli();
-				fixed_t audio_time = (audio_time_pof > 0) ? (audio_time_pof - stage.offset) : 0;
-				
-				//Old sync
-				stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
-				stage.interp_time = 0;
-				stage.song_time = stage.interp_ms;
-				
-				playing = true;
-				
-				//Update scroll
-				next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
-			}
-			else
-			{
-				//Song has ended
-				playing = false;
-				stage.song_time += timer_dt;
-					
-				//Update scroll
-				next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
-				
-				//Transition to menu or next song
-				if (stage.story && stage.stage_def->next_stage != stage.stage_id)
-				{
-					if (Stage_NextLoad())
-						goto SeamLoad;
-				}
-				else
-				{
-					stage.trans = StageTrans_Menu;
-					Trans_Start();
-				}
-			}	
-
-			RecalcScroll:;
-			//Update song scroll and step
-			if (next_scroll > stage.note_scroll)
-			{
-				if (((stage.note_scroll / 12) & FIXED_UAND) != ((next_scroll / 12) & FIXED_UAND))
-					stage.flag |= STAGE_FLAG_JUST_STEP;
-				stage.note_scroll = next_scroll;
-				stage.song_step = (stage.note_scroll >> FIXED_SHIFT);
-				if (stage.note_scroll < 0)
-					stage.song_step -= 11;
-				stage.song_step /= 12;
-			}
+			const fixed_t interp_int = FIXED_UNIT * 8 / 75;
 			
-			//Update section
-			if (stage.note_scroll >= 0)
+			if (!stage.paused)
 			{
-				//Check if current section has ended
-				u16 end = stage.cur_section->end;
-				if ((stage.note_scroll >> FIXED_SHIFT) >= end)
+				if (stage.note_scroll < 0)
 				{
-					//Increment section pointer
-					stage.cur_section++;
+					//Play countdown sequence
+					stage.song_time += timer_dt;
+						
+					//Update song
+					if (stage.song_time >= 0)
+					{
+						//Song has started
+						playing = true;
+						
+						Audio_PlayXA_Track(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, 0);
+							
+						//Update song time
+						fixed_t audio_time = (fixed_t)Audio_TellXA_Milli() - stage.offset;
+						if (audio_time < 0)
+							audio_time = 0;
+						stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
+						stage.interp_time = 0;
+						stage.song_time = stage.interp_ms;
+					}
+					else
+					{
+						//Still scrolling
+						playing = false;
+					}
 					
-					//Update BPM
-					u16 next_bpm = stage.cur_section->flag & SECTION_FLAG_BPM_MASK;
-					Stage_ChangeBPM(next_bpm, end);
-					stage.section_base = stage.cur_section;
+					//Update scroll
+					next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
+				}
+				else if (Audio_PlayingXA())
+				{
+					fixed_t audio_time_pof = (fixed_t)Audio_TellXA_Milli();
+					fixed_t audio_time = (audio_time_pof > 0) ? (audio_time_pof - stage.offset) : 0;
 					
-					//Recalculate scroll based off new BPM
+					if (stage.prefs.expsync)
+					{
+						//Get playing song position
+						if (audio_time_pof > 0)
+						{
+							stage.song_time += timer_dt;
+							stage.interp_time += timer_dt;
+						}
+						
+						if (stage.interp_time >= interp_int)
+						{
+							//Update interp state
+							while (stage.interp_time >= interp_int)
+								stage.interp_time -= interp_int;
+							stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
+						}
+						
+						//Resync
+						fixed_t next_time = stage.interp_ms + stage.interp_time;
+						if (stage.song_time >= next_time + FIXED_DEC(25,1000) || stage.song_time <= next_time - FIXED_DEC(25,1000))
+						{
+							stage.song_time = next_time;
+						}
+						else
+						{
+							if (stage.song_time < next_time - FIXED_DEC(1,1000))
+								stage.song_time += FIXED_DEC(1,1000);
+							if (stage.song_time > next_time + FIXED_DEC(1,1000))
+								stage.song_time -= FIXED_DEC(1,1000);
+						}
+					}
+					else
+					{
+						//Old sync
+						stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
+						stage.interp_time = 0;
+						stage.song_time = stage.interp_ms;
+					}
+					
+					playing = true;
+					
+					//Update scroll
 					next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
-					goto RecalcScroll;
+				}
+				else
+				{
+					//Song has ended
+					playing = false;
+					stage.song_time += timer_dt;
+						
+					//Update scroll
+					next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
+					
+					//Transition to menu or next song
+					if (stage.story && stage.stage_def->next_stage != stage.stage_id)
+					{
+						if (Stage_NextLoad())
+							goto SeamLoad;
+					}
+					else
+					{
+						stage.trans = StageTrans_Menu;
+						Trans_Start();
+					}
+				}	
+                
+				RecalcScroll:;
+				//Update song scroll and step
+				if (next_scroll > stage.note_scroll)
+				{
+					if (((stage.note_scroll / 12) & FIXED_UAND) != ((next_scroll / 12) & FIXED_UAND))
+						stage.flag |= STAGE_FLAG_JUST_STEP;
+					stage.note_scroll = next_scroll;
+					stage.song_step = (stage.note_scroll >> FIXED_SHIFT);
+					if (stage.note_scroll < 0)
+						stage.song_step -= 11;
+					stage.song_step /= 12;
+				}
+				
+				//Update section
+				if (stage.note_scroll >= 0)
+				{
+					//Check if current section has ended
+					u16 end = stage.cur_section->end;
+					if ((stage.note_scroll >> FIXED_SHIFT) >= end)
+					{
+						//Increment section pointer
+						stage.cur_section++;
+						
+						//Update BPM
+						u16 next_bpm = stage.cur_section->flag & SECTION_FLAG_BPM_MASK;
+						Stage_ChangeBPM(next_bpm, end);
+						stage.section_base = stage.cur_section;
+						
+						//Recalculate scroll based off new BPM
+						next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
+						goto RecalcScroll;
+					}
 				}
 			}
 			
@@ -1559,6 +1614,20 @@ void Stage_Tick(void)
 			PlayerState *this;
 			s32 VScore;
 			
+			if (!event.hidehud)
+			{
+			
+			//Draw Song's name
+			//stage.font_cdr.draw(&stage.font_cdr,
+			//	stage.credits,
+			//	FIXED_DEC(-159,1),
+			//	FIXED_DEC(108,1),
+			//	FontAlign_Left
+			//);
+			
+			//Draw Timer
+			//StageTimer_Draw();
+			
 			//Draw Score
 			if (stage.prefs.mode >= StageMode_2P)
 			{
@@ -1636,8 +1705,8 @@ void Stage_Tick(void)
 				if (!stage.instakill)
 				{
 					//Draw health heads
-					Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i, 1);
-					Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, -1);
+					Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i, true);
+					Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, false);
 					
 					//Draw health bar
 					if (stage.prefs.mode == StageMode_Swap)
@@ -1680,6 +1749,10 @@ void Stage_Tick(void)
 				Stage_DrawStrum(i | 4, &note_src, &note_dst);
 				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 			}
+			
+			};
+			
+			Events_Back();
 			
 			//Draw stage foreground
 			if (stage.back->draw_fg != NULL)

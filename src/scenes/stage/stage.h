@@ -9,6 +9,7 @@
 #include "character.h"
 #include "player.h"
 #include "object.h"
+#include "pause.h"
 #include "../../fonts/font.h"
 
 //Stage constants
@@ -30,12 +31,10 @@
 //Stage enums
 typedef enum
 {
-	StageId_1_1, //Bopeebo
-	StageId_1_2, //Fresh
-	StageId_1_3, //Dadbattle
-	StageId_1_4, //Tutorial
-	StageId_1_5, //Tutorial
-	StageId_1_6, //Tutorial
+	StageId_1_1,
+	StageId_1_2,
+	StageId_1_3,
+	StageId_1_4,
 	
 	StageId_Max
 } StageId;
@@ -155,6 +154,7 @@ typedef struct
 	DRAWENV draw[2];
 	
 	//Stage settings
+	int pause_state;
 	int pal_i;
 	struct
 	{
@@ -166,6 +166,8 @@ typedef struct
 		boolean downscroll, middlescroll, ghost, vibrate, botplay;
 		
 		boolean palmode;
+		
+		boolean expsync;
 	} prefs;
 	
 	//Song settings
@@ -173,13 +175,17 @@ typedef struct
 	
 	u32 offset;
 	
+	fixed_t pause_scroll;
+	u8 pause_select;
+	boolean paused;
+	
 	u32 sound[1];
 	
 	//font
-	FontData font_cdr;
+	FontData font_cdr, font_bold;
 	
 	//HUD textures
-	Gfx_Tex tex_hud0, tex_hud1, tex_note;
+	Gfx_Tex tex_hud0, tex_icons, tex_note;
 	
 	//Stage data
 	const StageDef *stage_def;
@@ -229,7 +235,7 @@ typedef struct
 	u16 step_base;
 	Section *section_base;
 	
-	s16 song_step;
+	s32 song_step;
 	
 	u8 gf_speed; //Typically 4 steps, changes in Fresh
 	
@@ -258,12 +264,14 @@ typedef struct
 extern Stage stage;
 
 //Stage drawing functions
+void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, u8 r, u8 g, u8 b, fixed_t zoom);
+void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, fixed_t zoom);
 void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 r, u8 g, u8 b);
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom);
+void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom);
 void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom);
-void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t zoom, fixed_t fx, fixed_t fy);
+void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, u8 r, u8 g, u8 b, u8 mode);
 void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, u8 mode);
-
 
 //Stage functions
 void Stage_Load(StageId id, StageDiff difficulty, boolean story);

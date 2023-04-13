@@ -1,0 +1,39 @@
+{
+	"CharAnim": [
+		"CharAnim_Idle",
+		"CharAnim_Left",
+		"CharAnim_LeftAlt",
+		"CharAnim_Down",
+		"CharAnim_DownAlt",
+		"CharAnim_Up",
+		"CharAnim_UpAlt",
+		"CharAnim_Right",
+		"CharAnim_RightAlt"
+	],
+	"PlayerAnim": [
+		"CharAnim_Idle", 
+		"CharAnim_Left", 
+		"CharAnim_LeftAlt", 
+		"CharAnim_Down", 
+		"CharAnim_DownAlt", 
+		"CharAnim_Up", 
+		"CharAnim_UpAlt", 
+		"CharAnim_Right", 
+		"CharAnim_RightAlt",
+		"PlayerAnim_LeftMiss",
+		"PlayerAnim_DownMiss",
+		"PlayerAnim_UpMiss",
+		"PlayerAnim_RightMiss",
+		"PlayerAnim_Peace",
+		"PlayerAnim_Sweat",
+		"PlayerAnim_Dead0",
+		"PlayerAnim_Dead1",
+		"PlayerAnim_Dead2",
+		"PlayerAnim_Dead3",
+		"PlayerAnim_Dead4",
+		"PlayerAnim_Dead5",
+		"PlayerAnim_Dead6",
+		"PlayerAnim_Dead7"
+	],
+	"output": "src/characters"
+}

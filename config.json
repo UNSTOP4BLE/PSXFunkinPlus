@@ -16,21 +16,21 @@
 			"hname"   : "Down"
 		},
 		{
-			"fnfanim" : "singUP",
-			"imgname" : "up",
-			"hname"   : "Up"
-		},
-		{
 			"fnfanim" : "singRIGHT",
 			"imgname" : "right",
 			"hname"   : "Right"
+		},
+		{
+			"fnfanim" : "singUP",
+			"imgname" : "up",
+			"hname"   : "Up"
 		}
 	],
-	"input":  "iso/characters/mordee/erectecai",
-	"outdir": "iso/characters/mordee/",
-	"charname" : "MordeE",
+	"input":  "iso/characters/niku/niku",
+	"outdir": "iso/characters/niku/",
+	"charname" : "Niku",
 	"optimize" : false,
-	"optimizename" : "mordee",
+	"optimizename" : "Aldryx",
 	"arcname" : "ArcMain",
 	"vrampos" : [
 		448, 
@@ -39,8 +39,8 @@
 		481
 	],
 
-	"bpp" : 8,
-	"resize" : 0.25,
+	"bpp" : 4,
+	"resize" : 0.18,
 	"xmlscale" : 1.0,
 	"padding" : 1,
 	"max_width" : 256,

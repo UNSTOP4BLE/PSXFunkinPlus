@@ -1,0 +1,4 @@
+1 xa shotgun-shell/Merged.xa 1 0
+1 xa shotgun-shell/Inst.xa 1 1
+1 xa parasite/Merged.xa 1 2
+1 xa parasite/Inst.xa 1 3

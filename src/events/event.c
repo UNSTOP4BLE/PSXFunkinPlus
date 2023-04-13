@@ -9,15 +9,18 @@
 #include "../psx/movie.h"
 #include "../psx/mutil.h"
 
-
-#include "../characters/benson/benson.h"
-
 Event event;
 
-static void Unemployed()
+void Load_Events()
 {
-	if (stage.song_step == 250)
-		benson.angry = true;
+	event.zoom = FIXED_DEC(1,1);
+	event.speed = FIXED_DEC(5,100);
+	event.shake = 0;
+	event.flash = 0;
+	event.fade = 0;
+	event.fadebool = false;
+	event.movieview = false;
+	event.fadebehind = false;
 }
 
 void Events()
@@ -26,9 +29,18 @@ void Events()
 	//FntPrint("steps: %d", stage.song_step);
 	if(stage.prefs.followcamera)
 		FollowCharCamera();
-	if (stage.stage_id == StageId_1_3)
-		Unemployed();
 }
+
+void Events_Front()
+{
+	
+}
+
+void Events_Back()
+{
+	
+}
+
 
 void FollowCharCamera()
 {
@@ -59,22 +71,12 @@ void FollowCharCamera()
 
 void NoteHitEvent(u8 type)
 {
-	stage.bump += FIXED_DEC(10,1000);
-	if (type & NOTE_FLAG_BULLET)
-	{
-		stage.camera.zoom += FIXED_DEC(200,1000);
-		stage.bump += FIXED_DEC(100,1000);
-	}
+	
 }
 
 void NoteHitEnemyEvent(u8 type)
 {
-	if (type & NOTE_FLAG_BULLET)
-	{
-		stage.bump += FIXED_DEC(100,1000);
-	}
-	if (stage.stage_id == StageId_1_6)
-		event.shake = 1000;
+	
 }
 
 void NoteMissEvent(u8 type, u8 state)

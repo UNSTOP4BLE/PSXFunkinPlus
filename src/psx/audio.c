@@ -226,6 +226,15 @@ void Audio_PauseXA(void)
 	XA_Pause();
 }
 
+void Audio_ResumeXA(void)
+{
+	if (xa_state & XA_STATE_PLAYING)
+		return;
+	xa_state |= XA_STATE_PLAYING;
+
+	XA_Play(xa_pos);
+}
+
 void Audio_StopXA(void)
 {
 	//Deinitialize XA system
@@ -422,5 +431,10 @@ void Audio_PlaySoundOnChannel(u32 addr, u32 channel, int volume) {
 void Audio_PlaySound(u32 addr, int volume) {
     Audio_PlaySoundOnChannel(addr, getFreeChannel(), volume);
    // printf("Could not find free channel to play sound (addr=%08x)\n", addr);
+}
+
+u32 VAG_IsPlaying(u32 channel)
+{
+	return (SPU_CHANNELS[channel]._reserved != 0);
 }
 

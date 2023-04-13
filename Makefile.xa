@@ -1,11 +1,7 @@
 all: \
 	iso/music/menu.xa \
-	iso/songs/exhilaration.xa \
-	iso/songs/reckless.xa \
-	iso/songs/unemployed.xa \
-	iso/songs/supercharge.xa \
-	iso/songs/temper-break.xa \
-	iso/songs/bonus3.xa \
+	iso/songs/1.xa \
+	iso/songs/2.xa \
 
 iso/%.xa: iso/%.ogg
 	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C 0 $< $@ 
@@ -16,20 +12,8 @@ iso/%.xa:
 # Menu
 iso/music/menu.xa: iso/music/freakymenu.xa iso/music/gameover.xa
 
-# Exhilaration
-iso/songs/exhilaration.xa: iso/songs/exhilaration/Inst.xa iso/songs/exhilaration/Merged.xa iso/songs/exhilaration/InstErect.xa iso/songs/exhilaration/MergedErect.xa
+# 1
+iso/songs/1.xa: iso/songs/shotgun-shell/Inst.xa iso/songs/shotgun-shell/Merged.xa iso/songs/parasite/Inst.xa iso/songs/parasite/Merged.xa
 
-# Reckless
-iso/songs/reckless.xa: iso/songs/reckless/Inst.xa iso/songs/reckless/Merged.xa iso/songs/reckless/InstErect.xa iso/songs/reckless/MergedErect.xa
-
-# Unemployed
-iso/songs/unemployed.xa: iso/songs/unemployed/Inst.xa iso/songs/unemployed/Merged.xa iso/songs/unemployed/InstErect.xa iso/songs/unemployed/MergedErect.xa
-
-# SuperCharge
-iso/songs/supercharge.xa: iso/songs/supercharge/Inst.xa iso/songs/supercharge/Merged.xa iso/songs/supercharge/InstErect.xa iso/songs/supercharge/MergedErect.xa
-
-# Temper-Break
-iso/songs/temper-break.xa: iso/songs/temper-break/Inst.xa iso/songs/temper-break/Merged.xa iso/songs/temper-break/InstErect.xa iso/songs/temper-break/MergedErect.xa
-
-# Bonus3
-iso/songs/bonus3.xa: iso/songs/cookies/Inst.xa iso/songs/cookies/Merged.xa iso/songs/new-management/Inst.xa iso/songs/new-management/Merged.xa
+# 2
+iso/songs/2.xa: iso/songs/godrays/Inst.xa iso/songs/godrays/Merged.xa iso/songs/promenade/Inst.xa iso/songs/promenade/Merged.xa

@@ -1,23 +1,32 @@
 all: \
 	iso/characters/bf/main.arc \
+	iso/characters/bfg/main.arc \
+	iso/characters/bfn/main.arc \
 	\
 	iso/characters/dad/main.arc \
+	iso/characters/aldryx/main.arc \
+	iso/characters/agoti/main.arc \
+	iso/characters/sol/main.arc \
+	iso/characters/niku/main.arc \
 	\
 	iso/characters/gf/main.arc \
-	iso/characters/gfone/main.arc \
 	iso/characters/gf/tut.arc \
 	iso/characters/gf/speaker.tim \
-	iso/characters/gfa/main.arc \
+	iso/characters/gfb/main.arc \
+	iso/characters/gfg/main.arc \
 	\
 	iso/stages/default/back.arc \
-	iso/stages/house/back.arc \
-	iso/stages/park/back.arc \
+	iso/stages/BG1/back.arc \
+	iso/stages/BG2/back.arc \
+	iso/stages/BG3/back.arc \
+	iso/stages/BG3/obj/back.arc \
+	iso/stages/BG4/back.arc \
 	\
+	iso/characters/icons.tim \
 	iso/images/menu/menu.arc \
 	iso/images/menu/loading.tim \
 	iso/images/font/fonts.tim \
 	iso/images/hud0.tim \
-	iso/images/hud1.tim \
 	iso/images/note.tim \
 
 iso/%.tim: iso/%.png
@@ -27,24 +36,39 @@ iso/%.arc:
 	tools/funkinarcpak/funkinarcpak $@ $^
 
 # Menu
-iso/images/menu/menu.arc: iso/images/menu/back.tim iso/images/menu/ng.tim iso/images/menu/story.tim iso/images/menu/title.tim
+iso/images/menu/menu.arc: iso/images/menu/back.tim iso/images/menu/ng.tim iso/images/menu/story.tim iso/images/menu/title.tim iso/images/menu/titleback0.tim iso/images/menu/titleback1.tim
 
 # BF
 iso/characters/bf/main.arc: iso/characters/bf/bf0.tim iso/characters/bf/bf0.tim iso/characters/bf/bf1.tim iso/characters/bf/bf2.tim iso/characters/bf/bf3.tim iso/characters/bf/bf4.tim iso/characters/bf/bf5.tim iso/characters/bf/bf6.tim iso/characters/bf/dead0.tim iso/characters/bf/dead1.tim iso/characters/bf/dead2.tim iso/characters/bf/retry.tim
-iso/characters/bfa/main.arc: iso/characters/bfa/idle0.tim iso/characters/bfa/idle1.tim iso/characters/bfa/idle2.tim iso/characters/bfa/idle3.tim iso/characters/bfa/left0.tim iso/characters/bfa/left1.tim iso/characters/bfa/down0.tim iso/characters/bfa/down1.tim iso/characters/bfa/down2.tim iso/characters/bfa/down3.tim iso/characters/bfa/up0.tim iso/characters/bfa/up1.tim iso/characters/bfa/right0.tim iso/characters/bfa/right1.tim iso/characters/bfa/right2.tim iso/characters/bfa/right3.tim iso/characters/bfa/leftmiss0.tim iso/characters/bfa/leftmiss1.tim iso/characters/bfa/downalt0.tim iso/characters/bfa/downalt1.tim iso/characters/bfa/downalt2.tim iso/characters/bfa/upmiss0.tim iso/characters/bfa/upmiss1.tim iso/characters/bfa/rightmiss0.tim iso/characters/bfa/rightmiss1.tim iso/characters/bfa/rightmiss2.tim 
+iso/characters/bfg/main.arc: iso/characters/bfg/bf0.tim iso/characters/bfg/bf0.tim iso/characters/bfg/bf1.tim iso/characters/bfg/bf2.tim iso/characters/bfg/bf3.tim iso/characters/bfg/bf4.tim iso/characters/bfg/bf5.tim iso/characters/bfg/bf6.tim iso/characters/bfg/dead0.tim iso/characters/bfg/dead1.tim iso/characters/bfg/dead2.tim iso/characters/bfg/retry.tim
+iso/characters/bfn/main.arc: iso/characters/bfn/bf0.tim iso/characters/bfn/bf0.tim iso/characters/bfn/bf1.tim iso/characters/bfn/bf2.tim iso/characters/bfn/bf3.tim iso/characters/bfn/bf4.tim iso/characters/bfn/bf5.tim iso/characters/bfn/bf6.tim iso/characters/bfn/dead0.tim iso/characters/bfn/dead1.tim iso/characters/bfn/dead2.tim iso/characters/bfn/retry.tim
+
 
 # Dad
 iso/characters/dad/main.arc: iso/characters/dad/idle0.tim iso/characters/dad/idle1.tim iso/characters/dad/left.tim iso/characters/dad/down.tim iso/characters/dad/up.tim iso/characters/dad/right.tim
 
+# Aldryx
+iso/characters/aldryx/main.arc: iso/characters/aldryx/idle0.tim iso/characters/aldryx/idle1.tim iso/characters/aldryx/left0.tim iso/characters/aldryx/left1.tim iso/characters/aldryx/left2.tim iso/characters/aldryx/left3.tim iso/characters/aldryx/left4.tim iso/characters/aldryx/down0.tim iso/characters/aldryx/down1.tim iso/characters/aldryx/down2.tim iso/characters/aldryx/down3.tim iso/characters/aldryx/down4.tim iso/characters/aldryx/up0.tim iso/characters/aldryx/up1.tim iso/characters/aldryx/right0.tim iso/characters/aldryx/right1.tim iso/characters/aldryx/right2.tim iso/characters/aldryx/right3.tim iso/characters/aldryx/right4.tim iso/characters/aldryx/right5.tim 
+iso/stages/BG1/back.arc: iso/stages/BG1/0.tim iso/stages/BG1/1.tim iso/stages/BG1/2.tim iso/stages/BG1/3.tim
+
+# Agoti
+iso/characters/agoti/main.arc: iso/characters/agoti/idle0.tim iso/characters/agoti/idle1.tim iso/characters/agoti/idle2.tim iso/characters/agoti/left0.tim iso/characters/agoti/left1.tim iso/characters/agoti/left2.tim iso/characters/agoti/left3.tim iso/characters/agoti/down0.tim iso/characters/agoti/down1.tim iso/characters/agoti/down2.tim iso/characters/agoti/down3.tim iso/characters/agoti/down4.tim iso/characters/agoti/up0.tim iso/characters/agoti/up1.tim iso/characters/agoti/up2.tim iso/characters/agoti/right0.tim iso/characters/agoti/right1.tim iso/characters/agoti/right2.tim iso/characters/agoti/right3.tim iso/characters/agoti/right4.tim iso/characters/agoti/right5.tim iso/characters/agoti/right6.tim iso/characters/agoti/right7.tim 
+iso/stages/BG2/back.arc: iso/stages/BG2/0.tim iso/stages/BG2/1.tim iso/stages/BG2/2.tim iso/stages/BG2/3.tim iso/stages/BG2/4.tim
+
+# Sol
+iso/characters/sol/main.arc: iso/characters/sol/idle0.tim iso/characters/sol/idle1.tim iso/characters/sol/idle2.tim iso/characters/sol/idle3.tim iso/characters/sol/idle4.tim iso/characters/sol/idle5.tim iso/characters/sol/idle6.tim iso/characters/sol/idle7.tim iso/characters/sol/idle8.tim iso/characters/sol/idle9.tim iso/characters/sol/idle10.tim iso/characters/sol/left0.tim iso/characters/sol/left1.tim iso/characters/sol/left2.tim iso/characters/sol/left3.tim iso/characters/sol/down0.tim iso/characters/sol/down1.tim iso/characters/sol/down2.tim iso/characters/sol/down3.tim iso/characters/sol/down4.tim iso/characters/sol/up0.tim iso/characters/sol/up1.tim iso/characters/sol/up2.tim iso/characters/sol/up3.tim iso/characters/sol/right0.tim iso/characters/sol/right1.tim iso/characters/sol/right2.tim iso/characters/sol/right3.tim iso/characters/sol/right4.tim 
+iso/stages/BG3/back.arc: iso/stages/BG3/0.tim iso/stages/BG3/1.tim 
+iso/stages/BG3/obj/back.arc: iso/stages/BG3/obj/agoti0.tim iso/stages/BG3/obj/agoti1.tim iso/stages/BG3/obj/aldryx0.tim iso/stages/BG3/obj/aldryx1.tim 
+
+# Niku
+iso/characters/niku/main.arc: iso/characters/niku/idle0.tim iso/characters/niku/idle1.tim iso/characters/niku/idle2.tim iso/characters/niku/idle3.tim iso/characters/niku/idle4.tim iso/characters/niku/idle5.tim iso/characters/niku/idle6.tim iso/characters/niku/idle7.tim iso/characters/niku/idle8.tim iso/characters/niku/idle9.tim iso/characters/niku/left0.tim iso/characters/niku/left1.tim iso/characters/niku/left2.tim iso/characters/niku/left3.tim iso/characters/niku/down0.tim iso/characters/niku/down1.tim iso/characters/niku/down2.tim iso/characters/niku/down3.tim iso/characters/niku/down4.tim iso/characters/niku/down5.tim iso/characters/niku/down6.tim iso/characters/niku/up0.tim iso/characters/niku/up1.tim iso/characters/niku/up2.tim iso/characters/niku/up3.tim iso/characters/niku/up4.tim iso/characters/niku/up5.tim iso/characters/niku/up6.tim iso/characters/niku/up7.tim iso/characters/niku/right0.tim iso/characters/niku/right1.tim iso/characters/niku/right2.tim iso/characters/niku/right3.tim iso/characters/niku/right4.tim iso/characters/niku/right5.tim 
+iso/stages/BG4/back.arc: iso/stages/BG4/0.tim iso/stages/BG4/1.tim iso/stages/BG4/2.tim 
+
 # GF
 iso/characters/gf/main.arc: iso/characters/gf/gf0.tim iso/characters/gf/gf1.tim iso/characters/gf/gf2.tim
 iso/characters/gf/tut.arc: iso/characters/gf/tut0.tim iso/characters/gf/tut1.tim
+iso/characters/gfb/main.arc: iso/characters/gfb/idle.tim iso/characters/gfb/cry.tim 
+iso/characters/gfg/main.arc: iso/characters/gfg/gf0.tim iso/characters/gfg/gf1.tim iso/characters/gfg/gf2.tim
 
 # Default
 iso/stages/default/back.arc: iso/stages/default/back0.tim iso/stages/default/back1.tim
-
-# House
-iso/stages/house/back.arc: iso/stages/house/0.tim iso/stages/house/1.tim iso/stages/house/2.tim
-
-# Park
-iso/stages/park/back.arc: iso/stages/park/0.tim iso/stages/park/1.tim iso/stages/park/2.tim iso/stages/park/3.tim
