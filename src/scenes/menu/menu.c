@@ -298,8 +298,7 @@ void Menu_Tick(void)
 			
 			//Initialize page
 			if (menu.page_swap)
-				menu.scroll = menu.select *
-				FIXED_DEC(12,1);
+				menu.scroll = menu.select * FIXED_DEC(12,1);
 			
 			//Draw version identification
 			fonts.font_bold.draw(&fonts.font_bold,

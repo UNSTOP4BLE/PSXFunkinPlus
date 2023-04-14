@@ -158,16 +158,27 @@ typedef struct
 	int pal_i;
 	struct
 	{
+		//Controls settings
+		u16 control_keys;
+		
+		//Adjust Combo settings
+		u8 combox, comboy;
+		
+		//Graphics settings
+		boolean lowgraphics, palmode;
+		
 		//Visuals & UI settings
-		boolean splash, hidehud, timebar, flashing, camerazoom, combostack, followcamera;
+		boolean notesplashes, hidehud, timebar, flashinglights, camerazooms, combostack, followcamera;
 		
 		//Gameplay settings
 		s32 mode;
-		boolean downscroll, middlescroll, ghost, vibrate, botplay;
+		boolean downscroll, middlescroll, opponentnotes;
+		boolean ghost;
 		
-		boolean palmode;
+		//Memory Card settings
+		boolean autosave;
 		
-		boolean expsync;
+		boolean botplay, expsync;
 	} prefs;
 	
 	//Song settings

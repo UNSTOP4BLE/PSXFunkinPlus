@@ -227,7 +227,6 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	Stage_StartVocal();
 	u16 heal = (hit_type > 1) ? -400 * hit_type : 800;
 	this->health += heal - this->antispam;
-	this->refresh_accuracy = true;
 	this->max_accuracy += 3;
 	
 	//Create combo object telling of our combo
@@ -241,7 +240,7 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 		ObjectList_Add(&stage.objlist_fg, (Object*)combo);
 	
 	//Create note splashes if SICK
-	if (hit_type == 0 && stage.prefs.splash)
+	if (hit_type == 0 && stage.prefs.notesplashes)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -262,9 +261,8 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 static void Stage_MissNote(PlayerState *this, u8 type)
 {
 	this->max_accuracy += 3;
-	this->refresh_accuracy = true;
+	this->refresh_score = true;
 	this->miss += 1;
-	this->refresh_miss = true;
 	
 	if (this->character->spec & CHAR_SPEC_MISSANIM)
 		this->character->set_anim(this->character, note_anims[type & 0x3][2]);
@@ -1108,8 +1106,6 @@ static void Stage_LoadState(void)
 		stage.player_state[i].health = 10000;
 		stage.player_state[i].combo = 0;
 		stage.player_state[i].refresh_score = false;
-		stage.player_state[i].refresh_miss = false;
-		stage.player_state[i].refresh_accuracy = false;
 		stage.player_state[i].score = 0;
 		stage.player_state[i].miss = 0;
 		stage.player_state[i].accuracy = 0;
@@ -1633,13 +1629,11 @@ void Stage_Tick(void)
 					
 					this->accuracy = ((this->min_accuracy * 100) / (this->max_accuracy));
 					
-					if (this->refresh_score || this->refresh_miss || this->refresh_miss)
+					if (this->refresh_score)
 					{
 						VScore = (this->score * stage.max_score / this->max_score) * 10;
-						sprintf(this->P2_text, "SC: %d | MS: %d | AC: %d%%.%%", VScore, this->miss, this->accuracy);
+						sprintf(this->P2_text, "SC: %d | MS: %d | AC: %d%%", VScore, this->miss, this->accuracy);
 						this->refresh_score = false;
-						this->refresh_miss = false;
-						this->refresh_accuracy = false;
 					}
 					
 					if (i == 0)
@@ -1664,13 +1658,11 @@ void Stage_Tick(void)
 				
 				this->accuracy = (this->min_accuracy * 100) / (this->max_accuracy);
 				
-				if (this->refresh_score || this->refresh_miss || this->refresh_miss)
+				if (this->refresh_score)
 				{
 					VScore = (this->score * stage.max_score / this->max_score) * 10;
 					sprintf(this->score_text, "Score: %d | Misses: %d | Accuracy: %d%%", VScore, this->miss, this->accuracy);
 					this->refresh_score = false;
-					this->refresh_miss = false;
-					this->refresh_accuracy = false;
 				}
 				
 				s32 texty = 100;

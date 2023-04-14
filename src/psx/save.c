@@ -52,18 +52,15 @@ static void initSaveFile(SaveFile *file, const char *name)
 
 void defaultSettings()
 {
-	stage.prefs.splash = true;
 	stage.prefs.hidehud = false;
 	stage.prefs.timebar = true;
-	stage.prefs.flashing = false;
-	stage.prefs.camerazoom = true;
+	stage.prefs.camerazooms = true;
 	stage.prefs.combostack = true;
 	
 	stage.prefs.mode = 0;
 	stage.prefs.downscroll = false;
 	stage.prefs.middlescroll = false;
 	stage.prefs.ghost = false;
-	stage.prefs.vibrate = false;
 	stage.prefs.botplay = false;
 }
 
