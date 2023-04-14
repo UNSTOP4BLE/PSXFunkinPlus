@@ -1,7 +1,7 @@
 #include "save.h"
 
 #include <libmcrd.h>
-#include "../stage/stage.h"
+#include "../scenes/stage/stage.h"
 
 static const u8 saveIconPalette[32] = 
 {
@@ -69,7 +69,7 @@ void defaultSettings()
 
 boolean readSaveFile()
 {
-	int fd = open("bu00:BASCUS-00000psxflucky", 0x0001);
+	int fd = open("bu00:BASCUS-00000funkinlucky", 0x0001);
 	if (fd < 0) // file doesnt exist 
 		return false;
 
@@ -87,13 +87,13 @@ boolean readSaveFile()
 
 void writeSaveFile()
 {	
-	int fd = open("bu00:BASCUS-00000sonic", 0x0002);
+	int fd = open("bu00:BASCUS-00000funkinlucky", 0x0002);
 
 	if (fd < 0) // if save doesnt exist make one
-		fd =  open("bu00:BASCUS-00000sonic", 0x0202 | (1 << 16));
+		fd =  open("bu00:BASCUS-00000funkinlucky", 0x0202 | (1 << 16));
 
 	SaveFile file;
-	initSaveFile(&file, "Sonic.EXE");
+	initSaveFile(&file, "PSXF Lucky's Engine");
   	memcpy((void *) file.saveData, (const void *) &stage.prefs, sizeof(stage.prefs));
 	
 	if (fd >= 0) {

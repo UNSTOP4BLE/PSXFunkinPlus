@@ -6,6 +6,15 @@
 
 #include <string.h>
 
+Fonts fonts;
+
+void Initalize_Fonts(void)
+{
+	FontData_Load(&fonts.font_cdr, Font_CDR);
+	FontData_Load(&fonts.font_bold, Font_Bold);
+	FontData_Load(&fonts.font_arial, Font_Arial);
+}
+
 //Font_Bold
 s32 Font_Bold_GetWidth(struct FontData *this, const char *text)
 {
@@ -161,12 +170,20 @@ void Font_CDR_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, Fon
 		
 		//Draw character
 		RECT src = {font_cdrmap[c].charX, 129 + font_cdrmap[c].charY, font_cdrmap[c].charW, font_cdrmap[c].charL};
-		RECT_FIXED dst = {x - FIXED_DEC(alignoffset,1), y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
-
-		Stage_DrawTexCol(&this->tex, &src, &dst, stage.bump, r, g, b);
 		
-		//Increment X
-		x += (font_cdrmap[c].charW - 1) << FIXED_SHIFT;
+		if (gameloop == GameLoop_Stage)
+		{
+			RECT_FIXED dst = {x - FIXED_DEC(alignoffset,1), y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
+			Stage_DrawTexCol(&this->tex, &src, &dst, stage.bump, r, g, b);
+			x += (font_cdrmap[c].charW - 1) << FIXED_SHIFT;
+		}
+		else
+		{
+			RECT dst_f = {x - alignoffset, y, src.w, src.h};
+			Gfx_DrawTexCol(&this->tex, &src, &dst_f, r, g, b);
+			x += (font_cdrmap[c].charW - 1);
+		}
+		
 	}
 }
 

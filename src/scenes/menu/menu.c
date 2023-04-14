@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "options.h"
 
 #include "../../main.h"
 #include "../../audio.h"
@@ -22,52 +23,7 @@
 typedef char MenuStr[MENUSTR_CHARS + 1];
 
 //Menu state
-static struct
-{
-	//Menu state
-	u8 page, next_page;
-	boolean page_swap;
-	u8 select, next_select;
-	s16 animcounter;
-	
-	fixed_t scroll;
-	fixed_t trans_time;
-	
-	//Page specific state
-	union
-	{
-		struct
-		{
-			fixed_t logo_bump;
-			fixed_t fade, fadespd;
-		} title;
-		struct
-		{
-			fixed_t fade, fadespd;
-		} story;
-		struct
-		{
-			fixed_t back_r, back_g, back_b;
-		} freeplay;
-	} page_state;
-	
-	union
-	{
-		struct
-		{
-			u8 id, diff;
-			boolean story;
-		} stage;
-	} page_param;
-	
-	//Menu assets
-	Gfx_Tex tex_back, tex_ng, tex_story, tex_title;
-	Gfx_Tex tex_titleback0, tex_titleback1;
-	FontData font_bold, font_arial;
-	
-	Character *gf; //Title Girlfriend
-} menu;
-
+Menu menu;
 
 //Internal menu functions
 char menu_text_buffer[0x100];
@@ -196,9 +152,6 @@ void Menu_Load(MenuPage page)
 	Gfx_LoadTex(&menu.tex_titleback1, Archive_Find(menu_arc, "titleback1.tim"), 0);
 	Mem_Free(menu_arc);
 	
-	FontData_Load(&menu.font_bold, Font_Bold);
-	FontData_Load(&menu.font_arial, Font_Arial);
-	
 	//Initialize menu state
 	menu.select = menu.next_select = 0;
 	
@@ -245,6 +198,13 @@ void Menu_Tick(void)
 {
 	//Clear per-frame flags
 	stage.flag &= ~STAGE_FLAG_JUST_STEP;
+	
+	fonts.font_cdr.draw(&fonts.font_cdr,
+		"Saving...",
+		310,
+		220,
+		FontAlign_Right
+	);
 	
 	//Get song position
 	u16 next_step = Audio_TellXA_Milli() / 147; //100 BPM
@@ -342,7 +302,7 @@ void Menu_Tick(void)
 				FIXED_DEC(12,1);
 			
 			//Draw version identification
-			menu.font_bold.draw(&menu.font_bold,
+			fonts.font_bold.draw(&fonts.font_bold,
 				"PSXFUNKIN BY CUCKYDEV",
 				16,
 				SCREEN_HEIGHT - 32,
@@ -411,7 +371,7 @@ void Menu_Tick(void)
 				//Draw all options
 				for (u8 i = 0; i < COUNT_OF(menu_options); i++)
 				{
-					menu.font_bold.draw(&menu.font_bold,
+					fonts.font_bold.draw(&fonts.font_bold,
 						Menu_LowerIf(menu_options[i], menu.select != i),
 						SCREEN_WIDTH2,
 						SCREEN_HEIGHT2 + (i << 5) - 48 - (menu.scroll >> FIXED_SHIFT),
@@ -422,7 +382,7 @@ void Menu_Tick(void)
 			else if (animf_count & 2)
 			{
 				//Draw selected option
-				menu.font_bold.draw(&menu.font_bold,
+				fonts.font_bold.draw(&fonts.font_bold,
 					menu_options[menu.select],
 					SCREEN_WIDTH2,
 					SCREEN_HEIGHT2 + (menu.select << 5) - 48 - (menu.scroll >> FIXED_SHIFT),
@@ -516,7 +476,7 @@ void Menu_Tick(void)
 			}
 			
 			//Draw week name and tracks
-			menu.font_bold.draw(&menu.font_bold,
+			fonts.font_bold.draw(&fonts.font_bold,
 				menu_options[menu.select].name,
 				SCREEN_WIDTH - 16,
 				24,
@@ -527,7 +487,7 @@ void Menu_Tick(void)
 			for (size_t i = 0; i < COUNT_OF(menu_options[menu.select].tracks); i++, trackp++)
 			{
 				if (*trackp != NULL)
-					menu.font_bold.draw(&menu.font_bold,
+					fonts.font_bold.draw(&fonts.font_bold,
 						*trackp,
 						SCREEN_WIDTH - 16,
 						SCREEN_HEIGHT - (4 * 24) + (i * 24),
@@ -590,7 +550,7 @@ void Menu_Tick(void)
 			}
 			
 			//Draw page label
-			menu.font_bold.draw(&menu.font_bold,
+			fonts.font_bold.draw(&fonts.font_bold,
 				"FREEPLAY",
 				16,
 				SCREEN_HEIGHT - 32,
@@ -651,7 +611,7 @@ void Menu_Tick(void)
 					break;
 				
 				//Draw text
-				menu.font_bold.draw(&menu.font_bold,
+				fonts.font_bold.draw(&fonts.font_bold,
 					Menu_LowerIf(menu_options[i].text, menu.select != i),
 					48 + (y >> 2),
 					SCREEN_HEIGHT2 + y - 8,
@@ -684,129 +644,7 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Options:
 		{
-			static const char *gamemode_strs[] = {"NORMAL", "SWAP", "MULTIPLAYER"};
-			static const struct
-			{
-				enum
-				{
-					OptType_Boolean,
-					OptType_Enum,
-				} type;
-				const char *text;
-				void *value;
-				union
-				{
-					struct
-					{
-						int a;
-					} spec_boolean;
-					struct
-					{
-						s32 max;
-						const char **strs;
-					} spec_enum;
-				} spec;
-			} menu_options[] = {
-				{OptType_Enum,    "GAMEMODE", &stage.prefs.mode, {.spec_enum = {COUNT_OF(gamemode_strs), gamemode_strs}}},
-				{OptType_Boolean, "GHOST TAP ", &stage.prefs.ghost, {.spec_boolean = {0}}},
-				{OptType_Boolean, "DOWNSCROLL", &stage.prefs.downscroll, {.spec_boolean = {0}}},
-				{OptType_Boolean, "MIDDLESCROLL", &stage.prefs.middlescroll, {.spec_boolean = {0}}},
-				{OptType_Boolean, "INSTAKILL", &stage.instakill, {.spec_boolean = {0}}},
-				{OptType_Boolean, "CAM FOLLOW CHAR", &stage.prefs.followcamera, {.spec_boolean = {0}}},
-				{OptType_Boolean, "PAL REFRESH RATE", &stage.prefs.palmode, {.spec_boolean = {0}}}
-			};
-			
-			if (menu.select == 6 && pad_state.press & (PAD_CROSS | PAD_LEFT | PAD_RIGHT))
-				stage.pal_i = 1;
-			
-			//Initialize page
-			if (menu.page_swap)
-				menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
-			
-			//Draw page label
-			menu.font_bold.draw(&menu.font_bold,
-				"OPTIONS",
-				16,
-				SCREEN_HEIGHT - 32,
-				FontAlign_Left
-			);
-			
-			//Handle option and selection
-			if (menu.next_page == menu.page && Trans_Idle())
-			{
-				//Change option
-				if (pad_state.press & PAD_UP)
-				{
-					if (menu.select > 0)
-						menu.select--;
-					else
-						menu.select = COUNT_OF(menu_options) - 1;
-				}
-				if (pad_state.press & PAD_DOWN)
-				{
-					if (menu.select < COUNT_OF(menu_options) - 1)
-						menu.select++;
-					else
-						menu.select = 0;
-				}
-				
-				//Handle option changing
-				switch (menu_options[menu.select].type)
-				{
-					case OptType_Boolean:
-						if (pad_state.press & (PAD_CROSS | PAD_LEFT | PAD_RIGHT))
-							*((boolean*)menu_options[menu.select].value) ^= 1;
-						break;
-					case OptType_Enum:
-						if (pad_state.press & PAD_LEFT)
-							if (--*((s32*)menu_options[menu.select].value) < 0)
-								*((s32*)menu_options[menu.select].value) = menu_options[menu.select].spec.spec_enum.max - 1;
-						if (pad_state.press & PAD_RIGHT)
-							if (++*((s32*)menu_options[menu.select].value) >= menu_options[menu.select].spec.spec_enum.max)
-								*((s32*)menu_options[menu.select].value) = 0;
-						break;
-				}
-				
-				//Return to main menu if circle is pressed
-				if (pad_state.press & PAD_CIRCLE)
-				{
-					menu.next_page = MenuPage_Main;
-					menu.next_select = 3; //Options
-					Trans_Start();
-				}
-			}
-			
-			//Draw options
-			s32 next_scroll = menu.select * FIXED_DEC(24,1);
-			menu.scroll += (next_scroll - menu.scroll) >> 4;
-			
-			for (u8 i = 0; i < COUNT_OF(menu_options); i++)
-			{
-				//Get position on screen
-				s32 y = (i * 24) - 8 - (menu.scroll >> FIXED_SHIFT);
-				if (y <= -SCREEN_HEIGHT2 - 8)
-					continue;
-				if (y >= SCREEN_HEIGHT2 + 8)
-					break;
-				
-				//Draw text
-				char text[0x80];
-				switch (menu_options[i].type)
-				{
-					case OptType_Boolean:
-						sprintf(text, "%s %s", menu_options[i].text, *((boolean*)menu_options[i].value) ? "ON" : "OFF");
-						break;
-					case OptType_Enum:
-						sprintf(text, "%s %s", menu_options[i].text, menu_options[i].spec.spec_enum.strs[*((s32*)menu_options[i].value)]);
-						break;
-				}
-				menu.font_bold.draw(&menu.font_bold,
-					Menu_LowerIf(text, menu.select != i),
-					48 + (y >> 2),
-					SCREEN_HEIGHT2 + y - 8,
-					FontAlign_Left
-				);
-			}
+			Options_Tick();
 			
 			//Draw background
 			Menu_DrawBack(

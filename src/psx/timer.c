@@ -1,5 +1,6 @@
 #include "timer.h"
 #include "../scenes/stage/stage.h"
+#include "../fonts/font.h"
 
 #define TIMER_BITS (3)
 
@@ -128,14 +129,14 @@ void StageTimer_Draw()
 	//Draw timer
 	FntPrint("%d",timer.timer);
 	sprintf(timer.timer_display, "%d", timer.timermin);
-	stage.font_cdr.draw(&stage.font_cdr,
+	fonts.font_cdr.draw(&fonts.font_cdr,
 		timer.timer_display,
 		FIXED_DEC(140 - 8,1), 
 		FIXED_DEC(109,1),
 		FontAlign_Left
 	);
 	sprintf(timer.timer_display, ":");
-	stage.font_cdr.draw(&stage.font_cdr,
+	fonts.font_cdr.draw(&fonts.font_cdr,
 		timer.timer_display,
 		FIXED_DEC(140,1),
 		FIXED_DEC(109,1),
@@ -146,7 +147,7 @@ void StageTimer_Draw()
 	else
 		sprintf(timer.timer_display, "0%d", timer.timer);
 
-	stage.font_cdr.draw(&stage.font_cdr,
+	fonts.font_cdr.draw(&fonts.font_cdr,
 		timer.timer_display,
 		FIXED_DEC(140 + 5,1),
 		FIXED_DEC(109,1),

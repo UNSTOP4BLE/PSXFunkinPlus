@@ -181,9 +181,6 @@ typedef struct
 	
 	u32 sound[1];
 	
-	//font
-	FontData font_cdr, font_bold;
-	
 	//HUD textures
 	Gfx_Tex tex_hud0, tex_icons, tex_note;
 	

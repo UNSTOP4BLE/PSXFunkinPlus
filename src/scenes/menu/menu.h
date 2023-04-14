@@ -17,6 +17,55 @@ typedef enum
 	MenuPage_Stage, //Changes game loop
 } MenuPage;
 
+//Menu state
+typedef struct
+{
+	//Menu state
+	u8 page, next_page;
+	boolean page_swap;
+	u8 select, next_select;
+	s16 animcounter;
+	
+	fixed_t scroll;
+	fixed_t trans_time;
+	
+	//Page specific state
+	union
+	{
+		struct
+		{
+			fixed_t logo_bump;
+			fixed_t fade, fadespd;
+		} title;
+		struct
+		{
+			fixed_t fade, fadespd;
+		} story;
+		struct
+		{
+			fixed_t back_r, back_g, back_b;
+		} freeplay;
+	} page_state;
+	
+	union
+	{
+		struct
+		{
+			u8 id, diff;
+			boolean story;
+		} stage;
+	} page_param;
+	
+	//Menu assets
+	Gfx_Tex tex_back, tex_ng, tex_story, tex_title;
+	Gfx_Tex tex_titleback0, tex_titleback1;
+	FontData font_bold, font_arial;
+	
+	Character *gf; //Title Girlfriend
+} Menu;
+
+extern Menu menu;
+
 //Menu functions
 void Menu_Load(MenuPage page);
 void Menu_Unload();

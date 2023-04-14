@@ -52,13 +52,22 @@ int main(int argc, char **argv)
 	
 	Mem_Init((void*)malloc_heap, sizeof(malloc_heap));
 	
-	stage.pal_i = 1;
+	ResetGraph(0);
+	Pad_Init();
+	InitCARD(1);
+	StartPAD();
+	StartCARD();
+	_bu_init();	
+	ChangeClearPAD(0);
+	
 	IO_Init();
 	Audio_Init();
 	Gfx_Init();
 	Pad_Init();
 	
 	Timer_Init(false, false);
+	
+	Initalize_Fonts();
 	
 	//Start game
 	gameloop = GameLoop_Menu;

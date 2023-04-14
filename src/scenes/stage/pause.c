@@ -62,7 +62,7 @@ void PausedState()
 			break;
 
 		//draw text
-		stage.font_bold.draw_col(&stage.font_bold,
+		fonts.font_bold.draw_col(&fonts.font_bold,
 		stage_options[i],
 		SCREEN_WIDTH2,
 		y + 120,

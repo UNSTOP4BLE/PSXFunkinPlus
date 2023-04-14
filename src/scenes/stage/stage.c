@@ -1187,10 +1187,6 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
     stage.sound[0] = Audio_LoadVAGData(data, file.size);
     Mem_Free(data);
 	
-	//load fonts
-	FontData_Load(&stage.font_cdr, Font_CDR);
-	FontData_Load(&stage.font_bold, Font_Bold);
-	
 	//Load music
 	stage.note_scroll = 0;
 	Stage_LoadMusic();
@@ -1618,7 +1614,7 @@ void Stage_Tick(void)
 			{
 			
 			//Draw Song's name
-			//stage.font_cdr.draw(&stage.font_cdr,
+			//fonts.font_cdr.draw(&fonts.font_cdr,
 			//	stage.credits,
 			//	FIXED_DEC(-159,1),
 			//	FIXED_DEC(108,1),
@@ -1635,26 +1631,26 @@ void Stage_Tick(void)
 				{
 					this = &stage.player_state[i];
 					
-					this->accuracy = (this->min_accuracy * 100) / (this->max_accuracy);
+					this->accuracy = ((this->min_accuracy * 100) / (this->max_accuracy));
 					
 					if (this->refresh_score || this->refresh_miss || this->refresh_miss)
 					{
 						VScore = (this->score * stage.max_score / this->max_score) * 10;
-						sprintf(this->P2_text, "SC: %d | MS: %d | AC: %d%%", VScore, this->miss, this->accuracy);
+						sprintf(this->P2_text, "SC: %d | MS: %d | AC: %d%%.%%", VScore, this->miss, this->accuracy);
 						this->refresh_score = false;
 						this->refresh_miss = false;
 						this->refresh_accuracy = false;
 					}
 					
 					if (i == 0)
-						stage.font_cdr.draw(&stage.font_cdr,
+						fonts.font_cdr.draw(&fonts.font_cdr,
 							this->P2_text,
 							FIXED_DEC(11,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1), 
 							FIXED_DEC(100,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
 							FontAlign_Left
 						);
 					else
-						stage.font_cdr.draw(&stage.font_cdr,
+						fonts.font_cdr.draw(&fonts.font_cdr,
 							this->P2_text,
 							FIXED_DEC(-11,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
 							FIXED_DEC(100,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
@@ -1682,7 +1678,7 @@ void Stage_Tick(void)
 				if (stage.prefs.downscroll)
 					texty = -70;
 				
-				stage.font_cdr.draw(&stage.font_cdr,
+				fonts.font_cdr.draw(&fonts.font_cdr,
 					this->score_text,
 					FIXED_DEC(20,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 50,1), 
 					FIXED_DEC(texty,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 50,1),

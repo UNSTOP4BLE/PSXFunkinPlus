@@ -28,7 +28,16 @@ typedef struct FontData
 	Gfx_Tex tex;
 } FontData;
 
+typedef struct
+{
+	//font
+	FontData font_cdr, font_bold, font_arial;
+} Fonts;
+
+extern Fonts fonts;
+
 //Font functions
+void Initalize_Fonts(void);
 void FontData_Load(FontData *this, Font font);
 
 #endif
