@@ -58,10 +58,15 @@ void defaultSettings()
 	stage.prefs.combostack = true;
 	
 	stage.prefs.mode = 0;
-	stage.prefs.downscroll = false;
+	stage.prefs.downscroll = true;
 	stage.prefs.middlescroll = false;
-	stage.prefs.ghost = false;
+	stage.prefs.ghost = true;
 	stage.prefs.botplay = false;
+	
+	stage.prefs.control_keys[0] = PAD_SQUARE;
+	stage.prefs.control_keys[1] = PAD_CROSS;
+	stage.prefs.control_keys[2] = PAD_TRIANGLE;
+	stage.prefs.control_keys[3] = PAD_CIRCLE;
 }
 
 boolean readSaveFile()

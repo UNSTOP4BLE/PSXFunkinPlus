@@ -59,7 +59,6 @@ u8 angletest;
 static u32 note_x[8];
 static u32 note_y[8];
 
-static const u16 note_key[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
 static const u8 note_anims[4][3] = {
 	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
 	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
@@ -392,22 +391,22 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 			this->pad_held = this->character->pad_held = pad->held;
 			this->pad_press = pad->press;
 			
-			if (this->pad_held & INPUT_LEFT)
+			if (this->pad_held & stage.prefs.control_keys[0])
 				Stage_SustainCheck(this, 0 | i);
-			if (this->pad_held & INPUT_DOWN)
+			if (this->pad_held & stage.prefs.control_keys[1])
 				Stage_SustainCheck(this, 1 | i);
-			if (this->pad_held & INPUT_UP)
+			if (this->pad_held & stage.prefs.control_keys[2])
 				Stage_SustainCheck(this, 2 | i);
-			if (this->pad_held & INPUT_RIGHT)
+			if (this->pad_held & stage.prefs.control_keys[3])
 				Stage_SustainCheck(this, 3 | i);
 			
-			if (this->pad_press & INPUT_LEFT)
+			if (this->pad_press & stage.prefs.control_keys[0])
 				Stage_NoteCheck(this, 0 | i);
-			if (this->pad_press & INPUT_DOWN)
+			if (this->pad_press & stage.prefs.control_keys[1])
 				Stage_NoteCheck(this, 1 | i);
-			if (this->pad_press & INPUT_UP)
+			if (this->pad_press & stage.prefs.control_keys[2])
 				Stage_NoteCheck(this, 2 | i);
-			if (this->pad_press & INPUT_RIGHT)
+			if (this->pad_press & stage.prefs.control_keys[3])
 				Stage_NoteCheck(this, 3 | i);
 		}
 		else
@@ -464,12 +463,12 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 			{
 				if (hit[j] & 5)
 				{
-					this->pad_held |= note_key[j];
+					this->pad_held |= stage.prefs.control_keys[j];
 					Stage_SustainCheck(this, j | i);
 				}
 				if (hit[j] & 1)
 				{
-					this->pad_press |= note_key[j];
+					this->pad_press |= stage.prefs.control_keys[j];
 					Stage_NoteCheck(this, j | i);
 				}
 			}
@@ -681,7 +680,7 @@ static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
 		this->arrow_hitan[i] -= timer_dt;
 		if (this->arrow_hitan[i] <= 0)
 		{
-			if (this->pad_held & note_key[i])
+			if (this->pad_held & stage.prefs.control_keys[i])
 				this->arrow_hitan[i] = 1;
 			else
 				this->arrow_hitan[i] = 0;
@@ -692,7 +691,7 @@ static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
 		//Play depress animation
 		note_src->x = (i + 1) << 5;
 		note_src->y = 96;
-		if (!(this->pad_held & note_key[i]))
+		if (!(this->pad_held & stage.prefs.control_keys[i]))
 			this->arrow_hitan[i] = 0;
 	}
 	else
@@ -783,7 +782,7 @@ static void Stage_DrawNotes(void)
 				//Check for sustain clipping
 				fixed_t clip;
 				y -= scroll.size;
-				if ((note->type & (bot | NOTE_FLAG_HIT)) || ((this->pad_held & note_key[note->type & 0x3]) && (note_fp + stage.late_sus_safe >= stage.note_scroll)))
+				if ((note->type & (bot | NOTE_FLAG_HIT)) || ((this->pad_held & stage.prefs.control_keys[note->type & 0x3]) && (note_fp + stage.late_sus_safe >= stage.note_scroll)))
 				{
 					clip = note_y[(note->type & 0x7) ^ stage.note_swap] - y;
 					if (clip < 0)

@@ -57,8 +57,8 @@ typedef struct
 	} page_param;
 	
 	//Menu assets
-	Gfx_Tex tex_back, tex_ng, tex_story, tex_title;
-	Gfx_Tex tex_titleback0, tex_titleback1;
+	Gfx_Tex tex_back, tex_ng, tex_story, tex_title, tex_options;
+	Gfx_Tex tex_titleback0, tex_titleback1, tex_titleback2, tex_titleback3;
 	FontData font_bold, font_arial;
 	
 	Character *gf; //Title Girlfriend

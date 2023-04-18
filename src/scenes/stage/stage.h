@@ -159,10 +159,10 @@ typedef struct
 	struct
 	{
 		//Controls settings
-		u16 control_keys;
+		u16 control_keys[4];
 		
 		//Adjust Combo settings
-		u8 combox, comboy;
+		s16 combox, comboy;
 		
 		//Graphics settings
 		boolean lowgraphics, palmode;

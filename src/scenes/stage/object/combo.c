@@ -26,8 +26,8 @@ boolean Obj_Combo_Tick(Object *obj)
 		RECT_FIXED hit_dst = {
 			this->x - FIXED_DEC(8,1),
 			this->hy - FIXED_DEC(16,1),
-			FIXED_DEC(50,1),
-			(FIXED_DEC(24,1) * clipp) >> 4
+			FIXED_DEC(60,1),
+			(FIXED_DEC(30,1) * clipp) >> 4
 		};
 		
 		Stage_DrawTex(&stage.tex_hud0, &hit_src, &hit_dst, stage.bump);
@@ -61,10 +61,10 @@ boolean Obj_Combo_Tick(Object *obj)
 				clipp << 1
 			};
 			RECT_FIXED num_dst = {
-				this->x - FIXED_DEC(-16,1) + (i * FIXED_DEC(12,1)) - FIXED_DEC(12,1),
-				this->numy[i] - FIXED_DEC(44,1),
-				FIXED_DEC(20,1),
-				(FIXED_DEC(24,1) * clipp) >> 4
+				this->x - FIXED_DEC(-16,1) + (i * FIXED_DEC(10,1)) - FIXED_DEC(12,1),
+				this->numy[i] - FIXED_DEC(32,1),
+				FIXED_DEC(16,1),
+				(FIXED_DEC(18,1) * clipp) >> 4
 			};
 			
 			Stage_DrawTex(&stage.tex_hud0, &num_src, &num_dst, stage.bump);

@@ -150,6 +150,9 @@ void Menu_Load(MenuPage page)
 	Gfx_LoadTex(&menu.tex_title, Archive_Find(menu_arc, "title.tim"), 0);
 	Gfx_LoadTex(&menu.tex_titleback0, Archive_Find(menu_arc, "titleback0.tim"), 0);
 	Gfx_LoadTex(&menu.tex_titleback1, Archive_Find(menu_arc, "titleback1.tim"), 0);
+	Gfx_LoadTex(&menu.tex_titleback2, Archive_Find(menu_arc, "titleback2.tim"), 0);
+	Gfx_LoadTex(&menu.tex_titleback3, Archive_Find(menu_arc, "titleback3.tim"), 0);
+	Gfx_LoadTex(&menu.tex_options, Archive_Find(menu_arc, "options.tim"), 0);
 	Mem_Free(menu_arc);
 	
 	//Initialize menu state

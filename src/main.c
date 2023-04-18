@@ -5,6 +5,7 @@
 #include "psx/gfx.h"
 #include "audio.h"
 #include "psx/pad.h"
+#include "psx/save.h"
 
 #include "scenes/menu/menu.h"
 #include "scenes/stage/stage.h"
@@ -60,6 +61,7 @@ int main(int argc, char **argv)
 	_bu_init();	
 	ChangeClearPAD(0);
 	
+	defaultSettings();
 	IO_Init();
 	Audio_Init();
 	Gfx_Init();
