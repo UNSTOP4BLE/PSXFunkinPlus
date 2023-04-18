@@ -28,21 +28,21 @@ static struct
 	boolean bind;
 } options;
 
-static const u8 buttons[12][4] = {
-	{157, 0, 14, 14}, //PAD_UP
-	{172, 0, 14, 14}, //PAD_DOWN
-	{157, 15, 14, 14}, //PAD_LEFT
-	{172, 15, 14, 14}, //PAD_RIGHT
+static const ButtonStr buttons[] = {
+	{PAD_UP,{157, 0, 14, 14}}, //PAD_UP
+	{PAD_DOWN,{172, 0, 14, 14}}, //PAD_DOWN
+	{PAD_LEFT,{157, 15, 14, 14}}, //PAD_LEFT
+	{PAD_RIGHT,{172, 15, 14, 14}}, //PAD_RIGHT
 	
-	{138, 17, 15, 15}, //PAD_TRIANGLE
-	{140, 0, 16, 16}, //PAD_CIRCLE
-	{123, 0, 16, 16}, //PAD_CROSS
-	{123, 17, 14, 14}, //PAD_SQUARE
+	{PAD_TRIANGLE,{138, 17, 15, 15}}, //PAD_TRIANGLE
+	{PAD_CIRCLE,{140, 0, 16, 16}}, //PAD_CIRCLE
+	{PAD_CROSS,{123, 0, 16, 16}}, //PAD_CROSS
+	{PAD_SQUARE,{123, 17, 14, 14}}, //PAD_SQUARE
 	
-	{72, 16, 23, 15}, //PAD_L1
-	{72, 0, 24, 15}, //PAD_L2
-	{97, 16, 24, 15}, //PAD_R1
-	{97, 0, 25, 15}, //PAD_R2
+	{PAD_L1,{72, 16, 23, 15}}, //PAD_L1
+	{PAD_L2,{72, 0, 24, 15}}, //PAD_L2
+	{PAD_R1,{97, 16, 24, 15}}, //PAD_R1
+	{PAD_R2,{97, 0, 25, 15}}, //PAD_R2
 };
 
 static void Controls()
@@ -75,57 +75,15 @@ static void Controls()
 	}
 	else
 	{
-		switch (pad_state.press)
-		{
-			case PAD_UP:
-				stage.prefs.control_keys[menu.select] = PAD_UP;
-				options.bind = false;
-				break;
-			case PAD_DOWN:
-				stage.prefs.control_keys[menu.select] = PAD_DOWN;
-				options.bind = false;
-				break;
-			case PAD_LEFT:
-				stage.prefs.control_keys[menu.select] = PAD_LEFT;
-				options.bind = false;
-				break;
-			case PAD_RIGHT:
-				stage.prefs.control_keys[menu.select] = PAD_RIGHT;
-				options.bind = false;
-				break;
-			case PAD_TRIANGLE:
-				stage.prefs.control_keys[menu.select] = PAD_TRIANGLE;
-				options.bind = false;
-				break;
-			case PAD_CIRCLE:
-				stage.prefs.control_keys[menu.select] = PAD_CIRCLE;
-				options.bind = false;
-				break;
-			case PAD_CROSS:
-				stage.prefs.control_keys[menu.select] = PAD_CROSS;
-				options.bind = false;
-				break;
-			case PAD_SQUARE:
-				stage.prefs.control_keys[menu.select] = PAD_SQUARE;
-				options.bind = false;
-				break;
-			case PAD_L1:
-				stage.prefs.control_keys[menu.select] = PAD_L1;
-				options.bind = false;
-				break;
-			case PAD_L2:
-				stage.prefs.control_keys[menu.select] = PAD_L2;
-				options.bind = false;
-				break;
-			case PAD_R1:
-				stage.prefs.control_keys[menu.select] = PAD_R1;
-				options.bind = false;
-				break;
-			case PAD_R2:
-				stage.prefs.control_keys[menu.select] = PAD_R2;
-				options.bind = false;
-				break;
-		}
+		if(pad_state.press)
+			for (u8 k = 0; k < 12; k++)
+			{
+				if(pad_state.press & buttons[k].key)
+				{
+					stage.prefs.control_keys[menu.select] = buttons[k].key;
+					options.bind = false;
+				}
+			}
 	}
 	
 	RECT select_src = {187, 0, 9, 11};
@@ -135,46 +93,12 @@ static void Controls()
 	
 	for (u8 j = 0; j < 4; j++)
 	{
-		switch (stage.prefs.control_keys[j])
+		for (u8 k = 0; k < 12; k++)
 		{
-			case PAD_UP:
-				order = 0;
-				break;
-			case PAD_DOWN:
-				order = 1;
-				break;
-			case PAD_LEFT:
-				order = 2;
-				break;
-			case PAD_RIGHT:
-				order = 3;
-				break;
-			case PAD_TRIANGLE:
-				order = 4;
-				break;
-			case PAD_CIRCLE:
-				order = 5;
-				break;
-			case PAD_CROSS:
-				order = 6;
-				break;
-			case PAD_SQUARE:
-				order = 7;
-				break;
-			case PAD_L1:
-				order = 8;
-				break;
-			case PAD_L2:
-				order = 9;
-				break;
-			case PAD_R1:
-				order = 10;
-				break;
-			case PAD_R2:
-				order = 11;
-				break;
+			if(stage.prefs.control_keys[j] == buttons[k].key)
+				order = k;
 		}
-		RECT button_src = {buttons[order][0], buttons[order][1], buttons[order][2], buttons[order][3]};
+		RECT button_src = {buttons[order].src[0], buttons[order].src[1], buttons[order].src[2], buttons[order].src[3]};
 		Gfx_BlitTex(&menu.tex_options,
 			&button_src,
 			SCREEN_WIDTH2 + (j * 32) - (button_src.w / 2) - 64 + 16,
