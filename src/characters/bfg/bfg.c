@@ -174,7 +174,7 @@ void Char_BFG_Tick(Character *character)
 	Char_BFG *this = (Char_BFG*)character;
 	
 	//Handle animation updates
-	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0 ||
+	if ((character->pad_held & (stage.prefs.control_keys[0] | stage.prefs.control_keys[1] | stage.prefs.control_keys[2] | stage.prefs.control_keys[3])) == 0 ||
 	    (character->animatable.anim != CharAnim_Left &&
 	     character->animatable.anim != CharAnim_LeftAlt &&
 	     character->animatable.anim != CharAnim_Down &&
