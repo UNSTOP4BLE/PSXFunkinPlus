@@ -827,7 +827,7 @@ static void Stage_DrawNotes(void)
 		}
 		
 		//Get note information
-		u8 i = ((note->type ^ stage.note_swap) & NOTE_FLAG_OPPONENT) != 0;
+		u8 i = (note->type & NOTE_FLAG_OPPONENT) != 0;
 		PlayerState *this = &stage.player_state[i];
 		
 		fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
