@@ -202,13 +202,6 @@ void Menu_Tick(void)
 	//Clear per-frame flags
 	stage.flag &= ~STAGE_FLAG_JUST_STEP;
 	
-	fonts.font_cdr.draw(&fonts.font_cdr,
-		"Saving...",
-		310,
-		220,
-		FontAlign_Right
-	);
-	
 	//Get song position
 	u16 next_step = Audio_TellXA_Milli() / 147; //100 BPM
 	if (next_step != stage.song_step)
@@ -364,8 +357,7 @@ void Menu_Tick(void)
 			}
 			
 			//Draw options
-			s32 next_scroll = menu.select *
-			FIXED_DEC(12,1);
+			s32 next_scroll = menu.select * FIXED_DEC(12,1);
 			menu.scroll += (next_scroll - menu.scroll) >> 2;
 			
 			if (menu.next_page == menu.page || menu.next_page == MenuPage_Title)

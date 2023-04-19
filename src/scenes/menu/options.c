@@ -13,6 +13,7 @@
 #include "../../psx/mutil.h"
 #include "../../psx/trans.h"
 #include "../../psx/loadscr.h"
+#include "../../psx/save.h"
 
 #include "../../fonts/font.h"
 
@@ -21,11 +22,13 @@
 //Options state
 static struct
 {
-	u8 select, select2, next_select, page;
+	u8 main_select, select, next_select, page;
 	u8 sinus;
 	
 	//Controls Variables
-	boolean bind;
+	boolean bind, save, load;
+	u8 savetext;
+	boolean exit;
 } options;
 
 static const ButtonStr buttons[] = {
@@ -44,6 +47,99 @@ static const ButtonStr buttons[] = {
 	{PAD_R1,{97, 16, 24, 15}}, //PAD_R1
 	{PAD_R2,{97, 0, 25, 15}}, //PAD_R2
 };
+
+static void Main_Options()
+{
+	static const char *menu_options[] = {
+		"CONTROLS",
+		"ADJUST COMBO",
+		"GRAPHICS",
+		"VISUALS AND UI",
+		"GAMEPLAY",
+		"MEMORY CARD",
+	};
+	
+	//Initialize page
+	if (menu.page_swap)
+		menu.scroll = menu.select * FIXED_DEC(12,1);
+	
+	//Handle option and selection
+	if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
+		Trans_Start();
+	
+	if (menu.next_page == menu.page && Trans_Idle())
+	{
+		//Change option
+		if (pad_state.press & PAD_UP)
+			{
+			if (options.main_select > 0)
+				options.main_select--;
+			else
+				options.main_select = COUNT_OF(menu_options) - 1;
+		}
+		if (pad_state.press & PAD_DOWN)
+		{
+			if (options.main_select < COUNT_OF(menu_options) - 1)
+				options.main_select++;
+			else
+				options.main_select = 0;
+		}
+		
+		//Select option if cross is pressed
+		if (pad_state.press & (PAD_START | PAD_CROSS))
+		{
+			options.page = options.main_select + 1;
+			menu.scroll = 0;
+			menu.select = 0;
+			if(options.main_select == 0)
+				options.bind = false;
+		}
+		
+		//Return to main menu if circle is pressed
+		if (stage.prefs.autosave)
+		{
+			if ((options.savetext == 0) && options.exit)
+			{
+				options.exit = false;
+				menu.next_page = MenuPage_Main;
+				menu.next_select = 3; //Options
+				Trans_Start();
+			}
+			if (pad_state.press & PAD_CIRCLE)
+			{
+				Save_Card();
+				options.exit = true;
+			}
+		}
+		else
+		{
+			if (pad_state.press & PAD_CIRCLE)
+			{
+				menu.next_page = MenuPage_Main;
+				menu.next_select = 3; //Options
+				Trans_Start();
+			}
+		}
+	}
+			
+	//Draw options
+	s32 next_scroll = options.main_select * FIXED_DEC(12,1);
+	menu.scroll += (next_scroll - menu.scroll) >> 2;
+
+	//Draw all options
+	for (u8 i = 0; i < COUNT_OF(menu_options); i++)
+	{
+		fonts.font_bold.draw_col(&fonts.font_bold,
+			menu_options[i],
+			SCREEN_WIDTH2,
+			SCREEN_HEIGHT2 + (i * 24) - 70,
+			FontAlign_Center,
+			(i == options.main_select) ? 128 : 100,
+			(i == options.main_select) ? 128 : 100,
+			(i == options.main_select) ? 128 : 100
+		);
+	}
+}
 
 static void Controls()
 {
@@ -70,7 +166,7 @@ static void Controls()
 		if (pad_state.press & PAD_CIRCLE)
 		{
 			options.page = 0;
-			menu.select = 0;
+			options.main_select = 0;
 		}
 	}
 	else
@@ -141,11 +237,15 @@ static void Adjust_Combo()
 	if (pad_state.press & PAD_CIRCLE)
 	{
 		options.page = 0;
-		menu.select = 1;
+		options.main_select = 1;
 	}
 	
 	RECT combo_src = {0, 0, 71, 39};
-	Gfx_BlitTex(&menu.tex_options, &combo_src, stage.prefs.combox + SCREEN_WIDTH2 - 20, stage.prefs.comboy + SCREEN_HEIGHT2 - 73);
+	Gfx_BlitTex(&menu.tex_options,
+		&combo_src,
+		SCREEN_WIDTH2 + stage.prefs.combox - 19,
+		SCREEN_HEIGHT2 + stage.prefs.comboy - 64
+	);
 }
 
 static void Graphics()
@@ -223,7 +323,7 @@ static void Graphics()
 		if (pad_state.press & PAD_CIRCLE)
 		{
 			options.page = 0;
-			menu.select = 2;
+			options.main_select = 2;
 		}
 	}
 		
@@ -339,7 +439,7 @@ static void Visuals_And_UI()
 		if (pad_state.press & PAD_CIRCLE)
 		{
 			options.page = 0;
-			menu.select = 3;
+			options.main_select = 3;
 		}
 	}
 		
@@ -455,7 +555,7 @@ static void Gameplay()
 		if (pad_state.press & PAD_CIRCLE)
 		{
 			options.page = 0;
-			menu.select = 4;
+			options.main_select = 4;
 		}
 	}
 		
@@ -497,205 +597,163 @@ static void Gameplay()
 
 static void Memory_Card()
 {
-			static const char *menu_options[] = {
-				"CARD SAVE",
-				"CARD LOAD",
-				"AUTO SAVE",
-				"RESET ALL DEFAULT"
-			};
-			
-			//Initialize page
-			if (menu.page_swap)
-				menu.scroll = menu.select * FIXED_DEC(12,1);
-			
-			//Handle option and selection
-			if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
-				Trans_Start();
-			
-			if (menu.next_page == menu.page && Trans_Idle())
+	static const char *menu_options[] = {
+		"CARD SAVE",
+		"CARD LOAD",
+		"AUTO SAVE",
+		"RESET ALL DEFAULT"
+	};
+	
+	//Initialize page
+	if (menu.page_swap)
+		menu.scroll = menu.select * FIXED_DEC(12,1);
+	
+	//Handle option and selection
+	if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
+		Trans_Start();
+	
+	if (menu.next_page == menu.page && Trans_Idle())
+	{
+		//Change option
+		if (pad_state.press & PAD_UP)
+		{
+			if (menu.select > 0)
+				menu.select--;
+			else
+				menu.select = COUNT_OF(menu_options) - 1;
+		}
+		if (pad_state.press & PAD_DOWN)
+		{
+			if (menu.select < COUNT_OF(menu_options) - 1)
+				menu.select++;
+			else
+				menu.select = 0;
+		}
+		
+		if((menu.select == 2) && (pad_state.press & (PAD_LEFT | PAD_RIGHT)))
+			stage.prefs.autosave = (stage.prefs.autosave) ? false : true;
+		
+		//Select option if cross is pressed
+		if (pad_state.press & (PAD_START | PAD_CROSS))
+		{
+			switch (menu.select)
 			{
-				//Change option
-				if (pad_state.press & PAD_UP)
-				{
-					if (menu.select > 0)
-						menu.select--;
-					else
-						menu.select = COUNT_OF(menu_options) - 1;
-				}
-				if (pad_state.press & PAD_DOWN)
-				{
-					if (menu.select < COUNT_OF(menu_options) - 1)
-						menu.select++;
-					else
-						menu.select = 0;
-				}
-				
-				if((menu.select == 2) && (pad_state.press & (PAD_LEFT | PAD_RIGHT)))
-					stage.prefs.autosave = (stage.prefs.autosave) ? false : true;
-				
-				//Select option if cross is pressed
-				if (pad_state.press & (PAD_START | PAD_CROSS))
-				{
-					switch (menu.select)
-					{
-						case 0: //Story Mode
-							break;
-					}
-					menu.select = 0;
-				}
-				
-				//Return to main menu if circle is pressed
-				if (pad_state.press & PAD_CIRCLE)
-				{
-					options.page = 0;
-					menu.select = 5;
-				}
+				case 0:
+					Save_Card();
+					break;
+				case 1:
+					Load_Card();
+					break;
+				case 3:
+					defaultSettings();
+					break;
 			}
+		}
+		
+		//Return to main menu if circle is pressed
+		if (pad_state.press & PAD_CIRCLE)
+		{
+			options.page = 0;
+			options.main_select = 5;
+		}
+	}
 			
-			//Draw options
-			s32 next_scroll = menu.select * FIXED_DEC(12,1);
-			menu.scroll += (next_scroll - menu.scroll) >> 2;
-			
-				//Draw all options
-				for (u8 i = 0; i < COUNT_OF(menu_options); i++)
-				{
-					if(i == 2)
-					{
-						char text[64];
-						sprintf(text, "%s %s", menu_options[i], (stage.prefs.autosave) ? "ON" : "OFF");
-						fonts.font_bold.draw_col(&fonts.font_bold,
-							text,
-							SCREEN_WIDTH2,
-							SCREEN_HEIGHT2 + (i * 24) - 50,
-							FontAlign_Center,
-							(i == menu.select) ? 128 : 100,
-							(i == menu.select) ? 128 : 100,
-							(i == menu.select) ? 128 : 100
-						);
-					}
-					else
-						fonts.font_bold.draw_col(&fonts.font_bold,
-							menu_options[i],
-							SCREEN_WIDTH2,
-							SCREEN_HEIGHT2 + (i * 24) - 50,
-							FontAlign_Center,
-							(i == menu.select) ? 128 : 100,
-							(i == menu.select) ? 128 : 100,
-							(i == menu.select) ? 128 : 100
-						);
-				}
+	//Draw options
+	s32 next_scroll = menu.select * FIXED_DEC(12,1);
+	menu.scroll += (next_scroll - menu.scroll) >> 2;
+	
+	//Draw all options
+	for (u8 i = 0; i < COUNT_OF(menu_options); i++)
+	{
+		if(i == 2)
+		{
+			char text[0x80];
+			sprintf(text, "%s %s", menu_options[i], (stage.prefs.autosave) ? "ON" : "OFF");
+			fonts.font_bold.draw_col(&fonts.font_bold,
+				text,
+				SCREEN_WIDTH2,
+				SCREEN_HEIGHT2 + (i * 24) - 50,
+				FontAlign_Center,
+				(i == menu.select) ? 128 : 100,
+				(i == menu.select) ? 128 : 100,
+				(i == menu.select) ? 128 : 100
+			);
+		}
+		else
+			fonts.font_bold.draw_col(&fonts.font_bold,
+				menu_options[i],
+				SCREEN_WIDTH2,
+				SCREEN_HEIGHT2 + (i * 24) - 50,
+				FontAlign_Center,
+				(i == menu.select) ? 128 : 100,
+				(i == menu.select) ? 128 : 100,
+				(i == menu.select) ? 128 : 100
+			);
+	}
 }
 
 void Options_Tick()
 {
 	options.sinus += 5;
 	
+	if(options.savetext == 2)
+	{
+		if (options.load)
+		{
+			options.load = false;
+			readSaveFile();
+		}
+		if (options.save)
+		{
+			options.save = false;
+			writeSaveFile();
+		}
+	}
+	if(options.savetext > 0)
+	{
+		options.savetext--;
+		RECT save_src = {197, 0, 18, 18};
+		Gfx_BlitTex(&menu.tex_options, &save_src, SCREEN_WIDTH - 36, SCREEN_HEIGHT - 36);
+	}
+	
 	//Initialize page
 	if (menu.page_swap)
 		options.page = 0;
 	
-	if (options.page == 0)
+	switch (options.page)
 	{
-			static const char *menu_options[] = {
-				"CONTROLS",
-				"ADJUST COMBO",
-				"GRAPHICS",
-				"VISUALS AND UI",
-				"GAMEPLAY",
-				"MEMORY CARD",
-			};
-			
-			//Initialize page
-			if (menu.page_swap)
-				menu.scroll = menu.select * FIXED_DEC(12,1);
-			
-			//Handle option and selection
-			if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
-				Trans_Start();
-			
-			if (menu.next_page == menu.page && Trans_Idle())
-			{
-				//Change option
-				if (pad_state.press & PAD_UP)
-				{
-					if (menu.select > 0)
-						menu.select--;
-					else
-						menu.select = COUNT_OF(menu_options) - 1;
-				}
-				if (pad_state.press & PAD_DOWN)
-				{
-					if (menu.select < COUNT_OF(menu_options) - 1)
-						menu.select++;
-					else
-						menu.select = 0;
-				}
-				
-				//Select option if cross is pressed
-				if (pad_state.press & (PAD_START | PAD_CROSS))
-				{
-					switch (menu.select)
-					{
-						case 0: //Story Mode
-							options.page = 1;
-							options.bind = false;
-							break;
-						case 1: //Freeplay
-							options.page = 2;
-							break;
-						case 2: //Mods
-							options.page = 3;
-							break;
-						case 3: //Story Mode
-							options.page = 4;
-							break;
-						case 4: //Freeplay
-							options.page = 5;
-							break;
-						case 5: //Mods
-							options.page = 6;
-							break;
-					}
-					menu.select = 0;
-				}
-				
-				//Return to main menu if circle is pressed
-				if (pad_state.press & PAD_CIRCLE)
-				{
-					menu.next_page = MenuPage_Main;
-					menu.next_select = 3; //Options
-					Trans_Start();
-				}
-			}
-			
-			//Draw options
-			s32 next_scroll = menu.select * FIXED_DEC(12,1);
-			menu.scroll += (next_scroll - menu.scroll) >> 2;
-			
-				//Draw all options
-				for (u8 i = 0; i < COUNT_OF(menu_options); i++)
-				{
-					fonts.font_bold.draw_col(&fonts.font_bold,
-						menu_options[i],
-						SCREEN_WIDTH2,
-						SCREEN_HEIGHT2 + (i * 24) - 70,
-						FontAlign_Center,
-						(i == menu.select) ? 128 : 100,
-						(i == menu.select) ? 128 : 100,
-						(i == menu.select) ? 128 : 100
-					);
-				}
+		case 0:
+			Main_Options();
+			break;
+		case 1:
+			Controls();
+			break;
+		case 2:
+			Adjust_Combo();
+			break;
+		case 3:
+			Graphics();
+			break;
+		case 4:
+			Visuals_And_UI();
+			break;
+		case 5:
+			Gameplay();
+			break;
+		case 6:
+			Memory_Card();
+			break;
 	}
-	if (options.page == 1)
-		Controls();
-	if (options.page == 2)
-		Adjust_Combo();
-	if (options.page == 3)
-		Graphics();
-	if (options.page == 4)
-		Visuals_And_UI();
-	if (options.page == 5)
-		Gameplay();
-	if (options.page == 6)
-		Memory_Card();
+}
+
+void Load_Card()
+{
+	options.savetext = 4;
+	options.load = true;
+}
+
+void Save_Card()
+{
+	options.savetext = 4;
+	options.save = true;
 }

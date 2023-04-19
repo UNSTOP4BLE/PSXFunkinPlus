@@ -138,8 +138,6 @@ int main(int argc, char *argv[])
 				new_note.type |= NOTE_FLAG_ALT_ANIM;
 			if (sustain >= 0)
 				new_note.type |= NOTE_FLAG_SUSTAIN_END;
-			if (j[3] == "Bullet_Note")
-				new_note.type |= NOTE_FLAG_BULLET;
 			
 			if (note_fudge.count(*((uint32_t*)&new_note)))
 			{

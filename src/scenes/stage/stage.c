@@ -228,15 +228,18 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	this->health += heal - this->antispam;
 	this->max_accuracy += 3;
 	
-	//Create combo object telling of our combo
-	Obj_Combo *combo = Obj_Combo_New(
-		FIXED_DEC(stage.prefs.combox,1),
-		FIXED_DEC(stage.prefs.comboy,1),
-		hit_type,
-		this->combo >= 10 ? this->combo : 0xFFFF
-	);
-	if (combo != NULL)
-		ObjectList_Add(&stage.objlist_fg, (Object*)combo);
+	if (stage.prefs.combostack)
+	{
+		//Create combo object telling of our combo
+		Obj_Combo *combo = Obj_Combo_New(
+			this->character->focus_x,
+			this->character->focus_y,
+			hit_type,
+			this->combo >= 10 ? this->combo : 0xFFFF
+		);
+		if (combo != NULL)
+			ObjectList_Add(&stage.objlist_fg, (Object*)combo);
+	}
 	
 	//Create note splashes if SICK
 	if (hit_type == 0 && stage.prefs.notesplashes)
@@ -268,7 +271,7 @@ static void Stage_MissNote(PlayerState *this, u8 type)
 	else
 		this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 	
-	if (this->combo)
+	if (this->combo && stage.prefs.combostack)
 	{
 		//Kill combo
 		if (stage.gf != NULL && this->combo > 5)
@@ -1638,16 +1641,16 @@ void Stage_Tick(void)
 					if (i == 0)
 						fonts.font_cdr.draw(&fonts.font_cdr,
 							this->P2_text,
-							FIXED_DEC(11,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1), 
+							FIXED_DEC(85,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1), 
 							FIXED_DEC(100,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
-							FontAlign_Left
+							FontAlign_Center
 						);
 					else
 						fonts.font_cdr.draw(&fonts.font_cdr,
 							this->P2_text,
-							FIXED_DEC(-11,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
+							FIXED_DEC(-65,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
 							FIXED_DEC(100,1) + FIXED_DEC(RandomRange(-event.shake,event.shake) / 100,1),
-							FontAlign_Right
+							FontAlign_Center
 						);
 				}
 			}

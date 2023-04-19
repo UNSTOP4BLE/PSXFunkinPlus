@@ -12,5 +12,7 @@ typedef struct
 
 //Menu functions
 void Options_Tick();
+void Load_Card();
+void Save_Card();
 
 #endif

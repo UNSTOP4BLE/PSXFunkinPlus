@@ -162,7 +162,7 @@ typedef struct
 		boolean lowgraphics, palmode;
 		
 		//Visuals & UI settings
-		boolean notesplashes, hidehud, timebar, flashinglights, camerazooms, combostack, followcamera;
+		boolean notesplashes, hidehud, timebar, flashinglights, camerazooms, combostack;
 		
 		//Gameplay settings
 		s32 mode;

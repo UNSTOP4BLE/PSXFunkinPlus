@@ -53,21 +53,20 @@ int main(int argc, char **argv)
 	
 	Mem_Init((void*)malloc_heap, sizeof(malloc_heap));
 	
-	ResetGraph(0);
-	Pad_Init();
-	InitCARD(1);
-	StartPAD();
-	StartCARD();
-	_bu_init();	
-	ChangeClearPAD(0);
-	
-	defaultSettings();
-	IO_Init();
-	Audio_Init();
-	Gfx_Init();
-	Pad_Init();
-	
-	Timer_Init(false, false);
+    Gfx_Init();
+    Pad_Init();
+    InitCARD(1);
+    StartPAD();
+    StartCARD();
+    _bu_init(); 
+    ChangeClearPAD(0);
+
+    IO_Init();
+    Audio_Init();
+    Timer_Init(false, false);
+
+    if (!readSaveFile())
+        defaultSettings();
 	
 	Initalize_Fonts();
 	
