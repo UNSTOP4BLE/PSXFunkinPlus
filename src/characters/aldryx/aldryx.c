@@ -115,7 +115,7 @@ void Char_Aldryx_Tick(Character *character)
 	Char_Aldryx *this = (Char_Aldryx*)character;
 	
 	//Perform idle dance
-	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
+	if ((character->pad_held & (stage.prefs.control_keys[0] | stage.prefs.control_keys[1] | stage.prefs.control_keys[2] | stage.prefs.control_keys[3])) == 0)
 		Character_PerformIdle(character);
 	
 	//Animate and draw
