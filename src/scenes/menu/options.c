@@ -66,7 +66,7 @@ static void Controls()
 		}
 		if (pad_state.press & PAD_CROSS)
 			options.bind = true;
-		//Return to main menu if circle is pressed
+		
 		if (pad_state.press & PAD_CIRCLE)
 		{
 			options.page = 0;
@@ -138,8 +138,14 @@ static void Adjust_Combo()
 	if (pad_state.held & PAD_RIGHT)
 		stage.prefs.combox += 1;
 	
+	if (pad_state.press & PAD_CIRCLE)
+	{
+		options.page = 0;
+		menu.select = 1;
+	}
+	
 	RECT combo_src = {0, 0, 71, 39};
-	Gfx_BlitTex(&menu.tex_options, &combo_src, stage.prefs.combox + SCREEN_WIDTH2, stage.prefs.comboy + SCREEN_HEIGHT2);
+	Gfx_BlitTex(&menu.tex_options, &combo_src, stage.prefs.combox + SCREEN_WIDTH2 - 20, stage.prefs.comboy + SCREEN_HEIGHT2 - 73);
 }
 
 static void Graphics()

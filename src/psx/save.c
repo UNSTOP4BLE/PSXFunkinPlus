@@ -63,10 +63,13 @@ void defaultSettings()
 	stage.prefs.ghost = true;
 	stage.prefs.botplay = false;
 	
-	stage.prefs.control_keys[0] = PAD_SQUARE;
-	stage.prefs.control_keys[1] = PAD_CROSS;
-	stage.prefs.control_keys[2] = PAD_TRIANGLE;
-	stage.prefs.control_keys[3] = PAD_CIRCLE;
+	stage.prefs.control_keys[0] = PAD_L2;
+	stage.prefs.control_keys[1] = PAD_L1;
+	stage.prefs.control_keys[2] = PAD_R1;
+	stage.prefs.control_keys[3] = PAD_R2;
+	
+	stage.prefs.combox = -100;
+	stage.prefs.comboy = 73;
 }
 
 boolean readSaveFile()

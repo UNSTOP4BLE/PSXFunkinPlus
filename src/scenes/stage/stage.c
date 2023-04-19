@@ -230,8 +230,8 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	
 	//Create combo object telling of our combo
 	Obj_Combo *combo = Obj_Combo_New(
-		FIXED_DEC(-100,1),
-		FIXED_DEC(0,1),
+		FIXED_DEC(stage.prefs.combox,1),
+		FIXED_DEC(stage.prefs.comboy,1),
 		hit_type,
 		this->combo >= 10 ? this->combo : 0xFFFF
 	);
