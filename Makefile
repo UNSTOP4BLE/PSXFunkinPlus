@@ -29,6 +29,7 @@ SRCS = src/main.c \
 	   \
        src/scenes/stage/stage.c \
        src/scenes/stage/pause.c \
+       src/scenes/stage/debug.c \
 	   src/scenes/stage/animation.c \
        src/scenes/stage/character.c \
        src/scenes/stage/object.c \
