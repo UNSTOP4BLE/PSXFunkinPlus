@@ -1,5 +1,6 @@
 all: \
 	iso/characters/bf/main.arc \
+	iso/characters/bf/low.arc \
 	iso/characters/bfg/main.arc \
 	iso/characters/bfn/main.arc \
 	\
@@ -40,9 +41,9 @@ iso/images/menu/menu.arc: iso/images/menu/back.tim iso/images/menu/ng.tim iso/im
 
 # BF
 iso/characters/bf/main.arc: iso/characters/bf/bf0.tim iso/characters/bf/bf0.tim iso/characters/bf/bf1.tim iso/characters/bf/bf2.tim iso/characters/bf/bf3.tim iso/characters/bf/bf4.tim iso/characters/bf/bf5.tim iso/characters/bf/bf6.tim iso/characters/bf/dead0.tim iso/characters/bf/dead1.tim iso/characters/bf/dead2.tim iso/characters/bf/retry.tim
+iso/characters/bf/low.arc: iso/characters/bf/dead0.tim iso/characters/bf/dead1.tim iso/characters/bf/dead2.tim iso/characters/bf/retry.tim
 iso/characters/bfg/main.arc: iso/characters/bfg/bf0.tim iso/characters/bfg/bf0.tim iso/characters/bfg/bf1.tim iso/characters/bfg/bf2.tim iso/characters/bfg/bf3.tim iso/characters/bfg/bf4.tim iso/characters/bfg/bf5.tim iso/characters/bfg/bf6.tim iso/characters/bfg/dead0.tim iso/characters/bfg/dead1.tim iso/characters/bfg/dead2.tim iso/characters/bfg/retry.tim
 iso/characters/bfn/main.arc: iso/characters/bfn/bf0.tim iso/characters/bfn/bf0.tim iso/characters/bfn/bf1.tim iso/characters/bfn/bf2.tim iso/characters/bfn/bf3.tim iso/characters/bfn/bf4.tim iso/characters/bfn/bf5.tim iso/characters/bfn/bf6.tim iso/characters/bfn/dead0.tim iso/characters/bfn/dead1.tim iso/characters/bfn/dead2.tim iso/characters/bfn/retry.tim
-
 
 # Dad
 iso/characters/dad/main.arc: iso/characters/dad/idle0.tim iso/characters/dad/idle1.tim iso/characters/dad/left.tim iso/characters/dad/down.tim iso/characters/dad/up.tim iso/characters/dad/right.tim

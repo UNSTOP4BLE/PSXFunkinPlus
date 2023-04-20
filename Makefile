@@ -6,6 +6,7 @@ SRCS = src/main.c \
        src/characters/bf/bf.c \
        src/characters/bfg/bfg.c \
        src/characters/bfn/bfn.c \
+       src/characters/bf/bflow.c \
 	   \
        src/characters/dad/dad.c \
        src/characters/aldryx/aldryx.c \
@@ -19,6 +20,7 @@ SRCS = src/main.c \
        src/characters/gfg/gfg.c \
 	   \
        src/stages/default/default.c \
+       src/stages/default/defaultlow.c \
        src/stages/bg1/bg1.c \
        src/stages/bg2/bg2.c \
        src/stages/bg3/bg3.c \

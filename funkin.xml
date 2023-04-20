@@ -54,6 +54,7 @@
 			<dir name = "char">
 				<!-- Boyfriend assets -->
 				<file name = "bf.arc" type = "data" source = "iso/characters/bf/main.arc"/>
+				<file name = "bflow.arc" type = "data" source = "iso/characters/bf/low.arc"/>
 				<file name = "bfg.arc" type = "data" source = "iso/characters/bfg/main.arc"/>
 				<file name = "bfn.arc" type = "data" source = "iso/characters/bfn/main.arc"/>
 				

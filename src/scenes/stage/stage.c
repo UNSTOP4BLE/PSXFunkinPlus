@@ -49,6 +49,9 @@
 #include "../../psx/trans.h"
 #include "../../psx/loadscr.h"
 
+#include "../../characters/bf/bflow.h"
+#include "../../stages/default/defaultlow.h"
+
 //Stage constants
 //#define STAGE_PERFECT //Play all notes perfectly
 //#define STAGE_NOHUD //Disable the HUD
@@ -1038,14 +1041,20 @@ static void Stage_LoadPlayer(void)
 {
 	//Load player character
 	Character_Free(stage.player);
-	stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y);
+	if(stage.prefs.lowgraphics)
+		stage.player = Char_BFLow_New(0, 0);
+	else
+		stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y);
 }
 
 static void Stage_LoadOpponent(void)
 {
 	//Load opponent character
 	Character_Free(stage.opponent);
-	stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y);
+	if(stage.prefs.lowgraphics)
+		stage.opponent = Char_BFLow_New(0, 0);
+	else
+		stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y);
 }
 
 static void Stage_LoadGirlfriend(void)
@@ -1063,7 +1072,10 @@ static void Stage_LoadStage(void)
 	//Load back
 	if (stage.back != NULL)
 		stage.back->free(stage.back);
-	stage.back = stage.stage_def->back();
+	if(stage.prefs.lowgraphics)
+		stage.back = Back_DefaultLow_New();
+	else
+		stage.back = stage.stage_def->back();
 }
 
 static void Stage_LoadChart(void)
@@ -1228,7 +1240,8 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Load characters
 	Stage_LoadPlayer();
 	Stage_LoadOpponent();
-	Stage_LoadGirlfriend();
+	if(!stage.prefs.lowgraphics)
+		Stage_LoadGirlfriend();
 	stage.hidegf = false;
 	Stage_SwapChars();
 	
@@ -1622,22 +1635,25 @@ void Stage_Tick(void)
 			}
 			
 			//Handle bump
-			if ((stage.bump = FIXED_UNIT + FIXED_MUL(stage.bump - FIXED_UNIT, FIXED_DEC(95,100))) <= FIXED_DEC(1003,1000))
-				stage.bump = FIXED_UNIT;
-			stage.sbump = FIXED_UNIT + FIXED_MUL(stage.sbump - FIXED_UNIT, FIXED_DEC(90,100));
-			
-			if (playing && (stage.flag & STAGE_FLAG_JUST_STEP))
+			if(!stage.prefs.lowgraphics)
 			{
-				//Check if screen should bump
-				boolean is_bump_step = (stage.song_step & 0xF) == 0;
+				if ((stage.bump = FIXED_UNIT + FIXED_MUL(stage.bump - FIXED_UNIT, FIXED_DEC(95,100))) <= FIXED_DEC(1003,1000))
+					stage.bump = FIXED_UNIT;
+				stage.sbump = FIXED_UNIT + FIXED_MUL(stage.sbump - FIXED_UNIT, FIXED_DEC(90,100));
 				
-				//Bump screen
-				if (is_bump_step)
-					stage.bump += FIXED_DEC(3,100);
-				
-				//Bump health every 4 steps
-				if ((stage.song_step & 0x3) == 0)
-					stage.sbump += FIXED_DEC(8,100);
+				if (playing && (stage.flag & STAGE_FLAG_JUST_STEP))
+				{
+					//Check if screen should bump
+					boolean is_bump_step = (stage.song_step & 0xF) == 0;
+					
+					//Bump screen
+					if (is_bump_step)
+						stage.bump += FIXED_DEC(3,100);
+					
+					//Bump health every 4 steps
+					if ((stage.song_step & 0x3) == 0)
+						stage.sbump += FIXED_DEC(8,100);
+				}
 			}
 			
 			//Scroll camera
@@ -1778,20 +1794,29 @@ void Stage_Tick(void)
 				
 				if (!event.hidehud && !stage.prefs.hidehud)
 				{
-					//Draw health heads
-					Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i, true);
-					Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, false);
-					
-					//Draw health bar
-					if (stage.prefs.mode == StageMode_Swap)
+					if(stage.prefs.lowgraphics)
 					{
-						Stage_DrawHealthBar(0 + (214 * stage.player_state[0].health / 20000), stage.player->health_bar);
-						Stage_DrawHealthBar(214, stage.opponent->health_bar);
+						//Draw health bar
+						Stage_DrawHealthBar(214 - (214 * stage.player_state[0].health / 20000), 0xFFFF0000);
+						Stage_DrawHealthBar(214, 0xFF00FF00);
 					}
 					else
 					{
-						Stage_DrawHealthBar(214 - (214 * stage.player_state[0].health / 20000), stage.opponent->health_bar);
-						Stage_DrawHealthBar(214, stage.player->health_bar);
+						//Draw health heads
+						Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i, true);
+						Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, false);
+						
+						//Draw health bar
+						if (stage.prefs.mode == StageMode_Swap)
+						{
+							Stage_DrawHealthBar(0 + (214 * stage.player_state[0].health / 20000), stage.player->health_bar);
+							Stage_DrawHealthBar(214, stage.opponent->health_bar);
+						}
+						else
+						{
+							Stage_DrawHealthBar(214 - (214 * stage.player_state[0].health / 20000), stage.opponent->health_bar);
+							Stage_DrawHealthBar(214, stage.player->health_bar);
+						}
 					}
 				}
 			}
@@ -1834,35 +1859,35 @@ void Stage_Tick(void)
 			
 			Events_Back();
 			
-			//Draw stage foreground
-			if (stage.back->draw_fg != NULL)
-				stage.back->draw_fg(stage.back);
-			
-			//Tick foreground objects
-			ObjectList_Tick(&stage.objlist_fg);
-			
 			//Tick characters
-			stage.player->tick(stage.player);
-			stage.opponent->tick(stage.opponent);
+			if(!stage.prefs.lowgraphics)
+			{
+				//Draw stage foreground
+				if (stage.back->draw_fg != NULL)
+					stage.back->draw_fg(stage.back);
+				
+				//Tick foreground objects
+				ObjectList_Tick(&stage.objlist_fg);
 			
-			//Draw stage middle
-			if (stage.back->draw_md != NULL)
-				stage.back->draw_md(stage.back);
+				stage.player->tick(stage.player);
+				stage.opponent->tick(stage.opponent);
 			
-			//Tick girlfriend
-			if (!stage.hidegf)
-				if (stage.gf != NULL )
-					stage.gf->tick(stage.gf);
-			
-			//static const RECT flash = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-			//Gfx_BlendRect(&flash, stage.camera.zoom / 2, 0, stage.camera.zoom / 2, 1);
-			
-			//Tick background objects
-			ObjectList_Tick(&stage.objlist_bg);
-			
-			//Draw stage background
-			if (stage.back->draw_bg != NULL)
-				stage.back->draw_bg(stage.back);
+				//Draw stage middle
+				if (stage.back->draw_md != NULL)
+					stage.back->draw_md(stage.back);
+				
+				//Tick girlfriend
+				if (!stage.hidegf)
+					if (stage.gf != NULL )
+						stage.gf->tick(stage.gf);
+
+				//Tick background objects
+				ObjectList_Tick(&stage.objlist_bg);
+				
+				//Draw stage background
+				if (stage.back->draw_bg != NULL)
+					stage.back->draw_bg(stage.back);
+			}
 			
 			if (stage.song_step > 0)
 				StageTimer_Tick();
