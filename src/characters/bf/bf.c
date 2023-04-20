@@ -209,10 +209,10 @@ void Char_BF_Tick(Character *character)
 		{
 			switch (stage.stage_id)
 			{
-				case StageId_1_4: //Tutorial peace
-					if (stage.song_step > 64 && stage.song_step < 192 && (stage.song_step & 0x3F) == 60)
-						character->set_anim(character, PlayerAnim_Peace);
-					break;
+				//case StageId_1_4: //Tutorial peace
+				//	if (stage.song_step > 64 && stage.song_step < 192 && (stage.song_step & 0x3F) == 60)
+				//		character->set_anim(character, PlayerAnim_Peace);
+				//	break;
 				default:
 					break;
 			}
@@ -238,11 +238,17 @@ void Char_BF_Tick(Character *character)
 				fixed_t skull_dim = (FIXED_DEC(16,1) * this->skull_scale) >> 6;
 				fixed_t skull_rad = skull_dim >> 1;
 				RECT_FIXED frag_dst = {
-					character->x + (((fixed_t)frag->x << FIXED_SHIFT) >> 3) - skull_rad - stage.camera.x,
-					character->y + (((fixed_t)frag->y << FIXED_SHIFT) >> 3) - skull_rad - stage.camera.y,
+					(((fixed_t)frag->x << FIXED_SHIFT) >> 3) - skull_rad,
+					(((fixed_t)frag->y << FIXED_SHIFT) >> 3) - skull_rad,
 					skull_dim,
 					skull_dim,
 				};
+				
+				frag_dst.x = character->x + FIXED_MUL(frag_dst.x,character->size) - stage.camera.x;
+				frag_dst.y = character->y + FIXED_MUL(frag_dst.y,character->size) - stage.camera.y;
+				frag_dst.w = FIXED_MUL(skull_dim,character->size);
+				frag_dst.h = FIXED_MUL(skull_dim,character->size);
+				
 				Stage_DrawTex(&this->tex_retry, &frag_src, &frag_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
 				
 				//Move fragment
@@ -253,30 +259,6 @@ void Char_BF_Tick(Character *character)
 			//Decrease scale
 			this->skull_scale--;
 		}
-		
-		//Draw input options
-		u8 input_scale = 16 - this->skull_scale;
-		if (input_scale > 16)
-			input_scale = 0;
-		
-		RECT button_src = {
-			 0, 96,
-			16, 16
-		};
-		RECT_FIXED button_dst = {
-			character->x - FIXED_DEC(32,1) - stage.camera.x,
-			character->y - FIXED_DEC(88,1) - stage.camera.y,
-			(FIXED_DEC(16,1) * input_scale) >> 4,
-			FIXED_DEC(16,1),
-		};
-		
-		//Cross - Retry
-		Stage_DrawTex(&this->tex_retry, &button_src, &button_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
-		
-		//Circle - Blueball
-		button_src.x = 16;
-		button_dst.y += FIXED_DEC(56,1);
-		Stage_DrawTex(&this->tex_retry, &button_src, &button_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
 		
 		//Draw 'RETRY'
 		u8 retry_frame;
@@ -311,11 +293,17 @@ void Char_BF_Tick(Character *character)
 			32
 		};
 		RECT_FIXED retry_dst = {
-			character->x -  FIXED_DEC(7,1) - stage.camera.x,
-			character->y - FIXED_DEC(92,1) - stage.camera.y,
+			FIXED_DEC(7,1),
+			FIXED_DEC(92,1),
 			FIXED_DEC(48,1),
 			FIXED_DEC(32,1),
 		};
+		
+		retry_dst.x = character->x - FIXED_MUL(retry_dst.x,character->size) - stage.camera.x;
+		retry_dst.y = character->y - FIXED_MUL(retry_dst.y,character->size) - stage.camera.y;
+		retry_dst.w = FIXED_MUL(retry_dst.w,character->size);
+		retry_dst.h = FIXED_MUL(retry_dst.h,character->size);
+		
 		Stage_DrawTex(&this->tex_retry, &retry_src, &retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
 	}
 	

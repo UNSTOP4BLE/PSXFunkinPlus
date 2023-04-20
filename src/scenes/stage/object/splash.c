@@ -23,7 +23,7 @@ boolean Obj_Splash_Tick(Object *obj)
 	this->size += FIXED_UNIT / 25;
 	
 	//Draw plubbie
-	RECT plub_src = {120 + (this->colour << 2), 224, 4, 4};
+	RECT plub_src = {129 + (this->colour << 2), 178, 4, 4};
 	RECT_FIXED plub_dst = {
 		this->x - (scale << 2),
 		this->y - (scale << 2),
@@ -37,7 +37,7 @@ boolean Obj_Splash_Tick(Object *obj)
 	fixed_t tx =  this->sin * scale >> 6;
 	fixed_t ty = -this->cos * scale >> 6;
 	
-	RECT tail_src = {120 + (this->colour << 2), 228, 4, 4};
+	RECT tail_src = {129 + (this->colour << 2), 182, 4, 4};
 	POINT_FIXED tl = {this->x - tx, this->y - ty};
 	POINT_FIXED tr = {this->x + tx, this->y + ty};
 	POINT_FIXED bl = {lx - tx, ly - ty};

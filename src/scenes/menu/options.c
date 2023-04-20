@@ -515,6 +515,19 @@ static void Gameplay()
 	if (menu.page_swap)
 		menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
 	
+	if (stage.prefs.mode == 2)
+	{
+		if ((menu.select > 1) && (menu.select < 4))
+			fonts.font_cdr.draw(&fonts.font_cdr,
+				"This option cannot be changed during multiplayer mode.",
+				SCREEN_WIDTH2 + 20,
+				SCREEN_HEIGHT - 20,
+				FontAlign_Center
+			);
+		stage.prefs.middlescroll = false;
+		stage.prefs.opponentnotes = true;
+	}
+	
 	//Handle option and selection
 	if (menu.next_page == menu.page && Trans_Idle())
 	{
