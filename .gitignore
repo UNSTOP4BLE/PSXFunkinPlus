@@ -38,8 +38,10 @@ build/
 *.xa
 *.cht
 
-# Don't remove these bitch
+# Don't remove these
 !makefile.cht
 !makefile.tim
 !makefile.xa
 !makefile.vag
+!Char Editor.exe
+!main.exe
