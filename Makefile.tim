@@ -20,7 +20,7 @@ all: \
 	iso/stages/BG1/back.arc \
 	iso/stages/BG2/back.arc \
 	iso/stages/BG3/back.arc \
-	iso/stages/BG3/obj/back.arc \
+	iso/stages/BG3/chars/back.arc \
 	iso/stages/BG4/back.arc \
 	\
 	iso/characters/icons.tim \
@@ -59,7 +59,7 @@ iso/stages/BG2/back.arc: iso/stages/BG2/0.tim iso/stages/BG2/1.tim iso/stages/BG
 # Sol
 iso/characters/sol/main.arc: iso/characters/sol/idle0.tim iso/characters/sol/idle1.tim iso/characters/sol/idle2.tim iso/characters/sol/idle3.tim iso/characters/sol/idle4.tim iso/characters/sol/idle5.tim iso/characters/sol/idle6.tim iso/characters/sol/idle7.tim iso/characters/sol/idle8.tim iso/characters/sol/idle9.tim iso/characters/sol/idle10.tim iso/characters/sol/left0.tim iso/characters/sol/left1.tim iso/characters/sol/left2.tim iso/characters/sol/left3.tim iso/characters/sol/down0.tim iso/characters/sol/down1.tim iso/characters/sol/down2.tim iso/characters/sol/down3.tim iso/characters/sol/down4.tim iso/characters/sol/up0.tim iso/characters/sol/up1.tim iso/characters/sol/up2.tim iso/characters/sol/up3.tim iso/characters/sol/right0.tim iso/characters/sol/right1.tim iso/characters/sol/right2.tim iso/characters/sol/right3.tim iso/characters/sol/right4.tim 
 iso/stages/BG3/back.arc: iso/stages/BG3/0.tim iso/stages/BG3/1.tim 
-iso/stages/BG3/obj/back.arc: iso/stages/BG3/obj/agoti0.tim iso/stages/BG3/obj/agoti1.tim iso/stages/BG3/obj/aldryx0.tim iso/stages/BG3/obj/aldryx1.tim 
+iso/stages/BG3/chars/back.arc: iso/stages/BG3/chars/agoti0.tim iso/stages/BG3/chars/agoti1.tim iso/stages/BG3/chars/aldryx0.tim iso/stages/BG3/chars/aldryx1.tim 
 
 # Niku
 iso/characters/niku/main.arc: iso/characters/niku/idle0.tim iso/characters/niku/idle1.tim iso/characters/niku/idle2.tim iso/characters/niku/idle3.tim iso/characters/niku/idle4.tim iso/characters/niku/idle5.tim iso/characters/niku/idle6.tim iso/characters/niku/idle7.tim iso/characters/niku/idle8.tim iso/characters/niku/idle9.tim iso/characters/niku/left0.tim iso/characters/niku/left1.tim iso/characters/niku/left2.tim iso/characters/niku/left3.tim iso/characters/niku/down0.tim iso/characters/niku/down1.tim iso/characters/niku/down2.tim iso/characters/niku/down3.tim iso/characters/niku/down4.tim iso/characters/niku/down5.tim iso/characters/niku/down6.tim iso/characters/niku/up0.tim iso/characters/niku/up1.tim iso/characters/niku/up2.tim iso/characters/niku/up3.tim iso/characters/niku/up4.tim iso/characters/niku/up5.tim iso/characters/niku/up6.tim iso/characters/niku/up7.tim iso/characters/niku/right0.tim iso/characters/niku/right1.tim iso/characters/niku/right2.tim iso/characters/niku/right3.tim iso/characters/niku/right4.tim iso/characters/niku/right5.tim 
