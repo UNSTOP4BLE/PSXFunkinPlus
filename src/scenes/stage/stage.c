@@ -1635,7 +1635,7 @@ void Stage_Tick(void)
 			}
 			
 			//Handle bump
-			if(!stage.prefs.lowgraphics)
+			if(!stage.prefs.lowgraphics && stage.prefs.camerazooms)
 			{
 				if ((stage.bump = FIXED_UNIT + FIXED_MUL(stage.bump - FIXED_UNIT, FIXED_DEC(95,100))) <= FIXED_DEC(1003,1000))
 					stage.bump = FIXED_UNIT;
