@@ -21,6 +21,6 @@ There are several exciting features planned for future updates, such as...
 ## Credits
 
 - The Funkin' Crew - The original creators of Friday Night Funkin
-- CuckyDev - The 
+- CuckyDev - The original creator of Friday Night Funkin PSX Port (PSXFunkin)
 
 - Special thanks to UNSTOP4BLE, IgorSou3000, and spicyjpeg for their contributions.
