@@ -61,4 +61,20 @@
 		"Promenade",
 		
 		StageId_1_4, STAGE_LOAD_FLAG
+	},
+	{ //StageId_1_4 (Tutorial)
+		//Characters
+		{Char_BF_New,    FIXED_DEC(110,1),  FIXED_DEC(110,1)},
+		{Char_Agoti_New, FIXED_DEC(-100,1),  FIXED_DEC(110,1)},
+		{NULL,     NULL,     NULL},
+		
+		//Stage background
+		Back_BG2_New,
+		
+		//Song info
+		1, 5,
+		XA_Bushwhack, 0,
+		"Promenade",
+		
+		StageId_1_5, STAGE_LOAD_FLAG
 	}

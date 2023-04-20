@@ -530,7 +530,8 @@ void Menu_Tick(void)
 				{StageId_1_1, 0xFF9271FD, "shotgun-shell"},
 				{StageId_1_2, 0xFF9271FD, "parasite"},
 				{StageId_1_3, 0xFF9271FD, "godrays"},
-				{StageId_1_4, 0xFF9271FD, "promenade"}
+				{StageId_1_4, 0xFF9271FD, "promenade"},
+				{StageId_1_5, 0xFF9271FD, "bushwhack"}
 			};
 			
 			//Initialize page

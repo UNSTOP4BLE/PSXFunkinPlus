@@ -16,12 +16,15 @@ static const XA_TrackDef xa_tracks[] = {
 	
 	{XA_2, XA_LENGTH(13019)},
 	{XA_2, XA_LENGTH(14624)},
+	
+	{XA_3, XA_LENGTH(36686)},
 };
 
 static const char *xa_paths[] = {
 	"\\MUSIC\\MENU.XA;1",   //XA_Menu
 	"\\MUSIC\\1.XA;1",
 	"\\MUSIC\\2.XA;1",
+	"\\MUSIC\\3.XA;1",
 	NULL,
 };
 
@@ -41,6 +44,8 @@ static const XA_Mp3 xa_mp3s[] = {
 	
 	{"godrays", true},
 	{"promenade", true},
+	
+	{"bushwhack", true},
 	
 	{NULL, false}
 };

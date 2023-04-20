@@ -90,6 +90,8 @@
 				<file name = "1.4e.cht" type = "data" source = "iso/songs/promenade/promenade-easy.json.cht"/>
 				<file name = "1.4n.cht" type = "data" source = "iso/songs/promenade/promenade.json.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/songs/promenade/promenade-hard.json.cht"/>
+				
+				<file name = "1.5n.cht" type = "data" source = "iso/songs/bushwhack/bushwhack.json.cht"/>
 			</dir>
 			
 			<!-- Music -->
@@ -103,6 +105,8 @@
 				<file name = "2.xa" type = "xa" source = "iso/songs/2.xa"/>
 				<dummy sectors="128"/>
 				
+				<file name = "3.xa" type = "xa" source = "iso/songs/3.xa"/>
+				<dummy sectors="128"/>
 			</dir>
 			
 			<!-- Sound -->
