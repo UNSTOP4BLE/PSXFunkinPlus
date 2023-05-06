@@ -499,6 +499,58 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 }
 
 //Stage drawing functions
+void Stage_DrawRect(const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb)
+{
+    fixed_t xz = dst->x;
+    fixed_t yz = dst->y;
+    fixed_t wz = dst->w;
+    fixed_t hz = dst->h;
+    
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
+    fixed_t r = l + FIXED_MUL(wz, zoom);
+    fixed_t b = t + FIXED_MUL(hz, zoom);
+    
+    l /= FIXED_UNIT;
+    t /= FIXED_UNIT;
+    r /= FIXED_UNIT;
+    b /= FIXED_UNIT;
+    
+    RECT sdst = {
+        l,
+        t,
+        r - l,
+        b - t,
+    };
+    Gfx_DrawRect(&sdst, cr, cg, cb);
+}
+
+void Stage_BlendRect(const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb, int mode)
+{
+    fixed_t xz = dst->x;
+    fixed_t yz = dst->y;
+    fixed_t wz = dst->w;
+    fixed_t hz = dst->h;
+    
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
+    fixed_t r = l + FIXED_MUL(wz, zoom);
+    fixed_t b = t + FIXED_MUL(hz, zoom);
+    
+    l /= FIXED_UNIT;
+    t /= FIXED_UNIT;
+    r /= FIXED_UNIT;
+    b /= FIXED_UNIT;
+    
+    RECT sdst = {
+        l,
+        t,
+        r - l,
+        b - t,
+    };
+    Gfx_BlendRect(&sdst, cr, cg, cb, mode);
+}
+
 void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, u8 cr, u8 cg, u8 cb, fixed_t zoom)
 {
     fixed_t xz = dst->x;
