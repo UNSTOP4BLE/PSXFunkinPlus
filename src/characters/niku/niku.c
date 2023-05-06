@@ -73,11 +73,11 @@ static const CharFrame char_niku_frame[] = {
 	{Niku_ArcMain_idle8,{0,0,140,240},{61,221}}, //8 Idle
 	{Niku_ArcMain_idle9,{0,0,140,240},{61,221}}, //9 Idle
 	
-	{Niku_ArcMain_left0,{0,0,125,236},{66,218}}, //10 Left
-	{Niku_ArcMain_left0,{126,0,128,236},{65,218}}, //11 Left
-	{Niku_ArcMain_left1,{0,0,132,236},{65,218}}, //12 Left
-	{Niku_ArcMain_left2,{0,0,132,236},{65,218}}, //13 Left
-	{Niku_ArcMain_left3,{0,0,132,236},{65,218}}, //14 Left
+	{Niku_ArcMain_left0,{0,0,125,236},{61,218}}, //10 Left
+	{Niku_ArcMain_left0,{126,0,128,236},{60,218}}, //11 Left
+	{Niku_ArcMain_left1,{0,0,132,236},{60,218}}, //12 Left
+	{Niku_ArcMain_left2,{0,0,132,236},{60,218}}, //13 Left
+	{Niku_ArcMain_left3,{0,0,132,236},{60,218}}, //14 Left
 	
 	{Niku_ArcMain_down0,{0,0,136,232},{61,216}}, //15 Down
 	{Niku_ArcMain_down1,{0,0,136,236},{62,217}}, //16 Down
@@ -102,8 +102,6 @@ static const CharFrame char_niku_frame[] = {
 	{Niku_ArcMain_right3,{0,0,152,236},{61,219}}, //33 Right
 	{Niku_ArcMain_right4,{0,0,152,236},{61,219}}, //34 Right
 	{Niku_ArcMain_right5,{0,0,148,236},{61,219}}, //35 Right
-	
-
 };
 
 static const Animation char_niku_anim[CharAnim_Max] = {

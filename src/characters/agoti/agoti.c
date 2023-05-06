@@ -56,10 +56,10 @@ static const CharFrame char_agoti_frame[] = {
 	{Agoti_ArcMain_idle1,{114,0,113,216},{56,198}}, //3 Idle
 	{Agoti_ArcMain_idle2,{0,0,113,216},{57,198}}, //4 Idle
 	
-	{Agoti_ArcMain_left0,{0,0,204,220},{120,207}}, //5 Left
-	{Agoti_ArcMain_left1,{0,0,204,224},{118,209}}, //6 Left
-	{Agoti_ArcMain_left2,{0,0,204,224},{117,209}}, //7 Left
-	{Agoti_ArcMain_left3,{0,0,204,224},{117,208}}, //8 Left
+	{Agoti_ArcMain_left0,{0,0,204,220},{110,203}}, //5 Left
+	{Agoti_ArcMain_left1,{0,0,204,224},{108,204}}, //6 Left
+	{Agoti_ArcMain_left2,{0,0,204,224},{107,204}}, //7 Left
+	{Agoti_ArcMain_left3,{0,0,204,224},{107,203}}, //8 Left
 	
 	{Agoti_ArcMain_down0,{0,0,152,164},{64,151}}, //9 Down
 	{Agoti_ArcMain_down1,{0,0,152,164},{62,153}}, //10 Down
