@@ -1,3 +1,5 @@
+//Most of this code is written by spicyjpeg
+
 #include "../audio.h"
 
 #include "io.h"

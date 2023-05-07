@@ -161,8 +161,8 @@ void Font_CDR_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, Fon
 	{
 		if (c == '\n')
 		{
-		x = xhold;
-		y += 11;
+			x = xhold;
+			y += 11;
 		}
 		//Shift and validate character
 		if ((c -= 0x20) >= 0x60)

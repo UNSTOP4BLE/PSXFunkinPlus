@@ -337,8 +337,8 @@ void Menu_Tick(void)
 						case 1: //Freeplay
 							menu.next_page = MenuPage_Freeplay;
 							break;
-						case 2: //Mods
-							menu.next_page = MenuPage_Mods;
+						case 2: //Credits
+							menu.next_page = MenuPage_Credits;
 							break;
 						case 3: //Options
 							menu.next_page = MenuPage_Options;
@@ -633,9 +633,119 @@ void Menu_Tick(void)
 			);
 			break;
 		}
-		case MenuPage_Mods:
+		case MenuPage_Credits:
 		{
-
+			static const struct
+			{
+				u32 col;
+				const char *text;
+				const char *desc;
+			} credits_options[] = {
+				{0xFFF6D558, "CuckyDev", "The original creator of PSXFunkin."},
+				{0xFFB60B00, "spicyjpeg", "All I know is that he made the sound effects work."},
+				{0xFF2CB2E5, "LuckyAzure", "The guy who started developing this engine."},
+				{0xFFC9AE69, "UNSTOP4BLE", "helped me a lot with everything.\n(Sound effects, some graphic stuff, etc.)"},
+				{0xFFFD6923, "IgorSou3000", "also helped with many things too."}
+			};
+			
+			//Initialize page
+			if (menu.page_swap)
+				menu.scroll = COUNT_OF(credits_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
+			
+			//Draw page label
+			fonts.font_bold.draw(&fonts.font_bold,
+				"CREDITS",
+				SCREEN_WIDTH2,
+				16,
+				FontAlign_Center
+			);
+			
+			//Handle option and selection
+			if (menu.next_page == menu.page && Trans_Idle())
+			{
+				//Change option
+				if (pad_state.press & PAD_UP)
+				{
+					if (menu.select > 0)
+						menu.select--;
+					else
+						menu.select = COUNT_OF(credits_options) - 1;
+				}
+				if (pad_state.press & PAD_DOWN)
+				{
+					if (menu.select < COUNT_OF(credits_options) - 1)
+						menu.select++;
+					else
+						menu.select = 0;
+				}
+				
+				//Return to main menu if circle is pressed
+				if (pad_state.press & PAD_CIRCLE)
+				{
+					menu.next_page = MenuPage_Main;
+					menu.next_select = 2; //Credits
+					Trans_Start();
+				}
+			}
+			
+			//Draw options
+			s32 next_scroll = menu.select * FIXED_DEC(24,1);
+			menu.scroll += (next_scroll - menu.scroll) >> 4;
+			
+			for (u8 i = 0; i < COUNT_OF(credits_options); i++)
+			{
+				//Get position on screen
+				s32 y = (i * 30) - 8;
+				
+				RECT save_src = {(i * 32), 72, 32, 32};
+				Gfx_BlitTex(&menu.tex_options, &save_src, 32, 64 + y - 14);
+				
+				//Draw text
+				fonts.font_cdr.draw_col(&fonts.font_cdr,
+					credits_options[i].text,
+					64,
+					64 + y,
+					FontAlign_Left,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100
+				);
+			}
+			
+			//Draw desc
+			fonts.font_cdr.draw(&fonts.font_cdr,
+				credits_options[menu.select].desc,
+				32,
+				SCREEN_HEIGHT - 42,
+				FontAlign_Left
+			);
+			
+			RECT desc_back = {
+				0,
+				SCREEN_HEIGHT - 48,
+				SCREEN_WIDTH,
+				32
+			};
+			Gfx_BlendRect(&desc_back, 100, 100, 100, 2);
+			
+			//Draw background
+			fixed_t tgt_r = (fixed_t)((credits_options[menu.select].col >> 16) & 0xFF) << FIXED_SHIFT;
+			fixed_t tgt_g = (fixed_t)((credits_options[menu.select].col >>  8) & 0xFF) << FIXED_SHIFT;
+			fixed_t tgt_b = (fixed_t)((credits_options[menu.select].col >>  0) & 0xFF) << FIXED_SHIFT;
+			
+			menu.page_state.freeplay.back_r += (tgt_r - menu.page_state.freeplay.back_r) >> 4;
+			menu.page_state.freeplay.back_g += (tgt_g - menu.page_state.freeplay.back_g) >> 4;
+			menu.page_state.freeplay.back_b += (tgt_b - menu.page_state.freeplay.back_b) >> 4;
+			
+			Menu_DrawBack(
+				true,
+				8,
+				menu.page_state.freeplay.back_r >> (FIXED_SHIFT + 1),
+				menu.page_state.freeplay.back_g >> (FIXED_SHIFT + 1),
+				menu.page_state.freeplay.back_b >> (FIXED_SHIFT + 1),
+				0, 0, 0
+			);
+			break;
 		}
 		case MenuPage_Options:
 		{

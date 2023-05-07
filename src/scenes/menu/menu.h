@@ -11,7 +11,7 @@ typedef enum
 	MenuPage_Main,
 	MenuPage_Story,
 	MenuPage_Freeplay,
-	MenuPage_Mods,
+	MenuPage_Credits,
 	MenuPage_Options,
 	
 	MenuPage_Stage, //Changes game loop
