@@ -143,24 +143,31 @@ static void Main_Options()
 
 static void Controls()
 {
+	static const char *keys[] = {
+		"LEFT",
+		"DOWN",
+		"UP",
+		"RIGHT"
+	};
+	
 	//Change option
 	if(!options.bind)
 	{
-		if (pad_state.press & PAD_LEFT)
+		if (pad_state.press & PAD_UP)
 		{
 			if (menu.select > 0)
 				menu.select--;
 			else
 				menu.select = 3;
 		}
-		if (pad_state.press & PAD_RIGHT)
+		if (pad_state.press & PAD_DOWN)
 		{
 			if (menu.select < 3)
 				menu.select++;
 			else
 				menu.select = 0;
 		}
-		if (pad_state.press & PAD_CROSS)
+		if (pad_state.press & (PAD_CROSS | PAD_START))
 			options.bind = true;
 		
 		if (pad_state.press & PAD_CIRCLE)
@@ -169,48 +176,53 @@ static void Controls()
 			options.main_select = 0;
 		}
 	}
-	else
+	else if(pad_state.press && !(pad_state.press & (PAD_START | PAD_SELECT)))
 	{
-		if(pad_state.press)
-			for (u8 k = 0; k < 12; k++)
-			{
-				if(pad_state.press & buttons[k].key)
-				{
-					stage.prefs.control_keys[menu.select] = buttons[k].key;
-					options.bind = false;
-				}
-			}
+		stage.prefs.control_keys[menu.select] = pad_state.press;
+		options.bind = false;
 	}
 	
-	RECT select_src = {187, 0, 9, 11};
-	RECT arrows_src = {0, 40, 128, 32};
+	//Draw options
+	s32 next_scroll = menu.select * FIXED_DEC(24,1);
+	menu.scroll += (next_scroll - menu.scroll) >> 4;
 	
-	u8 order;
-	
-	for (u8 j = 0; j < 4; j++)
-	{
-		for (u8 k = 0; k < 12; k++)
-		{
-			if(stage.prefs.control_keys[j] == buttons[k].key)
-				order = k;
-		}
-		RECT button_src = {buttons[order].src[0], buttons[order].src[1], buttons[order].src[2], buttons[order].src[3]};
-		Gfx_BlitTex(&menu.tex_options,
-			&button_src,
-			SCREEN_WIDTH2 + (j * 32) - (button_src.w / 2) - 64 + 16,
-			SCREEN_HEIGHT2 - 80
+	for (u8 i = 0; i < COUNT_OF(keys); i++)
+	{	
+		//Get position on screen
+		s32 y = (i * 24) - 8 - (menu.scroll >> FIXED_SHIFT);
+		if (y <= -SCREEN_HEIGHT2 - 8)
+			continue;
+		if (y >= SCREEN_HEIGHT2 + 8)
+			break;
+		
+		//Draw text
+		fonts.font_bold.draw_col(&fonts.font_bold,
+			keys[i],
+			SCREEN_WIDTH2 - 80,
+			SCREEN_HEIGHT2 + y - 8,
+			FontAlign_Left,
+			(i == menu.select) ? 128 : 100,
+			(i == menu.select) ? 128 : 100,
+			(i == menu.select) ? 128 : 100
 		);
+		
+		//Draw key
+		if (!((i == menu.select) && options.bind))
+		{
+			u8 order;
+			for (order = 0; order < COUNT_OF(buttons); order++)
+			{
+				if(stage.prefs.control_keys[i] == buttons[order].key)
+					break;
+			}
+			RECT button_src = {buttons[order].src[0], buttons[order].src[1], buttons[order].src[2], buttons[order].src[3]};
+			Gfx_BlitTex(&menu.tex_options,
+				&button_src,
+				SCREEN_WIDTH2 + 40 - (button_src.w / 2),
+				SCREEN_HEIGHT2 + y - 8
+			);
+		}
 	}
-	
-	Gfx_BlitTex(&menu.tex_options,
-		&select_src,
-		(SCREEN_WIDTH2 + 12) + (menu.select * 32) - 64,
-		SCREEN_HEIGHT2 + (MUtil_Sin(options.sinus) / 30)
-	);
-
-	Gfx_BlitTex(&menu.tex_options, &arrows_src, SCREEN_WIDTH2 - (arrows_src.w / 2), SCREEN_HEIGHT2 - 40);
-	Gfx_BlitTex(&menu.tex_options, &arrows_src, SCREEN_WIDTH2 - (arrows_src.w / 2), SCREEN_HEIGHT2 - 40);
-	
 }
 
 static void Adjust_Combo()
