@@ -297,10 +297,10 @@ void Menu_Tick(void)
 				menu.scroll = menu.select * FIXED_DEC(12,1);
 			
 			//Draw version identification
-			fonts.font_bold.draw(&fonts.font_bold,
-				"PSXFUNKIN BY CUCKYDEV",
-				16,
-				SCREEN_HEIGHT - 32,
+			fonts.font_cdr.draw(&fonts.font_cdr,
+				"Plus v0.1 (Alpha)",
+				4,
+				SCREEN_HEIGHT - 20,
 				FontAlign_Left
 			);
 			
@@ -642,10 +642,11 @@ void Menu_Tick(void)
 				const char *desc;
 			} credits_options[] = {
 				{0xFFF6D558, "CuckyDev", "The original creator of PSXFunkin."},
-				{0xFFB60B00, "spicyjpeg", "All I know is that he made the sound effects work."},
+				{0xFFB60B00, "spicyjpeg", "He made the save system and sound effects work."},
 				{0xFF2CB2E5, "LuckyAzure", "The guy who started developing this engine."},
-				{0xFFC9AE69, "UNSTOP4BLE", "helped me a lot with everything.\n(Sound effects, some graphic stuff, etc.)"},
-				{0xFFFD6923, "IgorSou3000", "also helped with many things too."}
+				{0xFFC9AE69, "UNSTOP4BLE", "Helped me a lot with everything.\n(sound effects, save system, some graphic stuff, etc.)"},
+				{0xFFFD6923, "IgorSou3000", "Also helped with many things too."},
+				{0xFF0000FF, "BilliousData", "He made the original CDR font."}
 			};
 			
 			//Initialize page
@@ -688,30 +689,6 @@ void Menu_Tick(void)
 				}
 			}
 			
-			//Draw options
-			s32 next_scroll = menu.select * FIXED_DEC(24,1);
-			menu.scroll += (next_scroll - menu.scroll) >> 4;
-			
-			for (u8 i = 0; i < COUNT_OF(credits_options); i++)
-			{
-				//Get position on screen
-				s32 y = (i * 30) - 8;
-				
-				RECT save_src = {(i * 32), 72, 32, 32};
-				Gfx_BlitTex(&menu.tex_options, &save_src, 32, 64 + y - 14);
-				
-				//Draw text
-				fonts.font_cdr.draw_col(&fonts.font_cdr,
-					credits_options[i].text,
-					64,
-					64 + y,
-					FontAlign_Left,
-					(i == menu.select) ? 128 : 100,
-					(i == menu.select) ? 128 : 100,
-					(i == menu.select) ? 128 : 100
-				);
-			}
-			
 			//Draw desc
 			fonts.font_cdr.draw(&fonts.font_cdr,
 				credits_options[menu.select].desc,
@@ -726,7 +703,47 @@ void Menu_Tick(void)
 				SCREEN_WIDTH,
 				32
 			};
-			Gfx_BlendRect(&desc_back, 100, 100, 100, 2);
+			Gfx_BlendRect(&desc_back, 110, 110, 110, 2);
+			
+			//Draw options
+			s32 next_scroll = menu.select * FIXED_DEC(32,1);
+			menu.scroll += (next_scroll - menu.scroll) >> 4;
+			
+			for (u8 i = 0; i < COUNT_OF(credits_options); i++)
+			{
+				//Get position on screen
+				s32 y = (i * 30) - 8 - (menu.scroll >> FIXED_SHIFT);
+				if (y <= -SCREEN_HEIGHT2 - 24)
+					continue;
+				if (y >= SCREEN_HEIGHT2 + 24)
+					break;
+				
+				RECT icon_src = {(i * 32), 72, 32, 32};
+				RECT icon_dst = {
+					96 + (y >> 2) + ((i == menu.select) ? 0 : 2),
+					SCREEN_HEIGHT2 + y - 14 + ((i == menu.select) ? 0 : 2),
+					(i == menu.select) ? 32 : 28,
+					(i == menu.select) ? 32 : 28
+				};
+				Gfx_DrawTexCol(&menu.tex_options,
+					&icon_src,
+					&icon_dst,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100
+				);
+				
+				//Draw text
+				fonts.font_cdr.draw_col(&fonts.font_cdr,
+					credits_options[i].text,
+					128 + (y >> 2),
+					SCREEN_HEIGHT2 + y,
+					FontAlign_Left,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100
+				);
+			}
 			
 			//Draw background
 			fixed_t tgt_r = (fixed_t)((credits_options[menu.select].col >> 16) & 0xFF) << FIXED_SHIFT;
