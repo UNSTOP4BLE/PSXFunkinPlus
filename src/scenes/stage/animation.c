@@ -1,5 +1,6 @@
 #include "animation.h"
 
+#include "stage.h"
 #include "../../psx/timer.h"
 
 //Animation functions
@@ -22,6 +23,8 @@ void Animatable_SetAnim(Animatable *this, u8 anim)
 void Animatable_Animate(Animatable *this, void *user, void (*set_frame)(void*, u8))
 {
 	//Wait for time
+	if (!stage.paused)
+	{
 	while (this->anim_time <= 0)
 	{
 		//Read script
@@ -47,6 +50,7 @@ void Animatable_Animate(Animatable *this, void *user, void (*set_frame)(void*, u
 		}
 	}
 	this->anim_time -= timer_dt;
+	}
 }
 
 boolean Animatable_Ended(Animatable *this)

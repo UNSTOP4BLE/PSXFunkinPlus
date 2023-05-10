@@ -27,7 +27,8 @@ void Back_BG2_DrawBG(StageBack *back)
 {
 	Back_BG2 *this = (Back_BG2*)back;
 	
-	this->time++;
+	if (!stage.paused)
+		this->time++;
 	
 	stage.opponent->focus_zoom = FIXED_DEC(80,100);
 	stage.player->focus_zoom = FIXED_DEC(80,100);

@@ -13,6 +13,7 @@ typedef struct
 	u32 cursonglength;
 	int secondtimer;
 	int timer;
+	int timersec;
 	int timermin;
 	char timer_display[13];
 } Timer;

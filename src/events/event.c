@@ -71,8 +71,11 @@ void FollowCharCamera()
         }
     }
     
-    stage.camera.x += char_dx;
-    stage.camera.y += char_dy;
+	if (!stage.paused)
+	{
+		stage.camera.x += char_dx;
+		stage.camera.y += char_dy;
+	}
 }
 
 void NoteHitEvent(u8 type)

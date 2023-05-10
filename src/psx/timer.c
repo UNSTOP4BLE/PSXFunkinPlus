@@ -107,54 +107,51 @@ void StageTimer_Calculate()
 
 void StageTimer_Tick()
 {
-	timer.secondtimer += timer_dt / 12;
-	if (stage.prefs.palmode ? timer.secondtimer >= 50 : timer.secondtimer >= 60)
-	{
-		timer.secondtimer = 0;
-		if (timer.timer <= 0)
-		{		
-			if (timer.timermin > 0)
-				timer.timermin --;
-			else
-				timer.timermin = 0;
-			timer.timer = 59;
-		}
-		else 
-			timer.timer --;
-	}
+    int remaining_time = (Audio_GetLength(stage.stage_def->music_track) - stage.song_time / 1000) % Audio_GetLength(stage.stage_def->music_track);
+    timer.timer = remaining_time;
+    timer.timermin = remaining_time / ((stage.prefs.palmode) ? 50 : 60);
+    timer.timersec = remaining_time % ((stage.prefs.palmode) ? 50 : 60);
 }
 
 void StageTimer_Draw()
 {
-	//Draw timer
-	FntPrint("%d",timer.timer);
-	sprintf(timer.timer_display, "%d", timer.timermin);
-	fonts.font_cdr.draw(&fonts.font_cdr,
-		timer.timer_display,
-		FIXED_DEC(140 - 8,1), 
-		FIXED_DEC(109,1),
-		FontAlign_Left
-	);
-	sprintf(timer.timer_display, ":");
-	fonts.font_cdr.draw(&fonts.font_cdr,
-		timer.timer_display,
-		FIXED_DEC(140,1),
-		FIXED_DEC(109,1),
-		FontAlign_Left
-	);
-	if (timer.timer > 9)
-		sprintf(timer.timer_display, "%d", timer.timer);
-	else
-		sprintf(timer.timer_display, "0%d", timer.timer);
+    if (timer.timersec >= 10)
+        sprintf(timer.timer_display, "%d:%d", timer.timermin, timer.timersec);
+    else
+        sprintf(timer.timer_display, "%d:0%d", timer.timermin, (timer.timersec > 0 ? timer.timersec : 0));
 
-	fonts.font_cdr.draw(&fonts.font_cdr,
-		timer.timer_display,
-		FIXED_DEC(140 + 5,1),
-		FIXED_DEC(109,1),
-		FontAlign_Left
-	);
-	
-	RECT bar_fill = {252, 252, 1, 1};
-	RECT_FIXED bar_dst = {FIXED_DEC(-70,1), FIXED_DEC(-110,1), FIXED_DEC(140,1), FIXED_DEC(11,1)};
-	Stage_DrawTex(&stage.tex_hud0, &bar_fill, &bar_dst, stage.bump);
+    // Draw timer
+    fonts.font_cdr.draw(&fonts.font_cdr,
+        timer.timer_display,
+        FIXED_DEC(2, 1),
+        FIXED_DEC(stage.prefs.downscroll ? 100 : -109, 1),
+        FontAlign_Center
+    );
+
+    // Draw length
+    const RECT texture_src = { 2, 230, 2, 2 };
+    RECT_FIXED back_dst = {
+        FIXED_DEC(-46, 1),
+        FIXED_DEC(-108, 1),
+        FIXED_DEC(92, 1),
+        FIXED_DEC(8, 1)
+    };
+    RECT_FIXED front_dst = {
+        FIXED_DEC(-44, 1),
+        FIXED_DEC(-106, 1),
+        ((88 * stage.song_time) / (Audio_GetLength(stage.stage_def->music_track) * 1024)) << FIXED_SHIFT,
+        FIXED_DEC(4, 1)
+    };
+
+    if (stage.prefs.downscroll)
+    {
+        back_dst.y = -back_dst.y - back_dst.h + FIXED_DEC(1, 1);
+        front_dst.y = -front_dst.y - front_dst.h + FIXED_DEC(1, 1);
+    }
+
+    if (stage.song_step >= 0)
+    {
+        Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &front_dst, stage.bump, 255, 255, 255);
+    }
+    Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &back_dst, stage.bump, 0, 0, 0);
 }

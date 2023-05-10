@@ -131,7 +131,7 @@ static void Stage_ScrollCamera(void)
 		if (pad_state.held & PAD_CROSS)
 			stage.camera.zoom += FIXED_DEC(1,100);
 	}
-	else
+	else if (!stage.paused)
 	{
 		//Scroll based off current divisor
 		stage.camera.x = lerp(stage.camera.x, stage.camera.tx, event.speed);
@@ -1489,11 +1489,6 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
-			if (stage.prefs.timebar)
-				StageTimer_Draw();
-			if (stage.debug)
-				Debug_StageDebug();
-			
 			if (stage.song_step >= 0)
 			{
 				if (stage.paused == false && pad_state.press & PAD_START)
@@ -1514,6 +1509,11 @@ void Stage_Tick(void)
 						break;
 				}
 			}
+			
+			if (stage.prefs.timebar)
+				StageTimer_Draw();
+			if (stage.debug)
+				Debug_StageDebug();
 			
 			Events();
 			
