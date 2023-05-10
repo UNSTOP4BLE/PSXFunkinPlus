@@ -59,10 +59,6 @@ static void Main_Options()
 		"MEMORY CARD",
 	};
 	
-	//Initialize page
-	if (menu.page_swap)
-		menu.scroll = menu.select * FIXED_DEC(12,1);
-	
 	//Handle option and selection
 	if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
 		Trans_Start();
@@ -89,8 +85,8 @@ static void Main_Options()
 		if (pad_state.press & (PAD_START | PAD_CROSS))
 		{
 			options.page = options.main_select + 1;
-			menu.scroll = 0;
 			menu.select = 0;
+			menu.scroll = 0;
 			if(options.main_select == 0)
 				options.bind = false;
 		}
@@ -121,10 +117,6 @@ static void Main_Options()
 			}
 		}
 	}
-			
-	//Draw options
-	s32 next_scroll = options.main_select * FIXED_DEC(12,1);
-	menu.scroll += (next_scroll - menu.scroll) >> 2;
 
 	//Draw all options
 	for (u8 i = 0; i < COUNT_OF(menu_options); i++)
@@ -291,10 +283,6 @@ static void Graphics()
 	if (menu.select == 1 && pad_state.press & (PAD_CROSS | PAD_LEFT | PAD_RIGHT))
 		stage.pal_i = 1;
 	
-	//Initialize page
-	if (menu.page_swap)
-		menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
-	
 	//Handle option and selection
 	if (menu.next_page == menu.page && Trans_Idle())
 	{
@@ -406,10 +394,6 @@ static void Visuals_And_UI()
 		{OptType_Boolean, "CAMERA ZOOMS", &stage.prefs.camerazooms, {.spec_boolean = {0}}},
 		{OptType_Boolean, "COMBO STACK", &stage.prefs.combostack, {.spec_boolean = {0}}}
 	};
-	
-	//Initialize page
-	if (menu.page_swap)
-		menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
 	
 	//Handle option and selection
 	if (menu.next_page == menu.page && Trans_Idle())
@@ -523,10 +507,6 @@ static void Gameplay()
 		{OptType_Boolean, "GHOST TAPPING", &stage.prefs.ghost, {.spec_boolean = {0}}}
 	};
 	
-	//Initialize page
-	if (menu.page_swap)
-		menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
-	
 	if (stage.prefs.mode == 2)
 	{
 		if ((menu.select > 1) && (menu.select < 4))
@@ -629,14 +609,6 @@ static void Memory_Card()
 		"RESET ALL DEFAULT"
 	};
 	
-	//Initialize page
-	if (menu.page_swap)
-		menu.scroll = menu.select * FIXED_DEC(12,1);
-	
-	//Handle option and selection
-	if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
-		Trans_Start();
-	
 	if (menu.next_page == menu.page && Trans_Idle())
 	{
 		//Change option
@@ -684,21 +656,27 @@ static void Memory_Card()
 	}
 			
 	//Draw options
-	s32 next_scroll = menu.select * FIXED_DEC(12,1);
-	menu.scroll += (next_scroll - menu.scroll) >> 2;
+	s32 next_scroll = menu.select * FIXED_DEC(24,1);
+	menu.scroll += (next_scroll - menu.scroll) >> 4;
 	
 	//Draw all options
 	for (u8 i = 0; i < COUNT_OF(menu_options); i++)
 	{
+		s32 y = (i * 24) - 8 - (menu.scroll >> FIXED_SHIFT);
+		if (y <= -SCREEN_HEIGHT2 - 8)
+			continue;
+		if (y >= SCREEN_HEIGHT2 + 8)
+			break;
+		
 		if(i == 2)
 		{
 			char text[0x80];
 			sprintf(text, "%s %s", menu_options[i], (stage.prefs.autosave) ? "ON" : "OFF");
 			fonts.font_bold.draw_col(&fonts.font_bold,
 				text,
-				SCREEN_WIDTH2,
-				SCREEN_HEIGHT2 + (i * 24) - 50,
-				FontAlign_Center,
+				SCREEN_WIDTH2 - 120,
+				SCREEN_HEIGHT2 + y - 8,
+				FontAlign_Left,
 				(i == menu.select) ? 128 : 100,
 				(i == menu.select) ? 128 : 100,
 				(i == menu.select) ? 128 : 100
@@ -707,9 +685,9 @@ static void Memory_Card()
 		else
 			fonts.font_bold.draw_col(&fonts.font_bold,
 				menu_options[i],
-				SCREEN_WIDTH2,
-				SCREEN_HEIGHT2 + (i * 24) - 50,
-				FontAlign_Center,
+				SCREEN_WIDTH2 - 120,
+				SCREEN_HEIGHT2 + y - 8,
+				FontAlign_Left,
 				(i == menu.select) ? 128 : 100,
 				(i == menu.select) ? 128 : 100,
 				(i == menu.select) ? 128 : 100
