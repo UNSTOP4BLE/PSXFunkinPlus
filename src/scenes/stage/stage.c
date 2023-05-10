@@ -1434,8 +1434,6 @@ static boolean Stage_NextLoad(void)
 	}
 }
 
-fixed_t song_time2;
-
 void Stage_Tick(void)
 {
 	SeamLoad:;
