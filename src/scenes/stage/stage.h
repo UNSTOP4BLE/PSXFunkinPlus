@@ -180,6 +180,8 @@ typedef struct
 	boolean debug, freecam;
 	
 	u32 offset;
+	u32 note_x[8];
+	u32 note_y[8];
 	
 	fixed_t pause_scroll;
 	u8 pause_select;

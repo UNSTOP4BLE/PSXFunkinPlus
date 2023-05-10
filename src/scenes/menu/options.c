@@ -697,8 +697,6 @@ static void Memory_Card()
 
 void Options_Tick()
 {
-	options.sinus += 5;
-	
 	if(options.savetext == 2)
 	{
 		if (options.load)

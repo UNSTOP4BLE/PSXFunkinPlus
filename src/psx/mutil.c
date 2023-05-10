@@ -1,9 +1,3 @@
-/*
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
-
 #include "mutil.h"
 
 #include "timer.h"
@@ -52,10 +46,12 @@ s16 smooth(u8 x)
 	return smooth_table[x];
 }
 
-fixed_t lerp(fixed_t position, fixed_t target, fixed_t speed)
+fixed_t lerp(fixed_t current, fixed_t target, fixed_t speed)
 {
-	fixed_t data = position + FIXED_MUL((target - position),speed);
-	return data;
+    // Calculate the new position by interpolating between the current and target position.
+    fixed_t new_position = current + FIXED_MUL((target - current), speed);
+
+    return new_position;
 }
 
 void MUtil_RotatePoint(POINT *p, s16 s, s16 c)

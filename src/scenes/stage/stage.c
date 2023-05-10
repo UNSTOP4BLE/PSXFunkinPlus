@@ -58,16 +58,18 @@
 
 //#define STAGE_FREECAM //Freecam
 
-u8 angletest;
-
-static u32 note_x[8];
-static u32 note_y[8];
-
 static const u8 note_anims[4][3] = {
 	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
 	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
 	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss},
 	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss},
+};
+
+static const s16 note_def[4][8] = {
+	{-80,-80,-80,-80,-80,-80,-80,-80}, //Notes Y Position
+	{26,60,94,128,-128,-94,-60,-26}, //Notes X Position
+	{-51,-17,17,51,-128,-94,94,128}, //Notes X Position with Middle Scroll
+	{-128,-94,-60,-26,26,60,94,128} //Notes X Position with Swapped
 };
 
 static const StageDef stage_defs[StageId_Max] = {
@@ -260,8 +262,8 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 		{
 			//Create splash object
 			Obj_Splash *splash = Obj_Splash_New(
-				note_x[type ^ stage.note_swap],
-				note_y[type ^ stage.note_swap] * (stage.prefs.downscroll ? -1 : 1),
+				stage.note_x[type ^ stage.note_swap],
+				stage.note_y[type ^ stage.note_swap] * (stage.prefs.downscroll ? -1 : 1),
 				type & 0x3
 			);
 			if (splash != NULL)
@@ -773,8 +775,6 @@ static void Stage_DrawHealth(s16 health, u16 health_i[2][4], boolean ox)
 	if (stage.prefs.downscroll)
 		dst.y = -dst.y;
 	
-	angletest++;
-	
 	//Draw health icon
 	Stage_DrawTexRotate(&stage.tex_icons, &src, &dst, 0, src.w / 2, src.h / 2, FIXED_MUL(stage.bump, stage.sbump));
 }
@@ -887,7 +887,7 @@ static void Stage_DrawNotes(void)
 		
 		fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
 		fixed_t time = (scroll.start - stage.song_time) + (scroll.length * (note->pos - scroll.start_step) / scroll.length_step);
-		fixed_t y = note_y[(note->type & 0x7)] + FIXED_MUL(stage.speed, time * 150);
+		fixed_t y = stage.note_y[(note->type & 0x7)] + FIXED_MUL(stage.speed, time * 150);
 		
 		//Check if went above screen
 		if (y < FIXED_DEC(-16 - SCREEN_HEIGHT2, 1))
@@ -925,7 +925,7 @@ static void Stage_DrawNotes(void)
 				y -= scroll.size;
 				if ((note->type & (bot | NOTE_FLAG_HIT)) || ((this->pad_held & stage.prefs.control_keys[note->type & 0x3]) && (note_fp + stage.late_sus_safe >= stage.note_scroll)))
 				{
-					clip = note_y[(note->type & 0x7)] - y;
+					clip = stage.note_y[(note->type & 0x7)] - y;
 					if (clip < 0)
 						clip = 0;
 				}
@@ -944,7 +944,7 @@ static void Stage_DrawNotes(void)
 						note_src.w = 32;
 						note_src.h = 28 - (clip >> FIXED_SHIFT);
 						
-						note_dst.x = note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
+						note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
 						note_dst.y = y + clip;
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = (note_src.h << FIXED_SHIFT);
@@ -968,7 +968,7 @@ static void Stage_DrawNotes(void)
 				{
 					//Get note height
 					fixed_t next_time = (scroll.start - stage.song_time) + (scroll.length * (note->pos + 12 - scroll.start_step) / scroll.length_step);
-					fixed_t next_y = note_y[(note->type & 0x7)] + FIXED_MUL(stage.speed, next_time * 150) - scroll.size;
+					fixed_t next_y = stage.note_y[(note->type & 0x7)] + FIXED_MUL(stage.speed, next_time * 150) - scroll.size;
 					fixed_t next_size = next_y - y;
 					
 					if (clip < next_size)
@@ -978,7 +978,7 @@ static void Stage_DrawNotes(void)
 						note_src.w = 32;
 						note_src.h = 16;
 						
-						note_dst.x = note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
+						note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
 						note_dst.y = y + clip;
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = (next_y - y) - clip;
@@ -1008,7 +1008,7 @@ static void Stage_DrawNotes(void)
 				note_src.w = 32;
 				note_src.h = 32;
 				
-				note_dst.x = note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
+				note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
 				note_dst.y = y - FIXED_DEC(16,1);
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
@@ -1058,7 +1058,7 @@ static void Stage_DrawNotes(void)
 				note_src.w = 32;
 				note_src.h = 32;
 				
-				note_dst.x = note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
+				note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
 				note_dst.y = y - FIXED_DEC(16,1);
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
@@ -1337,6 +1337,16 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Test offset
 	stage.offset = 0;
 	Gfx_SetClear(0, 0, 0);
+	
+	//Manage Notes Position
+	u8 scroll_index = (stage.prefs.middlescroll) ? 2 : 1;
+	if (stage.prefs.mode == StageMode_Swap && !stage.prefs.middlescroll) {
+		scroll_index = 3;
+	}
+	for (int i = 0; i < 8; i++) {
+		stage.note_x[i] = FIXED_DEC(note_def[scroll_index][i], 1);
+		stage.note_y[i] = FIXED_DEC(note_def[0][i], 1);
+	}
 }
 
 void Stage_Unload(void)
@@ -1508,26 +1518,6 @@ void Stage_Tick(void)
 			}
 			
 			Events();
-			
-			//Manage Notes Position
-			s16 note_def[4][8] = {
-				{-80,-80,-80,-80,-80,-80,-80,-80}, //Notes Y Position
-				{26,60,94,128,-128,-94,-60,-26}, //Notes X Position
-				{-51,-17,17,51,-128,-94,94,128}, //Notes X Position with Middle Scroll
-				{-128,-94,-60,-26,26,60,94,128} //Notes X Position with Swapped
-			};
-			if (stage.prefs.mode == StageMode_Swap && !stage.prefs.middlescroll)
-				for (int i = 0; i < 8; i++)
-				{
-					note_x[i] = FIXED_DEC(note_def[3][i],1);
-					note_y[i] = FIXED_DEC(note_def[0][i],1);
-				}
-			else
-				for (int i = 0; i < 8; i++)
-				{
-					note_x[i] = FIXED_DEC(note_def[(stage.prefs.middlescroll) ? 2 : 1][i],1);
-					note_y[i] = FIXED_DEC(note_def[0][i],1);
-				}
 			
 			if (stage.prefs.botplay)
 			{
@@ -1883,8 +1873,8 @@ void Stage_Tick(void)
 			for (u8 i = 0; i < 4; i++)
 			{
 				//BF
-				note_dst.x = note_x[i] - FIXED_DEC(16,1);
-				note_dst.y = note_y[i] - FIXED_DEC(16,1);
+				note_dst.x = stage.note_x[i] - FIXED_DEC(16,1);
+				note_dst.y = stage.note_y[i] - FIXED_DEC(16,1);
 				if (stage.prefs.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
 				
@@ -1893,8 +1883,8 @@ void Stage_Tick(void)
 				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 				
 				//Opponent
-				note_dst.x = note_x[(i | 0x4)] - FIXED_DEC(16,1);
-				note_dst.y = note_y[(i | 0x4)] - FIXED_DEC(16,1);
+				note_dst.x = stage.note_x[(i | 0x4)] - FIXED_DEC(16,1);
+				note_dst.y = stage.note_y[(i | 0x4)] - FIXED_DEC(16,1);
 				
 				if (stage.prefs.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;

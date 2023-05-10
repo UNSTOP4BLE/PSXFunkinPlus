@@ -44,98 +44,89 @@ static u8 malloc_heap[0x1B0000];
 //Entry point
 int main(int argc, char **argv)
 {
-	//Remember arguments
+	// Remember arguments
 	my_argc = argc;
 	my_argv = argv;
 	
-	//Initialize system
-	PSX_Init();
-	
-	Mem_Init((void*)malloc_heap, sizeof(malloc_heap));
-	
+	// Initialize system
+    PSX_Init();
+    Mem_Init((void*)malloc_heap, sizeof(malloc_heap));
     Gfx_Init();
     Pad_Init();
     InitCARD(1);
     StartPAD();
     StartCARD();
-    _bu_init(); 
+    _bu_init();
     ChangeClearPAD(0);
-
     IO_Init();
     Audio_Init();
     Timer_Init(false, false);
 
     if (!readSaveFile())
         defaultSettings();
-	
-	Initalize_Fonts();
-	
-	//Start game
-	gameloop = GameLoop_Menu;
-	Menu_Load(MenuPage_Opening);
-	
-	//Game loop
-	while (PSX_Running())
-	{
-		//Prepare frame
-		Timer_Tick();
-		Audio_ProcessXA();
-		Pad_Update();
-		
+
+    Initalize_Fonts();
+
+    // Start game
+    gameloop = GameLoop_Menu;
+    Menu_Load(MenuPage_Opening);
+
+    // Game loop
+    while (PSX_Running())
+    {
+        // Prepare frame
+        Timer_Tick();
+        Audio_ProcessXA();
+        Pad_Update();
+
 		#ifdef MEM_STAT
-			//Memory stats
+			// Memory stats
 			size_t mem_used, mem_size, mem_max;
 			Mem_GetStat(&mem_used, &mem_size, &mem_max);
 			#ifndef MEM_BAR
 				FntPrint("mem: %08X/%08X (max %08X)\n", mem_used, mem_size, mem_max);
 			#endif
 		#endif
-		
-		//Set video mode
-		if (stage.prefs.palmode)
+
+		// Set video mode
+		if (stage.prefs.palmode && stage.pal_i == 1)
 		{
-			if (stage.pal_i == 1)
-			{
-				SetVideoMode(MODE_PAL);
-				SsSetTickMode(SS_TICK50);
-				stage.disp[0].screen.y = stage.disp[1].screen.y = 24;
-				Timer_Init(true, true);
-				stage.pal_i = 2;
-			}
+			SetVideoMode(MODE_PAL);
+			SsSetTickMode(SS_TICK50);
+			stage.disp[0].screen.y = stage.disp[1].screen.y = 24;
+			Timer_Init(true, true);
+			stage.pal_i = 2;
 		}
-		else
+		else if (!stage.prefs.palmode && stage.pal_i == 1)
 		{
-			if (stage.pal_i == 1)
-			{
-				SetVideoMode(MODE_NTSC);
-				SsSetTickMode(SS_TICK60);
-				stage.disp[0].screen.y = stage.disp[1].screen.y = 0;
-				Timer_Init(false, false);
-				stage.pal_i = 2;
-			}
+			SetVideoMode(MODE_NTSC);
+			SsSetTickMode(SS_TICK60);
+			stage.disp[0].screen.y = stage.disp[1].screen.y = 0;
+			Timer_Init(false, false);
+			stage.pal_i = 2;
 		}
-		
-		//Tick and draw game
-		switch (gameloop)
-		{
-			case GameLoop_Menu:
-				Menu_Tick();
-				break;
-			case GameLoop_Stage:
-				Stage_Tick();
-				break;
-		}
-		
-		//Flip gfx buffers
-		Gfx_Flip();
-	}
-	
-	//Deinitialize system
-	Pad_Quit();
-	Gfx_Quit();
-	Audio_Quit();
-	IO_Quit();
-	
-	PSX_Quit();
-	return 0;
+
+        // Tick and draw game
+        switch (gameloop)
+        {
+        case GameLoop_Menu:
+            Menu_Tick();
+            break;
+        case GameLoop_Stage:
+            Stage_Tick();
+            break;
+        }
+
+        // Flip gfx buffers
+        Gfx_Flip();
+    }
+
+    // Deinitialize system
+    Pad_Quit();
+    Gfx_Quit();
+    Audio_Quit();
+    IO_Quit();
+    PSX_Quit();
+
+    return 0;
 }

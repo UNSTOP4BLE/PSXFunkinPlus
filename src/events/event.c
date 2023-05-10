@@ -26,6 +26,7 @@ void Load_Events()
 void Events()
 {
 	event.shake = lerp(event.shake,0,FIXED_DEC(2,10));
+	FollowCharCamera();
 	//FntPrint("steps: %d", stage.song_step);
 	//if(stage.prefs.followcamera)
 	//	FollowCharCamera();
@@ -44,29 +45,34 @@ void Events_Back()
 
 void FollowCharCamera()
 {
-	u8 sensitivity = 2;
-	if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
-	{
-		if (stage.opponent->animatable.anim == CharAnim_Up)
-			stage.camera.y -= FIXED_DEC(sensitivity,10);
-		if (stage.opponent->animatable.anim == CharAnim_Down)
-			stage.camera.y += FIXED_DEC(sensitivity,10);
-		if (stage.opponent->animatable.anim == CharAnim_Left)
-			stage.camera.x -= FIXED_DEC(sensitivity,10);
-		if (stage.opponent->animatable.anim == CharAnim_Right)
-			stage.camera.x += FIXED_DEC(sensitivity,10);
-	}
-	else
-	{
-		if (stage.player->animatable.anim == CharAnim_Up)
-			stage.camera.y -= FIXED_DEC(sensitivity,10);
-		if (stage.player->animatable.anim == CharAnim_Down)
-			stage.camera.y += FIXED_DEC(sensitivity,10);
-		if (stage.player->animatable.anim == CharAnim_Left)
-			stage.camera.x -= FIXED_DEC(sensitivity,10);
-		if (stage.player->animatable.anim == CharAnim_Right)
-			stage.camera.x += FIXED_DEC(sensitivity,10);
-	}
+    u8 sensitivity = 2;
+    fixed_t camera_speed = FIXED_DEC(sensitivity, 10);
+    fixed_t char_dx = 0;
+    fixed_t char_dy = 0;
+    
+    if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
+    {
+        switch (stage.opponent->animatable.anim)
+        {
+            case CharAnim_Up: char_dy = -camera_speed; break;
+            case CharAnim_Down: char_dy = camera_speed; break;
+            case CharAnim_Left: char_dx = -camera_speed; break;
+            case CharAnim_Right: char_dx = camera_speed; break;
+        }
+    }
+    else
+    {
+        switch (stage.player->animatable.anim)
+        {
+            case CharAnim_Up: char_dy = -camera_speed; break;
+            case CharAnim_Down: char_dy = camera_speed; break;
+            case CharAnim_Left: char_dx = -camera_speed; break;
+            case CharAnim_Right: char_dx = camera_speed; break;
+        }
+    }
+    
+    stage.camera.x += char_dx;
+    stage.camera.y += char_dy;
 }
 
 void NoteHitEvent(u8 type)
