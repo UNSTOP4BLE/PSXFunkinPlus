@@ -738,45 +738,45 @@ void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
 }
 
 //Stage HUD functions
-static void Stage_DrawHealth(s16 health, u16 health_i[2][4], boolean ox)
+static void Stage_DrawHealth(s16 health, u16 health_i[2][4], boolean ox) 
 {
-	u8 status;
+    // Check if we should use 'dying' frame
+    u8 status;
+    if (ox)
+        status = !(health > 2000);
+    else
+        status = (health >= 18000);
 	
-	if (stage.prefs.mode == StageMode_Swap)
-		ox = (ox) ? false : true;
+    if (stage.prefs.mode == StageMode_Swap)
+        ox = !ox;
 	
-	//Check if we should use 'dying' frame
-	if (ox)
-		status = ((health >= 18000) ? 1 : 0);
-	else
-		status = ((health <= 2000) ? 1 : 0);
-	
-	//Get src and dst
-	fixed_t hx = (105 << FIXED_SHIFT) * (10000 - health) / 10000;
-	if (stage.prefs.mode == StageMode_Swap)
-		hx = -hx;
-	
-	RECT src = {
-		health_i[status][0],
-		health_i[status][1],
-		health_i[status][2],
-		health_i[status][3]
-	};
-	RECT_FIXED dst = {
-		hx + ox * FIXED_DEC(32,1) - FIXED_DEC(12,1),
-		(SCREEN_HEIGHT2 - 34) << FIXED_SHIFT,
-		src.w << FIXED_SHIFT,
-		src.h << FIXED_SHIFT
-	};
-	
-	if (ox)
-		dst.w = -dst.w;
-	
-	if (stage.prefs.downscroll)
-		dst.y = -dst.y;
-	
-	//Draw health icon
-	Stage_DrawTexRotate(&stage.tex_icons, &src, &dst, 0, src.w / 2, src.h / 2, FIXED_MUL(stage.bump, stage.sbump));
+    // Get src and dst
+    fixed_t hx = (105 << FIXED_SHIFT) * (10000 - health) / 10000;
+    if (stage.prefs.mode == StageMode_Swap)
+        hx = -hx;
+
+    fixed_t temp = hx + ox * FIXED_DEC(32,1) - FIXED_DEC(12,1);
+    RECT src = {
+        health_i[status][0],
+        health_i[status][1],
+        health_i[status][2],
+        health_i[status][3]
+    };
+    RECT_FIXED dst = {
+        temp,
+        (SCREEN_HEIGHT2 - 34) << FIXED_SHIFT,
+        src.w << FIXED_SHIFT,
+        src.h << FIXED_SHIFT
+    };
+
+    if (ox)
+        dst.w = -dst.w;
+
+    if (stage.prefs.downscroll)
+        dst.y = -dst.y;
+
+    // Draw health icon
+    Stage_DrawTexRotate(&stage.tex_icons, &src, &dst, 0, src.w / 2, src.h / 2, FIXED_MUL(stage.bump, stage.sbump));
 }
 
 static void Stage_DrawHealthBar(s16 x, s32 color)
@@ -1834,11 +1834,11 @@ void Stage_Tick(void)
 				
 				if (!event.hidehud && !stage.prefs.hidehud)
 				{
-					if(stage.prefs.lowgraphics)
+					if (stage.prefs.lowgraphics)
 					{
 						//Draw health bar
-						Stage_DrawHealthBar(214 - (214 * stage.player_state[0].health / 20000), 0xFFFF0000);
-						Stage_DrawHealthBar(214, 0xFF00FF00);
+						Stage_DrawHealthBar(214 - (107 * stage.player_state[0].health / 10000), 0xFFFF0000);
+						Stage_DrawHealthBar(107, 0xFF00FF00);
 					}
 					else
 					{
@@ -1849,12 +1849,12 @@ void Stage_Tick(void)
 						//Draw health bar
 						if (stage.prefs.mode == StageMode_Swap)
 						{
-							Stage_DrawHealthBar(0 + (214 * stage.player_state[0].health / 20000), stage.player->health_bar);
+							Stage_DrawHealthBar(107 * stage.player_state[0].health / 10000, stage.player->health_bar);
 							Stage_DrawHealthBar(214, stage.opponent->health_bar);
 						}
 						else
 						{
-							Stage_DrawHealthBar(214 - (214 * stage.player_state[0].health / 20000), stage.opponent->health_bar);
+							Stage_DrawHealthBar(214 - (107 * stage.player_state[0].health / 10000), stage.opponent->health_bar);
 							Stage_DrawHealthBar(214, stage.player->health_bar);
 						}
 					}
