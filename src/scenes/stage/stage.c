@@ -801,7 +801,7 @@ static void Stage_DrawHealthBar(s16 x, s32 color)
 	};
 	
 	if (stage.prefs.downscroll)
-		dst.y = -dst.y - dst.h;
+		dst.y = FIXED_DEC(-SCREEN_HEIGHT2 + 32,1);
 	
 	Stage_DrawTexCol(&stage.tex_hud0, &src, &dst, stage.bump, red >> 1, blue >> 1, green >> 1);
 }
