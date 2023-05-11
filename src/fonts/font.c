@@ -194,7 +194,8 @@ void Font_Draw(struct FontData *this, const char *text, s32 x, s32 y, FontAlign 
 }
 
 // Load font texture
-static void FontData_LoadTex(FontData *this) {
+static void FontData_LoadTex(FontData *this)
+{
     static const char *filename = "\\FONTS\\FONTS.TIM;1";
     Gfx_LoadTex(&this->tex, IO_Read(filename), GFX_LOADTEX_FREE);
 }

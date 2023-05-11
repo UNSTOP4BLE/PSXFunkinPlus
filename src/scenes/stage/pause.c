@@ -64,9 +64,9 @@ void PausedState()
 		//draw text
 		fonts.font_bold.draw_col(&fonts.font_bold,
 		stage_options[i],
-		SCREEN_WIDTH2,
+		48 + (y >> 2),
 		y + 120,
-		FontAlign_Center,
+		FontAlign_Left,
 		//if the option is the one you are selecting, draw in normal color, else, draw gray
 		(i == stage.pause_select) ? 128 : 100,
 		(i == stage.pause_select) ? 128 : 100,

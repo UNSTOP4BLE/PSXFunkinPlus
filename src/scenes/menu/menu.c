@@ -552,9 +552,6 @@ void Menu_Tick(void)
 				FontAlign_Left
 			);
 			
-			//Draw difficulty selector
-			Menu_DifficultySelector(SCREEN_WIDTH - 100, SCREEN_HEIGHT2 - 48);
-			
 			//Handle option and selection
 			if (menu.next_page == menu.page && Trans_Idle())
 			{
@@ -592,7 +589,59 @@ void Menu_Tick(void)
 				}
 			}
 			
+			//Change difficulty
+			if (menu.next_page == menu.page && Trans_Idle())
+			{
+				if (pad_state.press & PAD_LEFT)
+				{
+					if (menu.page_param.stage.diff > StageDiff_Easy)
+						menu.page_param.stage.diff--;
+					else
+						menu.page_param.stage.diff = StageDiff_Hard;
+				}
+				if (pad_state.press & PAD_RIGHT)
+				{
+					if (menu.page_param.stage.diff < StageDiff_Hard)
+						menu.page_param.stage.diff++;
+					else
+						menu.page_param.stage.diff = StageDiff_Easy;
+				}
+			}
+			
+			//Draw scores and difficulties
+			char scoredisp[30];
+			sprintf(scoredisp, "PERSONAL BEST: %d", (stage.prefs.savescore[menu_options[menu.select].stage][menu.page_param.stage.diff] > 0) ? stage.prefs.savescore[menu_options[menu.select].stage][menu.page_param.stage.diff] * 10 : 0);
+			
+			fonts.font_arial.draw(&fonts.font_arial,
+				scoredisp,
+				SCREEN_WIDTH - 1,
+				9,
+				FontAlign_Right
+			);
+			
+			static const char *diff[] = {
+				"<<EASY>>",
+				"<<NORMAL>>",
+				"<<HARD>>",
+			};
+			
+			fonts.font_arial.draw(&fonts.font_arial,
+				diff[menu.page_param.stage.diff],
+				SCREEN_WIDTH - (Font_Arial_GetWidth(&fonts.font_arial,scoredisp) + 3) / 2,
+				18,
+				FontAlign_Center
+			);
+			
+			RECT desc_back = {
+				SCREEN_WIDTH - (Font_Arial_GetWidth(&fonts.font_arial,scoredisp) + 3),
+				0,
+				SCREEN_WIDTH + Font_Arial_GetWidth(&fonts.font_arial,scoredisp) + 3,
+				30
+			};
+			Gfx_BlendRect(&desc_back, 110, 110, 110, 2);
+			
 			//Draw options
+			
 			s32 next_scroll = menu.select * FIXED_DEC(24,1);
 			menu.scroll += (next_scroll - menu.scroll) >> 4;
 			

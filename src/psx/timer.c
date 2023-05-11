@@ -124,7 +124,7 @@ void StageTimer_Draw()
     fonts.font_cdr.draw(&fonts.font_cdr,
         timer.timer_display,
         FIXED_DEC(2, 1),
-        FIXED_DEC(stage.prefs.downscroll ? 100 : -109, 1),
+        FIXED_DEC((stage.prefs.downscroll && !(stage.prefs.mode >= StageMode_2P)) ? 100 : -109, 1),
         FontAlign_Center
     );
 
@@ -142,8 +142,8 @@ void StageTimer_Draw()
         ((88 * stage.song_time) / (Audio_GetLength(stage.stage_def->music_track) * 1024)) << FIXED_SHIFT,
         FIXED_DEC(4, 1)
     };
-
-    if (stage.prefs.downscroll)
+	
+    if (stage.prefs.downscroll && !(stage.prefs.mode >= StageMode_2P))
     {
         back_dst.y = -back_dst.y - back_dst.h + FIXED_DEC(1, 1);
         front_dst.y = -front_dst.y - front_dst.h + FIXED_DEC(1, 1);

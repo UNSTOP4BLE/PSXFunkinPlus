@@ -6,28 +6,6 @@
 #include "../../scenes/stage/stage.h"
 #include "../../main.h"
 
-//Boyfriend skull fragments
-static SkullFragment char_bf_skull[15] = {
-	{ 1 * 8, -87 * 8, -13, -13},
-	{ 9 * 8, -88 * 8,   5, -22},
-	{18 * 8, -87 * 8,   9, -22},
-	{26 * 8, -85 * 8,  13, -13},
-	
-	{-3 * 8, -82 * 8, -13, -11},
-	{ 8 * 8, -85 * 8,  -9, -15},
-	{20 * 8, -82 * 8,   9, -15},
-	{30 * 8, -79 * 8,  13, -11},
-	
-	{-1 * 8, -74 * 8, -13, -5},
-	{ 8 * 8, -77 * 8,  -9, -9},
-	{19 * 8, -75 * 8,   9, -9},
-	{26 * 8, -74 * 8,  13, -5},
-	
-	{ 5 * 8, -73 * 8, -5, -3},
-	{14 * 8, -76 * 8,  9, -6},
-	{26 * 8, -67 * 8, 15, -3},
-};
-
 //Boyfriend player types
 enum
 {
@@ -60,11 +38,6 @@ typedef struct
 	
 	Gfx_Tex tex, tex_retry;
 	u8 frame, tex_id;
-	
-	u8 retry_bump;
-	
-	SkullFragment skull[COUNT_OF(char_bf_skull)];
-	u8 skull_scale;
 } Char_BF;
 
 //Boyfriend player definitions
@@ -203,109 +176,11 @@ void Char_BF_Tick(Character *character)
 		     character->animatable.anim != PlayerAnim_RightMiss) &&
 			(stage.song_step & 0x7) == 0)
 			character->set_anim(character, CharAnim_Idle);
-		
-		//Stage specific animations
-		if (stage.note_scroll >= 0)
-		{
-			switch (stage.stage_id)
-			{
-				//case StageId_1_4: //Tutorial peace
-				//	if (stage.song_step > 64 && stage.song_step < 192 && (stage.song_step & 0x3F) == 60)
-				//		character->set_anim(character, PlayerAnim_Peace);
-				//	break;
-				default:
-					break;
-			}
-		}
 	}
 	
 	//Retry screen
-	if (character->animatable.anim >= PlayerAnim_Dead3)
-	{
-		//Tick skull fragments
-		if (this->skull_scale)
-		{
-			SkullFragment *frag = this->skull;
-			for (size_t i = 0; i < COUNT_OF_MEMBER(Char_BF, skull); i++, frag++)
-			{
-				//Draw fragment
-				RECT frag_src = {
-					(i & 1) ? 112 : 96,
-					(i >> 1) << 4,
-					16,
-					16
-				};
-				fixed_t skull_dim = (FIXED_DEC(16,1) * this->skull_scale) >> 6;
-				fixed_t skull_rad = skull_dim >> 1;
-				RECT_FIXED frag_dst = {
-					(((fixed_t)frag->x << FIXED_SHIFT) >> 3) - skull_rad,
-					(((fixed_t)frag->y << FIXED_SHIFT) >> 3) - skull_rad,
-					skull_dim,
-					skull_dim,
-				};
-				
-				frag_dst.x = character->x + FIXED_MUL(frag_dst.x,character->size) - stage.camera.x;
-				frag_dst.y = character->y + FIXED_MUL(frag_dst.y,character->size) - stage.camera.y;
-				frag_dst.w = FIXED_MUL(skull_dim,character->size);
-				frag_dst.h = FIXED_MUL(skull_dim,character->size);
-				
-				Stage_DrawTex(&this->tex_retry, &frag_src, &frag_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
-				
-				//Move fragment
-				frag->x += frag->xsp;
-				frag->y += ++frag->ysp;
-			}
-			
-			//Decrease scale
-			this->skull_scale--;
-		}
-		
-		//Draw 'RETRY'
-		u8 retry_frame;
-		
-		if (character->animatable.anim == PlayerAnim_Dead6)
-		{
-			//Selected retry
-			retry_frame = 2 - (this->retry_bump >> 3);
-			if (retry_frame >= 3)
-				retry_frame = 0;
-			if (this->retry_bump & 2)
-				retry_frame += 3;
-			
-			if (++this->retry_bump == 0xFF)
-				this->retry_bump = 0xFD;
-		}
-		else
-		{
-			//Idle
-			retry_frame = 1 +  (this->retry_bump >> 2);
-			if (retry_frame >= 3)
-				retry_frame = 0;
-			
-			if (++this->retry_bump >= 55)
-				this->retry_bump = 0;
-		}
-		
-		RECT retry_src = {
-			(retry_frame & 1) ? 48 : 0,
-			(retry_frame >> 1) << 5,
-			48,
-			32
-		};
-		RECT_FIXED retry_dst = {
-			FIXED_DEC(7,1),
-			FIXED_DEC(92,1),
-			FIXED_DEC(48,1),
-			FIXED_DEC(32,1),
-		};
-		
-		retry_dst.x = character->x - FIXED_MUL(retry_dst.x,character->size) - stage.camera.x;
-		retry_dst.y = character->y - FIXED_MUL(retry_dst.y,character->size) - stage.camera.y;
-		retry_dst.w = FIXED_MUL(retry_dst.w,character->size);
-		retry_dst.h = FIXED_MUL(retry_dst.h,character->size);
-		
-		Stage_DrawTex(&this->tex_retry, &retry_src, &retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
-	}
+	if (character->animatable.anim >= PlayerAnim_Dead2)
+		Stage_BlendTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), (stage.retry_visibility == 0) ? 0 : 1);
 	
 	//Animate and draw character
 	Animatable_Animate(&character->animatable, (void*)this, Char_BF_SetFrame);
@@ -387,7 +262,6 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\BF.ARC;1");
 	this->arc_dead = NULL;
-	//IO_FindFile(&this->file_dead_arc, "\\CHAR\\BFDEAD.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"bf0.tim",   //BF_ArcMain_BF0
@@ -409,21 +283,6 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	
 	//Initialize render state
 	this->tex_id = this->frame = 0xFF;
-	
-	//Initialize player state
-	this->retry_bump = 0;
-	
-	//Copy skull fragments
-	memcpy(this->skull, char_bf_skull, sizeof(char_bf_skull));
-	this->skull_scale = 64;
-	
-	SkullFragment *frag = this->skull;
-	for (size_t i = 0; i < COUNT_OF_MEMBER(Char_BF, skull); i++, frag++)
-	{
-		//Randomize trajectory
-		frag->xsp += RandomRange(-4, 4);
-		frag->ysp += RandomRange(-2, 2);
-	}
 	
 	return (Character*)this;
 }

@@ -309,34 +309,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 	//Perform note check
 	for (Note *note = stage.cur_note;; note++)
 	{
-		if (note->type & NOTE_FLAG_MINE)
-		{
-			//Check if mine can be hit
-			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
-			if (note_fp - (stage.late_safe * 3 / 5) > stage.note_scroll)
-				break;
-			if (note_fp + (stage.late_safe * 2 / 5) < stage.note_scroll)
-				continue;
-			if ((note->type & NOTE_FLAG_HIT) || (note->type & (NOTE_FLAG_OPPONENT | 0x3)) != type || (note->type & NOTE_FLAG_SUSTAIN))
-				continue;
-			
-			//Hit the mine
-			note->type |= NOTE_FLAG_HIT;
-			
-			//if (stage.stage_id == StageId_Clwn_4)
-			NoteHitEvent(note->type);
-			if (false)
-				this->health = -0x7000;
-			else
-				this->health -= 2000;
-			if (this->character->spec & CHAR_SPEC_MISSANIM)
-				this->character->set_anim(this->character, note_anims[type & 0x3][2]);
-			else
-				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
-			this->arrow_hitan[type & 0x3] = -1;
-			return;
-		}
-		else
+		if (!(note->type & NOTE_FLAG_MINE))
 		{
 			//Check if note can be hit
 			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
@@ -354,6 +327,30 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			this->character->set_anim(this->character, note_anims[type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0]);
 			u8 hit_type = Stage_HitNote(this, type, stage.note_scroll - note_fp);
 			this->arrow_hitan[type & 0x3] = stage.step_time;
+			(void)hit_type;
+			return;
+		}
+		else
+		{
+			//Check if mine can be hit
+			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
+			if (note_fp - (stage.late_safe * 3 / 5) > stage.note_scroll)
+				break;
+			if (note_fp + (stage.late_safe * 2 / 5) < stage.note_scroll)
+				continue;
+			if ((note->type & NOTE_FLAG_HIT) || (note->type & (NOTE_FLAG_OPPONENT | 0x3)) != type || (note->type & NOTE_FLAG_SUSTAIN))
+				continue;
+			
+			//Hit the mine
+			note->type |= NOTE_FLAG_HIT;
+			
+			NoteHitEvent(note->type);
+			this->health -= 2000;
+			if (this->character->spec & CHAR_SPEC_MISSANIM)
+				this->character->set_anim(this->character, note_anims[type & 0x3][2]);
+			else
+				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+			this->arrow_hitan[type & 0x3] = -1;
 			return;
 		}
 	}
@@ -394,6 +391,15 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 		
 		Stage_StartVocal();
 		this->arrow_hitan[type & 0x3] = stage.step_time;
+	}
+}
+
+static void CheckNewScore()
+{
+	if (stage.prefs.mode == StageMode_Normal && !stage.prefs.botplay && timer.timermin == 0 && timer.timer <= 5)
+	{
+		if (stage.player_state[0].score >= stage.prefs.savescore[stage.stage_id][stage.stage_diff])
+			stage.prefs.savescore[stage.stage_id][stage.stage_diff] = stage.player_state[0].score;
 	}
 }
 
@@ -1257,8 +1263,10 @@ static void Stage_LoadState(void)
 		stage.player_state[i].accuracy = 0;
 		stage.player_state[i].max_accuracy = 0;
 		stage.player_state[i].min_accuracy = 0;
-		strcpy(stage.player_state[i].score_text, "Score: 0 | Misses: 0 | Accuracy: 0%");
-		strcpy(stage.player_state[i].P2_text, "SC: 0 | MS: 0 | AC: 0%");
+		if (stage.prefs.mode >= StageMode_2P)
+			strcpy(stage.player_state[i].score_text, "SC: 0 | MS: 0 | AC: 0%");
+		else
+			strcpy(stage.player_state[i].score_text, "Score: 0 | Misses: 0 | Accuracy: 0%");
 		
 		stage.player_state[i].pad_held = stage.player_state[i].pad_press = 0;
 	}
@@ -1266,6 +1274,61 @@ static void Stage_LoadState(void)
 	ObjectList_Free(&stage.objlist_splash);
 	ObjectList_Free(&stage.objlist_fg);
 	ObjectList_Free(&stage.objlist_bg);
+}
+
+//Retry Tick
+static void Retry_Tick()
+{
+	//Draw 'RETRY'
+	u8 retry_frame;
+	
+	if (stage.player->animatable.anim >= PlayerAnim_Dead3)
+	{
+		if (stage.player->animatable.anim == PlayerAnim_Dead6)
+		{
+			//Selected retry
+			retry_frame = 3 + (stage.retry_bump >> 2);
+			if (retry_frame >= 5)
+				retry_frame = 5;
+			
+			if (stage.retry_bump <= 55)
+				stage.retry_bump++;
+		}
+		else
+		{
+			//Idle
+			retry_frame = 1 + (stage.retry_bump >> 2);
+			if (retry_frame >= 3)
+				retry_frame = 0;
+			
+			if (++stage.retry_bump >= 55)
+				stage.retry_bump = 0;
+		}
+	}
+	
+	RECT retry_src = {
+		(retry_frame & 1) ? 48 : 0,
+		(retry_frame >> 1) << 5,
+		48,
+		32
+	};
+	RECT_FIXED retry_dst = {
+		FIXED_DEC(7,1),
+		FIXED_DEC(92,1),
+		FIXED_DEC(48,1),
+		FIXED_DEC(32,1),
+	};
+	
+	retry_dst.x = stage.player->x - FIXED_MUL(retry_dst.x,stage.player->size) - stage.camera.x;
+	retry_dst.y = stage.player->y - FIXED_MUL(retry_dst.y,stage.player->size) - stage.camera.y;
+	retry_dst.w = FIXED_MUL(retry_dst.w,stage.player->size);
+	retry_dst.h = FIXED_MUL(retry_dst.h,stage.player->size);
+	
+	stage.retry_dst = retry_dst;
+	stage.retry_src = retry_src;
+	
+	if (stage.retry_visibility > 0)
+		stage.retry_visibility--;
 }
 
 //Stage functions
@@ -1328,6 +1391,10 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	IO_FindFile(&file, "\\SOUNDS\\MICDROP.VAG;1");
    	u32 *data = IO_ReadFile(&file);
     stage.sound[0] = Audio_LoadVAGData(data, file.size);
+	
+	IO_FindFile(&file, "\\SOUNDS\\CONTINUE.VAG;1");
+   	data = IO_ReadFile(&file);
+    stage.sound[1] = Audio_LoadVAGData(data, file.size);
     Mem_Free(data);
 	
 	//Load music
@@ -1347,6 +1414,11 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 		stage.note_x[i] = FIXED_DEC(note_def[scroll_index][i], 1);
 		stage.note_y[i] = FIXED_DEC(note_def[0][i], 1);
 	}
+	
+	//Initialize player state
+	stage.retry_visibility = 10;
+	stage.retry_bump = 0;
+	stage.retry_fade = 0;
 }
 
 void Stage_Unload(void)
@@ -1376,6 +1448,9 @@ void Stage_Unload(void)
 
 static boolean Stage_NextLoad(void)
 {
+	CheckNewScore();
+	writeSaveFile();
+	
 	u8 load = stage.stage_def->next_load;
 	if (load == 0)
 	{
@@ -1436,6 +1511,17 @@ static boolean Stage_NextLoad(void)
 
 void Stage_Tick(void)
 {
+	//Reload song when start or cross is pressed
+	if (pad_state.press & PAD_START && stage.state != StageState_Play && stage.state != StageState_DeadDecide && (stage.player->animatable.anim >= PlayerAnim_Dead2))
+	{
+		stage.state = StageState_DeadDecide;
+		stage.player->set_anim(stage.player, PlayerAnim_Dead6);
+		Audio_StopXA();
+		Audio_PlaySound(stage.sound[1], 0x3fff);
+		stage.retry_visibility = 0;
+		stage.retry_bump = 0;
+	}
+	
 	SeamLoad:;
 	
 	//Tick transition
@@ -1447,6 +1533,9 @@ void Stage_Tick(void)
 		switch (stage.trans)
 		{
 			case StageTrans_Menu:
+				CheckNewScore();
+				writeSaveFile();
+				
 				//Load appropriate menu
 				Stage_Unload();
 				
@@ -1491,7 +1580,7 @@ void Stage_Tick(void)
 		{
 			if (stage.song_step >= 0)
 			{
-				if (stage.paused == false && pad_state.press & PAD_START)
+				if (!stage.paused && pad_state.press & PAD_START)
 				{
 					stage.pause_scroll = -1;
 					Audio_PauseXA();
@@ -1727,6 +1816,7 @@ void Stage_Tick(void)
 						if (playing && (note->type & NOTE_FLAG_OPPONENT) && !(note->type & NOTE_FLAG_HIT))
 						{
 							//Opponent hits note
+							stage.player_state[1].arrow_hitan[note->type & 0x3] = stage.step_time;
 							Stage_StartVocal();
 							if (note->type & NOTE_FLAG_SUSTAIN)
 								opponent_snote = note_anims[note->type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0];
@@ -1770,7 +1860,7 @@ void Stage_Tick(void)
 					if (this->refresh_score)
 					{
 						VScore = (this->score * stage.max_score / this->max_score) * 10;
-						sprintf(this->P2_text, "SC: %d | MS: %d | AC: %d%%", VScore, this->miss, this->accuracy);
+						sprintf(this->score_text, "SC: %d | MS: %d | AC: %d%%", VScore, this->miss, this->accuracy);
 						this->refresh_score = false;
 					}
 					
@@ -1778,14 +1868,14 @@ void Stage_Tick(void)
 					{
 						if (i == 0)
 							fonts.font_cdr.draw(&fonts.font_cdr,
-								this->P2_text,
+								this->score_text,
 								FIXED_DEC(85,1), 
 								FIXED_DEC(100,1),
 								FontAlign_Center
 							);
 						else
 							fonts.font_cdr.draw(&fonts.font_cdr,
-								this->P2_text,
+								this->score_text,
 								FIXED_DEC(-65,1),
 								FIXED_DEC(100,1),
 								FontAlign_Center
@@ -1838,7 +1928,7 @@ void Stage_Tick(void)
 					{
 						//Draw health bar
 						Stage_DrawHealthBar(214 - (107 * stage.player_state[0].health / 10000), 0xFFFF0000);
-						Stage_DrawHealthBar(107, 0xFF00FF00);
+						Stage_DrawHealthBar(214, 0xFF00FF00);
 					}
 					else
 					{
@@ -2000,6 +2090,8 @@ void Stage_Tick(void)
 		{
 			//Scroll camera and tick player
 			Stage_ScrollCamera();
+			if (stage.player->animatable.anim >= PlayerAnim_Dead2)
+				Retry_Tick();
 			stage.player->tick(stage.player);
 			
 			//Enter next state once mic has been dropped
@@ -2026,6 +2118,29 @@ void Stage_Tick(void)
 			
 			//Scroll camera and tick player
 			Stage_ScrollCamera();
+			if (stage.player->animatable.anim >= PlayerAnim_Dead2)
+				Retry_Tick();
+			stage.player->tick(stage.player);
+			break;
+		}
+		case StageState_DeadDecide:
+		{
+			//Fade
+			static const RECT fade = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+			Gfx_BlendRect(&fade, stage.retry_fade, stage.retry_fade, stage.retry_fade, 2);
+			
+			if (stage.retry_fade < 252)
+				stage.retry_fade += 4;
+			if (Trans_Idle() && (stage.retry_fade > 200))
+			{
+				stage.trans = StageTrans_Reload;
+				Trans_Start();
+			}
+			
+			//Scroll camera and tick player
+			Stage_ScrollCamera();
+			if (stage.player->animatable.anim >= PlayerAnim_Dead2)
+				Retry_Tick();
 			stage.player->tick(stage.player);
 			break;
 		}

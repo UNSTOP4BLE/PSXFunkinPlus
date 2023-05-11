@@ -112,6 +112,7 @@
 			<!-- Sound -->
 			<dir name = "sounds">
 				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.wav.vag"/>
+				<file name = "continue.vag" type = "data" source = "iso/sounds/gameOverEnd.ogg.vag"/>
 			</dir>
 			
 			<!-- Dummy sectors -->

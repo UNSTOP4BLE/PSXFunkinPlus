@@ -135,10 +135,9 @@ typedef struct
 	s32 max_accuracy;
 	
 	boolean refresh_score;
-	s32 score, max_score;
+	int score; 
+	u32 max_score;
 	char score_text[50];
-	
-	char P2_text[30];
 	
 	u16 pad_held, pad_press;
 } PlayerState;
@@ -153,6 +152,9 @@ typedef struct
 	int pal_i;
 	struct
 	{
+		//Song Scores
+		int savescore[StageId_Max][3];
+		
 		//Controls settings
 		u16 control_keys[4];
 		
@@ -187,7 +189,7 @@ typedef struct
 	u8 pause_select;
 	boolean paused;
 	
-	u32 sound[1];
+	u32 sound[2];
 	
 	//HUD textures
 	Gfx_Tex tex_hud0, tex_icons, tex_note;
@@ -262,8 +264,11 @@ typedef struct
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
 	
-	//Animations
-	
+	//Retry
+	u8 retry_bump, retry_visibility, retry_fade;
+	RECT retry_src;
+	RECT_FIXED retry_dst;
+	boolean retry;
 } Stage;
 
 extern Stage stage;
