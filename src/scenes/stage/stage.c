@@ -1152,7 +1152,7 @@ static void Stage_CountDown(void)
             break;
     }
 	
-    RECT ready_src = textures[stage.frame].src;   
+    RECT ready_src = textures[stage.frame].src;
     RECT_FIXED ready_dst = {
 		-(ready_src.w / 2) << FIXED_SHIFT,
 		-(ready_src.h / 2) << FIXED_SHIFT, 

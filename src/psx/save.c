@@ -59,6 +59,14 @@ static void initSaveFile(SaveFile *file, const char *name)
 
 void defaultSettings()
 {
+	for (u8 i = 0; i < StageId_Max; i++)
+	{
+		for (u8 j = 0; j < 3; j++)
+		{
+			stage.prefs.savescore[i][j] = 0;
+		}
+	}
+	
 	stage.prefs.control_keys[0] = PAD_LEFT;
 	stage.prefs.control_keys[1] = PAD_DOWN;
 	stage.prefs.control_keys[2] = PAD_TRIANGLE;
