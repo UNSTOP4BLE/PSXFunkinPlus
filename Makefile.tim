@@ -25,7 +25,6 @@ all: \
 	\
 	iso/characters/icons.tim \
 	iso/images/menu/menu.arc \
-	iso/images/menu/loading.tim \
 	iso/images/font/fonts.tim \
 	iso/images/hud0.tim \
 

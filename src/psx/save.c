@@ -70,16 +70,15 @@ void defaultSettings()
 	stage.prefs.lowgraphics = false;
 	stage.prefs.palmode = false;
 	
-	
 	stage.prefs.notesplashes = true;
 	stage.prefs.hidehud = false;
 	stage.prefs.timebar = true;
-	stage.prefs.flashinglights = true;
+	stage.prefs.flashinglights = false;
 	stage.prefs.camerazooms = true;
 	stage.prefs.combostack = true;
 	
 	stage.prefs.mode = 0;
-	stage.prefs.downscroll = true;
+	stage.prefs.downscroll = false;
 	stage.prefs.middlescroll = false;
 	stage.prefs.opponentnotes = true;
 	stage.prefs.ghost = true;
@@ -88,6 +87,7 @@ void defaultSettings()
 	
 	stage.prefs.botplay = false;
 }
+
 boolean readSaveFile()
 {
 	int fd = open(savetitle, 0x0001);

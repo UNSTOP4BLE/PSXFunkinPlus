@@ -1280,7 +1280,7 @@ static void Stage_LoadState(void)
 static void Retry_Tick()
 {
 	//Draw 'RETRY'
-	u8 retry_frame;
+	u8 retry_frame = 0;
 	
 	if (stage.player->animatable.anim >= PlayerAnim_Dead3)
 	{
@@ -1329,6 +1329,8 @@ static void Retry_Tick()
 	
 	if (stage.retry_visibility > 0)
 		stage.retry_visibility--;
+	
+	(void)retry_frame;
 }
 
 //Stage functions
@@ -1447,7 +1449,8 @@ void Stage_Unload(void)
 static boolean Stage_NextLoad(void)
 {
 	CheckNewScore();
-	writeSaveFile();
+	if (stage.prefs.autosave)
+		writeSaveFile();
 	
 	u8 load = stage.stage_def->next_load;
 	if (load == 0)
@@ -1532,7 +1535,8 @@ void Stage_Tick(void)
 		{
 			case StageTrans_Menu:
 				CheckNewScore();
-				writeSaveFile();
+				if (stage.prefs.autosave)
+					writeSaveFile();
 				
 				//Load appropriate menu
 				Stage_Unload();
