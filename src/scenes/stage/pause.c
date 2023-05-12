@@ -63,14 +63,14 @@ void PausedState()
 
 		//draw text
 		fonts.font_bold.draw_col(&fonts.font_bold,
-		stage_options[i],
-		48 + (y >> 2),
-		y + 120,
-		FontAlign_Left,
-		//if the option is the one you are selecting, draw in normal color, else, draw gray
-		(i == stage.pause_select) ? 128 : 100,
-		(i == stage.pause_select) ? 128 : 100,
-		(i == stage.pause_select) ? 128 : 100
+			stage_options[i],
+			48 + (y >> 2),
+			y + 120,
+			FontAlign_Left,
+			//if the option is the one you are selecting, draw in normal color, else, draw gray
+			(i == stage.pause_select) ? 128 : 100,
+			(i == stage.pause_select) ? 128 : 100,
+			(i == stage.pause_select) ? 128 : 100
 		);
 	}
 	//pog blend

@@ -27,7 +27,6 @@ void Events()
 {
 	event.shake = lerp(event.shake,0,FIXED_DEC(2,10));
 	FollowCharCamera();
-	//FntPrint("steps: %d", stage.song_step);
 	//if(stage.prefs.followcamera)
 	//	FollowCharCamera();
 }

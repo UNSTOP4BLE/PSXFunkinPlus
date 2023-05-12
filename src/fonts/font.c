@@ -13,6 +13,7 @@ void Initalize_Fonts(void)
 	FontData_Load(&fonts.font_cdr, Font_CDR);
 	FontData_Load(&fonts.font_bold, Font_Bold);
 	FontData_Load(&fonts.font_arial, Font_Arial);
+	Gfx_LoadTex(&stage.tex_icons, IO_Read("\\STAGE\\ICONS.TIM;1"), GFX_LOADTEX_FREE);
 }
 
 //Font_Bold

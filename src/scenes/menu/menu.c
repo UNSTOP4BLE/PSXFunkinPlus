@@ -522,16 +522,17 @@ void Menu_Tick(void)
 		{
 			static const struct
 			{
+				RECT src;
 				StageId stage;
 				u32 col;
 				const char *text;
 			} menu_options[] = {
 				//{StageId_4_4, 0xFFFC96D7, "TEST"},
-				{StageId_1_1, 0xFF9271FD, "shotgun-shell"},
-				{StageId_1_2, 0xFF9271FD, "parasite"},
-				{StageId_1_3, 0xFF9271FD, "godrays"},
-				{StageId_1_4, 0xFF9271FD, "promenade"},
-				{StageId_1_5, 0xFF9271FD, "bushwhack"}
+				{{140, 0, 33, 36}, StageId_1_1, 0xFF2F2F2F, "shotgun-shell"},
+				{{0, 28, 39, 30}, StageId_1_2, 0xFFBA1E24, "parasite"},
+				{{122, 37, 41, 32}, StageId_1_3, 0xFF4CD1E2, "godrays"},
+				{{0, 59, 32, 42}, StageId_1_4, 0xFFFFFFFF, "promenade"},
+				{{0, 28, 39, 30}, StageId_1_5, 0xFF9271FD, "bushwhack"}
 			};
 			
 			//Initialize page
@@ -642,24 +643,43 @@ void Menu_Tick(void)
 			
 			//Draw options
 			
-			s32 next_scroll = menu.select * FIXED_DEC(24,1);
+			s32 next_scroll = menu.select * FIXED_DEC(36,1);
 			menu.scroll += (next_scroll - menu.scroll) >> 4;
 			
 			for (u8 i = 0; i < COUNT_OF(menu_options); i++)
 			{
 				//Get position on screen
-				s32 y = (i * 24) - 8 - (menu.scroll >> FIXED_SHIFT);
-				if (y <= -SCREEN_HEIGHT2 - 8)
+				s32 y = (i * 36) - 8 - (menu.scroll >> FIXED_SHIFT);
+				if (y <= -SCREEN_HEIGHT2 - 16)
 					continue;
-				if (y >= SCREEN_HEIGHT2 + 8)
+				if (y >= SCREEN_HEIGHT2 + 16)
 					break;
 				
+				//Draw icon
+				RECT icon_src = menu_options[i].src;
+				RECT icon_dst = {
+					54 + (y >> 2) - (icon_src.w / 2),
+					SCREEN_HEIGHT2 + y - (icon_src.h / 2),
+					icon_src.w,
+					icon_src.h
+				};
+				Gfx_DrawTexCol(&stage.tex_icons,
+					&icon_src,
+					&icon_dst,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100
+				);
+				
 				//Draw text
-				fonts.font_bold.draw(&fonts.font_bold,
-					Menu_LowerIf(menu_options[i].text, menu.select != i),
-					48 + (y >> 2),
+				fonts.font_bold.draw_col(&fonts.font_bold,
+					menu_options[i].text,
+					84 + (y >> 2),
 					SCREEN_HEIGHT2 + y - 8,
-					FontAlign_Left
+					FontAlign_Left,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100,
+					(i == menu.select) ? 128 : 100
 				);
 			}
 			

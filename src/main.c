@@ -67,6 +67,7 @@ int main(int argc, char **argv)
         defaultSettings();
 
     Initalize_Fonts();
+	stage.pal_i = 1;
 
     // Start game
     gameloop = GameLoop_Menu;
