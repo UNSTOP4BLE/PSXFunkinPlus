@@ -37,7 +37,6 @@ build/
 *.arc
 *.xa
 *.cht
-*.vag
 
 # Don't remove these
 !makefile.cht

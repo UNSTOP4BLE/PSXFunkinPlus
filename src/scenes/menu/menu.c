@@ -528,11 +528,11 @@ void Menu_Tick(void)
 				const char *text;
 			} menu_options[] = {
 				//{StageId_4_4, 0xFFFC96D7, "TEST"},
-				{{140, 0, 33, 36}, StageId_1_1, 0xFF2F2F2F, "shotgun-shell"},
-				{{0, 28, 39, 30}, StageId_1_2, 0xFFBA1E24, "parasite"},
-				{{122, 37, 41, 32}, StageId_1_3, 0xFF4CD1E2, "godrays"},
-				{{0, 59, 32, 42}, StageId_1_4, 0xFFFFFFFF, "promenade"},
-				{{0, 28, 39, 30}, StageId_1_5, 0xFF9271FD, "bushwhack"}
+				{{140, 0, 33, 36}, StageId_1_1, 0xFF2F2F2F, "SHOTGUN-SHELL"},
+				{{0, 28, 39, 30}, StageId_1_2, 0xFFBA1E24, "PARASITE"},
+				{{122, 37, 41, 32}, StageId_1_3, 0xFF4CD1E2, "GODRAYS"},
+				{{0, 59, 32, 42}, StageId_1_4, 0xFFFFFFFF, "PROMENADE"},
+				{{0, 28, 39, 30}, StageId_1_5, 0xFF9271FD, "BUSHWHACK"}
 			};
 			
 			//Initialize page

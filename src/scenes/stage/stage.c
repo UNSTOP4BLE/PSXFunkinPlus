@@ -58,6 +58,8 @@
 
 //#define STAGE_FREECAM //Freecam
 
+static int Sounds[7];
+
 static const u8 note_anims[4][3] = {
 	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
 	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
@@ -1084,6 +1086,91 @@ static void Stage_DrawNotes(void)
 	}
 }
 
+static void Stage_CountDown(void)
+{
+	static const struct
+	{
+		RECT src;
+	} textures[] = {
+		{{0,0,189,91}},
+		{{0,92,176,81}},
+		{{0,174,77,59}},
+	};
+	
+	boolean transparent = false;
+	
+    switch(stage.song_step)
+    {
+        case -21:
+			stage.introsound = true;
+            break;
+        case -20:
+			if(stage.introsound)
+			{
+				Audio_PlaySound(Sounds[2], 0x3fff);
+				stage.introsound = false;
+			}
+            break;
+        case -16:
+			transparent = true;
+			stage.introsound = true;
+            break;
+        case -15:
+			stage.frame = 0;
+			if(stage.introsound)
+			{
+				Audio_PlaySound(Sounds[3], 0x3fff);
+				stage.introsound = false;
+			}
+            break;
+        case -11:
+			transparent = true;
+			stage.introsound = true;
+            break;
+        case -10:
+			stage.frame = 1;
+			if(stage.introsound)
+			{
+				Audio_PlaySound(Sounds[4], 0x3fff);
+				stage.introsound = false;
+			}
+            break;
+        case -6:
+			transparent = true;
+			stage.introsound = true;
+            break;
+        case -5:
+			stage.frame = 2;
+			if(stage.introsound)
+			{
+				Audio_PlaySound(Sounds[5], 0x3fff);
+				stage.introsound = false;
+			}
+            break;
+        case -1:
+			transparent = true;
+            break;
+    }
+	
+    RECT ready_src = textures[stage.frame].src;   
+    RECT_FIXED ready_dst = {
+		-(ready_src.w / 2) << FIXED_SHIFT,
+		-(ready_src.h / 2) << FIXED_SHIFT, 
+		FIXED_DEC(ready_src.w,1), 
+		FIXED_DEC(ready_src.h,1)
+	};   
+	
+	if(stage.song_step > -16 && stage.song_step < 0)
+	{
+		if (!transparent)
+			Stage_DrawTex(&stage.tex_intro, &ready_src, &ready_dst, stage.bump);
+		else
+			Stage_BlendTex(&stage.tex_intro, &ready_src, &ready_dst, stage.bump, 1);
+	}
+	
+	transparent = false;
+}
+
 //Stage loads
 static void Stage_SwapChars(void)
 {
@@ -1333,6 +1420,16 @@ static void Retry_Tick()
 	(void)retry_frame;
 }
 
+static void Load_SFX(char *path, u8 offset)
+{
+	CdlFILE file;
+	
+	IO_FindFile(&file, path);
+   	u32 *data = IO_ReadFile(&file);
+    Sounds[offset] = Audio_LoadVAGData(data, file.size);
+    Mem_Free(data);
+}
+
 //Stage functions
 void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 {
@@ -1343,9 +1440,19 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 
 	//Load HUD textures
 	Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
+	Gfx_LoadTex(&stage.tex_intro, IO_Read("\\STAGE\\INTRO.TIM;1"), GFX_LOADTEX_FREE);
 	
 	//Load stage background
 	Stage_LoadStage();
+	
+	//Load VAG files
+	Audio_ClearAlloc();
+	Load_SFX("\\SOUNDS\\MICDROP.VAG;1",0);
+	Load_SFX("\\SOUNDS\\CONTINUE.VAG;1",1);
+	Load_SFX("\\SOUNDS\\INTRO0.VAG;1",2);
+	Load_SFX("\\SOUNDS\\INTRO1.VAG;1",3);
+	Load_SFX("\\SOUNDS\\INTRO2.VAG;1",4);
+	Load_SFX("\\SOUNDS\\INTRO3.VAG;1",5);
 	
 	//Load Events
 	Load_Events();
@@ -1381,20 +1488,6 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	
 	//Initialize stage according to mode
 	stage.note_swap = (stage.prefs.mode == StageMode_Swap) ? 4 : 0;
-	
-	//Load VAG files
-	Audio_ClearAlloc();
-	CdlFILE file;
-
-	IO_FindFile(&file, "\\SOUNDS\\MICDROP.VAG;1");
-   	u32 *data = IO_ReadFile(&file);
-    stage.sound[0] = Audio_LoadVAGData(data, file.size);
-    Mem_Free(data);
-	
-	IO_FindFile(&file, "\\SOUNDS\\CONTINUE.VAG;1");
-   	data = IO_ReadFile(&file);
-    stage.sound[1] = Audio_LoadVAGData(data, file.size);
-    Mem_Free(data);
 	
 	//Load music
 	stage.note_scroll = 0;
@@ -1517,7 +1610,7 @@ void Stage_Tick(void)
 		stage.state = StageState_DeadDecide;
 		stage.player->set_anim(stage.player, PlayerAnim_Dead6);
 		Audio_StopXA();
-		Audio_PlaySound(stage.sound[1], 0x3fff);
+		Audio_PlaySound(Sounds[1], 0x3fff);
 		stage.retry_visibility = 0;
 		stage.retry_bump = 0;
 	}
@@ -1604,6 +1697,8 @@ void Stage_Tick(void)
 				StageTimer_Draw();
 			if (stage.debug)
 				Debug_StageDebug();
+			
+            Stage_CountDown();
 			
 			Events();
 			
@@ -2031,7 +2126,7 @@ void Stage_Tick(void)
 		{
 			//Stop music immediately
 			Audio_StopXA();
-			Audio_PlaySound(stage.sound[0], 0x3fff);
+			Audio_PlaySound(Sounds[0], 0x3fff);
 			
 			//Unload stage data
 			Mem_Free(stage.chart_data);

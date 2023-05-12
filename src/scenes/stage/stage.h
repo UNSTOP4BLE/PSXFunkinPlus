@@ -189,10 +189,8 @@ typedef struct
 	u8 pause_select;
 	boolean paused;
 	
-	u32 sound[2];
-	
 	//HUD textures
-	Gfx_Tex tex_hud0, tex_icons, tex_note;
+	Gfx_Tex tex_hud0, tex_icons, tex_intro;
 	
 	//Stage data
 	const StageDef *stage_def;
@@ -269,6 +267,10 @@ typedef struct
 	RECT retry_src;
 	RECT_FIXED retry_dst;
 	boolean retry;
+	
+	//Intro
+	u8 frame;
+	boolean introsound;
 } Stage;
 
 extern Stage stage;

@@ -27,6 +27,7 @@ all: \
 	iso/images/menu/menu.arc \
 	iso/images/font/fonts.tim \
 	iso/images/hud0.tim \
+	iso/images/intro.tim \
 
 iso/%.tim: iso/%.png
 	tools/funkintimconv/funkintimconv $@ $<
