@@ -6,6 +6,7 @@
 #include "audio.h"
 #include "psx/pad.h"
 #include "psx/save.h"
+#include "fonts/font.h"
 
 #include "scenes/menu/menu.h"
 #include "scenes/stage/stage.h"
@@ -20,18 +21,18 @@ void ErrorLock(void)
 {
 	while (1)
 	{
-		#ifdef PSXF_PC
-			MsgPrint(error_msg);
-			exit(1);
-		#else
-			FntPrint("A fatal error has occured\n~c700%s\n", error_msg);
-			Gfx_Flip();
-		#endif
+		fonts.font_cdr.draw(&fonts.font_cdr,
+			error_msg,
+			(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_WIDTH2 + 10,1) : 10,
+			(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_HEIGHT2 + 10,1) : 10,
+			FontAlign_Left
+		);
+		Gfx_Flip();
 	}
 }
 
 //Memory heap
-//#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
+#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
 
 #define MEM_IMPLEMENTATION
 #include "psx/mem.h"
@@ -84,6 +85,21 @@ int main(int argc, char **argv)
 			size_t mem_used, mem_size, mem_max;
 			Mem_GetStat(&mem_used, &mem_size, &mem_max);
 			#ifndef MEM_BAR
+				char text[80];
+				sprintf(text, "FPS: %d", 1000 / timer_dt);
+				fonts.font_cdr.draw(&fonts.font_cdr,
+					text,
+					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_WIDTH2 + 10,1) : 10,
+					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_HEIGHT2 + 10,1) : 10,
+					FontAlign_Left
+				);
+				sprintf(text, "Memory: %08X/%08X (max %08X)", mem_used, mem_size, mem_max);
+				fonts.font_cdr.draw(&fonts.font_cdr,
+					text,
+					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_WIDTH2 + 10,1) : 10,
+					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_HEIGHT2 + 20,1) : 20,
+					FontAlign_Left
+				);
 				FntPrint("mem: %08X/%08X (max %08X)\n", mem_used, mem_size, mem_max);
 			#endif
 		#endif

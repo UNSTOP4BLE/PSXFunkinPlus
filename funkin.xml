@@ -36,7 +36,6 @@
 			<dir name = "stage">
 				<file name = "hud0.tim" type = "data" source = "iso/images/hud0.tim"/>
 				<file name = "icons.tim" type = "data" source = "iso/characters/icons.tim"/>
-				<file name = "note.tim" type = "data" source = "iso/images/note.tim"/>
 			</dir>
 			
 			<!-- Week 1 assets -->

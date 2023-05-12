@@ -1343,9 +1343,6 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
 	Gfx_LoadTex(&stage.tex_icons, IO_Read("\\STAGE\\ICONS.TIM;1"), GFX_LOADTEX_FREE);
 	
-	//Load Special Notes
-	Gfx_LoadTex(&stage.tex_note, IO_Read("\\STAGE\\NOTE.TIM;1"), GFX_LOADTEX_FREE);
-	
 	//Load stage background
 	Stage_LoadStage();
 	
@@ -1391,6 +1388,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	IO_FindFile(&file, "\\SOUNDS\\MICDROP.VAG;1");
    	u32 *data = IO_ReadFile(&file);
     stage.sound[0] = Audio_LoadVAGData(data, file.size);
+    Mem_Free(data);
 	
 	IO_FindFile(&file, "\\SOUNDS\\CONTINUE.VAG;1");
    	data = IO_ReadFile(&file);

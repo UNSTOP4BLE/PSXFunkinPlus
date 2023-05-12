@@ -28,7 +28,6 @@ all: \
 	iso/images/menu/loading.tim \
 	iso/images/font/fonts.tim \
 	iso/images/hud0.tim \
-	iso/images/note.tim \
 
 iso/%.tim: iso/%.png
 	tools/funkintimconv/funkintimconv $@ $<

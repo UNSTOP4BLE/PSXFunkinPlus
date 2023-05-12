@@ -162,7 +162,7 @@ void Font_CDR_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, Fon
 		if (c == '\n')
 		{
 			x = xhold;
-			y += 11;
+			y += (gameloop == GameLoop_Stage) ? FIXED_DEC(11,1) : 11;
 		}
 		//Shift and validate character
 		if ((c -= 0x20) >= 0x60)
