@@ -1,0 +1,50 @@
+name: ISO
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: sudo apt-get -y install gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
+
+    - name: Install mkpsxiso
+      run: |
+        wget https://github.com/Lameguy64/mkpsxiso/releases/download/v2.03/mkpsxiso-2.03-Linux.deb
+        sudo dpkg -i mkpsxiso-2.03-Linux.deb
+
+    - name: Copy PsyQ
+      run: |
+        cd mips
+        mkdir psyq
+        cd psyq
+        wget http://psx.arthus.net/sdk/Psy-Q/psyq-4_7-converted-light.zip
+        unzip psyq-4_7-converted-light.zip
+        
+    - name: Compile tools
+      run: |
+        make -f Makefile.tools
+        make -f Makefile.tim
+        make -f Makefile.chr
+        make -f Makefile.xa
+        make -f Makefile.cht
+      
+    - name: Compile PSXFunkin
+      run: make
+      
+#    - name: Make ISO
+#      run: mkpsxiso -y funkin.xml
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: EXE
+        path: ./funkin.ps-exe
