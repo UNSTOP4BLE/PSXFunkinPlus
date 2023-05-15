@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get -y update
-        sudo apt-get -y install libavformat-dev libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
+        sudo apt-get -y install libswscale-dev libavformat-dev libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
 
     - name: Install mkpsxiso
       run: |
