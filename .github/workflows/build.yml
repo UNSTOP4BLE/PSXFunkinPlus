@@ -34,18 +34,11 @@ jobs:
     - name: Compile tools
       run: |
         make -f Makefile.tools
-        make -f Makefile.tim
-        make -f Makefile.xa
-        make -f Makefile.cht
-      
-    - name: Compile PSXFunkin
-      run: make
-      
-    - name: Make ISO
-      run: |
         wget https://archive.org/download/psyq-sdk/PSYQ_SDK.zip/psyq%2Fcdgen%2FLCNSFILE%2FLICENSEA.DAT -O licensea.dat
-        mkpsxiso -y funkin.xml
-
+              
+    - name: Compile PSXFunkin
+      run: make -f Makefile.assets all
+      
     - name: Upload Artifact
       uses: actions/upload-artifact@master
       with:
