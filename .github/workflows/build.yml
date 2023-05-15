@@ -14,10 +14,11 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: |
-        sudo apt-get -y update
-        sudo apt-get -y install libswscale-dev libavformat-dev libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
-
+    - uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: libswscale-dev libavformat-dev libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
+        version: 1.0
+          
     - name: Install mkpsxiso
       run: |
         wget https://github.com/Lameguy64/mkpsxiso/releases/download/v2.03/mkpsxiso-2.03-Linux.deb
