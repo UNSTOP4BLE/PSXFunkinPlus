@@ -48,3 +48,10 @@ jobs:
         path: |
           funkin.bin
           funkin.cue
+
+    - name: Debug Artifact
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: failure
+        path: ./
