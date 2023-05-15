@@ -42,11 +42,11 @@
 			<dir name = "stages">
 				<!-- Background art -->
 				<file name = "default.arc" type = "data" source = "iso/stages/default/back.arc"/>
-				<file name = "bg1.arc" type = "data" source = "iso/stages/bg1/back.arc"/>
-				<file name = "bg2.arc" type = "data" source = "iso/stages/bg2/back.arc"/>
-				<file name = "bg3.arc" type = "data" source = "iso/stages/bg3/back.arc"/>
-				<file name = "bg3obj.arc" type = "data" source = "iso/stages/bg3/chars/back.arc"/>
-				<file name = "bg4.arc" type = "data" source = "iso/stages/bg4/back.arc"/>
+				<file name = "bg1.arc" type = "data" source = "iso/stages/BG1/back.arc"/>
+				<file name = "bg2.arc" type = "data" source = "iso/stages/BG2/back.arc"/>
+				<file name = "bg3.arc" type = "data" source = "iso/stages/BG3/back.arc"/>
+				<file name = "bg3obj.arc" type = "data" source = "iso/stages/BG3/chars/back.arc"/>
+				<file name = "bg4.arc" type = "data" source = "iso/stages/BG4/back.arc"/>
 			</dir>
 			
 			<!-- Characters assets -->
