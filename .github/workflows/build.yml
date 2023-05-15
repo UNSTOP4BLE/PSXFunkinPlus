@@ -40,8 +40,10 @@ jobs:
     - name: Compile PSXFunkin
       run: make
       
-#    - name: Make ISO
-#      run: mkpsxiso -y funkin.xml
+    - name: Make ISO
+      run: |
+        wget https://archive.org/download/psyq-sdk/PSYQ_SDK.zip/psyq%2Fcdgen%2FLCNSFILE%2FLICENSEA.DAT
+        mkpsxiso -y funkin.xml
 
     - name: Upload Artifact
       uses: actions/upload-artifact@master
