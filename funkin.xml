@@ -112,10 +112,10 @@
 			<dir name = "sounds">
 				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.wav.vag"/>
 				<file name = "continue.vag" type = "data" source = "iso/sounds/gameOverEnd.wav.vag"/>
-				<file name = "intro3.vag" type = "data" source = "iso/sounds/intro3.vag"/>
-				<file name = "intro2.vag" type = "data" source = "iso/sounds/intro2.vag"/>
-				<file name = "intro1.vag" type = "data" source = "iso/sounds/intro1.vag"/>
-				<file name = "intro0.vag" type = "data" source = "iso/sounds/intro0.vag"/>
+				<file name = "intro3.vag" type = "data" source = "iso/sounds/intro3.VAG"/>
+				<file name = "intro2.vag" type = "data" source = "iso/sounds/intro2.VAG"/>
+				<file name = "intro1.vag" type = "data" source = "iso/sounds/intro1.VAG"/>
+				<file name = "intro0.vag" type = "data" source = "iso/sounds/intro0.VAG"/>
 			</dir>
 			
 			<!-- Dummy sectors -->
