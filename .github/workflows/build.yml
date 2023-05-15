@@ -14,7 +14,9 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: sudo apt-get -y install libavformat-extra libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install libavformat-dev libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
 
     - name: Install mkpsxiso
       run: |
