@@ -40,6 +40,11 @@ typedef struct
 } Char_GF;
 
 //GF character definitions
+static const u16 char_gf_icons[2][4] = {
+    {174, 0, 34, 30},
+    {174, 0, 34, 30}
+};
+
 static const CharFrame char_gf_frame[] = {
 	{GF_ArcMain_GF0, {  0,   0,  74, 103}, { 37,  72}}, //0 bop left 1
 	{GF_ArcMain_GF0, { 75,   0,  74, 103}, { 38,  72}}, //1 bop left 2
@@ -207,15 +212,7 @@ Character *Char_GF_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i[0][0] = 0;
-	this->character.health_i[0][1] = 0;
-	this->character.health_i[0][2] = 46;
-	this->character.health_i[0][3] = 30;
-	
-	this->character.health_i[1][0] = 47;
-	this->character.health_i[1][1] = 0;
-	this->character.health_i[1][2] = 43;
-	this->character.health_i[1][3] = 35;
+	memcpy(this->character.health_i, char_gf_icons, sizeof(char_gf_icons));
 	
 	//health bar color
 	this->character.health_bar = 0xFFA5004A;

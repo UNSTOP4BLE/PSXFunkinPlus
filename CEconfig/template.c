@@ -54,7 +54,7 @@ void Char_<CharacterName>_Tick(Character *character)
 	Char_<CharacterName> *this = (Char_<CharacterName>*)character;
 	
 	//Perform idle dance
-	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
+	if ((character->pad_held & (stage.prefs.control_keys[0] | stage.prefs.control_keys[1] | stage.prefs.control_keys[2] | stage.prefs.control_keys[3])) == 0)
 		Character_PerformIdle(character);
 	
 	//Animate and draw
@@ -99,15 +99,15 @@ Character *Char_<CharacterName>_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i[0][0] = 0;
+	this->character.health_i[0][0] = 84;
 	this->character.health_i[0][1] = 0;
-	this->character.health_i[0][2] = 46;
-	this->character.health_i[0][3] = 30;
+	this->character.health_i[0][2] = 27;
+	this->character.health_i[0][3] = 25;
 	
-	this->character.health_i[1][0] = 47;
+	this->character.health_i[1][0] = 112;
 	this->character.health_i[1][1] = 0;
-	this->character.health_i[1][2] = 43;
-	this->character.health_i[1][3] = 35;
+	this->character.health_i[1][2] = 27;
+	this->character.health_i[1][3] = 25;
 	
 	//health bar color
 	this->character.health_bar = 0xFF<HB Color>;

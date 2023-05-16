@@ -78,7 +78,7 @@ void FollowCharCamera()
 
 void NoteHitEvent(u8 type)
 {
-	stage.camera.ta = RandomRange(-50, 50);
+
 }
 
 void NoteHitEnemyEvent(u8 type)

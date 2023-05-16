@@ -61,6 +61,11 @@ typedef struct
 } Char_BFLow;
 
 //Boyfriend player definitions
+static const u16 char_bflow_icons[2][4] = {
+    {0, 102, 42, 28},
+    {43, 102, 42, 34}
+};
+
 static const CharFrame char_bflow_frame[] = {
 	{BFLow_ArcMain_Dead0, {  0,   0, 102,  99}, { 53,  92}}, //0 idle 1
 	{BFLow_ArcMain_Dead0, {103,   0, 102,  99}, { 53,  92}}, //1 idle 2
@@ -265,18 +270,10 @@ Character *Char_BFLow_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = CHAR_SPEC_MISSANIM;
 	
-	this->character.health_i[0][0] = 0;
-	this->character.health_i[0][1] = 102;
-	this->character.health_i[0][2] = 42;
-	this->character.health_i[0][3] = 28;
-	
-	this->character.health_i[1][0] = 43;
-	this->character.health_i[1][1] = 102;
-	this->character.health_i[1][2] = 42;
-	this->character.health_i[1][3] = 34;
+	memcpy(this->character.health_i, char_bflow_icons, sizeof(char_bflow_icons));
 	
 	//health bar color
-	this->character.health_bar = 0xFF00A6E2;
+	this->character.health_bar = 0xFF31B0D1;
 	
 	this->character.focus_x = FIXED_DEC(-30,1);
 	this->character.focus_y = FIXED_DEC(-90,1);

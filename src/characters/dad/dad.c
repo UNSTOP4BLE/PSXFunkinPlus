@@ -32,6 +32,11 @@ typedef struct
 } Char_Dad;
 
 //Dad character definitions
+static const u16 char_dad_icons[2][4] = {
+    {140, 0, 33, 39},
+    {140, 0, 33, 39}
+};
+
 static const CharFrame char_dad_frame[] = {
 	{Dad_ArcMain_Idle0, {  0,   0, 106, 192}, { 42, 183+4}}, //0 idle 1
 	{Dad_ArcMain_Idle0, {107,   0, 108, 190}, { 43, 181+4}}, //1 idle 2
@@ -128,18 +133,10 @@ Character *Char_Dad_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i[0][0] = 84;
-	this->character.health_i[0][1] = 0;
-	this->character.health_i[0][2] = 27;
-	this->character.health_i[0][3] = 25;
-	
-	this->character.health_i[1][0] = 112;
-	this->character.health_i[1][1] = 0;
-	this->character.health_i[1][2] = 27;
-	this->character.health_i[1][3] = 25;
+	memcpy(this->character.health_i, char_dad_icons, sizeof(char_dad_icons));
 	
 	//health bar color
-	this->character.health_bar = 0xFFA1A1A1;
+	this->character.health_bar = 0xFFAF66CE;
 	
 	this->character.focus_x = FIXED_DEC(65,1);
 	this->character.focus_y = FIXED_DEC(-115,1);
