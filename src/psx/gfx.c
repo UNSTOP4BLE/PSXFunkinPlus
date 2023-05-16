@@ -237,47 +237,52 @@ void Gfx_BlitTex(Gfx_Tex *tex, const RECT *src, s32 x, s32 y)
 
 void Gfx_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle, fixed_t hx, fixed_t hy, u8 r, u8 g, u8 b)
 {	
-	s16 sin = MUtil_Sin(angle);
-	s16 cos = MUtil_Cos(angle);
-	
-	hx = hx * (dst->w / src->w);
-	hy = hy * (dst->h / src->h);
-	
-	//Get rotated points
-	POINT p0 = {0 - hx, 0 - hy};
-	MUtil_RotatePoint(&p0, sin, cos);
-	
-	POINT p1 = {dst->w - hx, 0 - hy};
-	MUtil_RotatePoint(&p1, sin, cos);
-	
-	POINT p2 = {0 - hx, dst->h - hy};
-	MUtil_RotatePoint(&p2, sin, cos);
-	
-	POINT p3 = {dst->w - hx, dst->h - hy};
-	MUtil_RotatePoint(&p3, sin, cos);
-	
-	POINT d0 = {
-		dst->x + p0.x,
-		dst->y + p0.y
-	};
-	POINT d1 = {
-		dst->x + p1.x,
-		dst->y + p1.y
-	};
-	POINT d2 = {
-        dst->x + p2.x,
-		dst->y + p2.y
-	};
-	POINT d3 = {
-        dst->x + p3.x,
-		dst->y + p3.y
-	};
+	//Manipulate rects to comply with GPU restrictions
+    RECT csrc = *src;
+    RECT cdst = *dst;
+
+    if (dst->w < 0)
+        csrc.x--;
+    if (dst->h < 0)
+        csrc.y--;
+
+    if ((csrc.x + csrc.w) >= 0x100)
+    {
+        csrc.w = 0xFF - csrc.x;
+        cdst.w = cdst.w * csrc.w / src->w;
+    }
+    if ((csrc.y + csrc.h) >= 0x100)
+    {
+        csrc.h = 0xFF - csrc.y;
+        cdst.h = cdst.h * csrc.h / src->h;
+    }
+
+    s16 sinVal = MUtil_Sin(angle);
+    s16 cosVal = MUtil_Cos(angle);
+
+    hx = hx * (cdst.w / csrc.w);
+    hy = hy * (cdst.h / csrc.h);
+
+    // Get rotated points
+    POINT points[4] = {
+        {0 - hx, 0 - hy},
+        {cdst.w - hx, 0 - hy},
+        {0 - hx, cdst.h - hy},
+        {cdst.w - hx, cdst.h - hy}
+    };
+
+    for (int i = 0; i < 4; i++)
+    {
+        MUtil_RotatePoint(&points[i], sinVal, cosVal);
+        points[i].x += cdst.x;
+        points[i].y += cdst.y;
+    }
 	
 	//Add quad
 	POLY_FT4 *quad = (POLY_FT4*)nextpri;
 	setPolyFT4(quad);
-	setUVWH(quad, src->x, src->y, src->w, src->h);
-	setXY4(quad, d0.x, d0.y, d1.x, d1.y, d2.x, d2.y, d3.x, d3.y);
+	setUVWH(quad, src->x, csrc.y, csrc.w, csrc.h);
+    setXY4(quad, points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y, points[3].x, points[3].y);
 	setRGB0(quad, r, g, b);
 	quad->tpage = tex->tpage;
 	quad->clut = tex->clut;
@@ -375,47 +380,52 @@ void Gfx_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT *p0, const POINT
 
 void Gfx_BlendTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle, fixed_t hx, fixed_t hy, u8 mode, u8 r, u8 g, u8 b)
 {	
-	s16 sin = MUtil_Sin(angle);
-	s16 cos = MUtil_Cos(angle);
-	
-	hx = hx * (dst->w / src->w);
-	hy = hy * (dst->h / src->h);
-	
-	//Get rotated points
-	POINT p0 = {0 - hx, 0 - hy};
-	MUtil_RotatePoint(&p0, sin, cos);
-	
-	POINT p1 = {dst->w - hx, 0 - hy};
-	MUtil_RotatePoint(&p1, sin, cos);
-	
-	POINT p2 = {0 - hx, dst->h - hy};
-	MUtil_RotatePoint(&p2, sin, cos);
-	
-	POINT p3 = {dst->w - hx, dst->h - hy};
-	MUtil_RotatePoint(&p3, sin, cos);
-	
-	POINT d0 = {
-		dst->x + p0.x,
-		dst->y + p0.y
-	};
-	POINT d1 = {
-		dst->x + p1.x,
-		dst->y + p1.y
-	};
-	POINT d2 = {
-        dst->x + p2.x,
-		dst->y + p2.y
-	};
-	POINT d3 = {
-        dst->x + p3.x,
-		dst->y + p3.y
-	};
+	//Manipulate rects to comply with GPU restrictions
+    RECT csrc = *src;
+    RECT cdst = *dst;
+
+    if (dst->w < 0)
+        csrc.x--;
+    if (dst->h < 0)
+        csrc.y--;
+
+    if ((csrc.x + csrc.w) >= 0x100)
+    {
+        csrc.w = 0xFF - csrc.x;
+        cdst.w = cdst.w * csrc.w / src->w;
+    }
+    if ((csrc.y + csrc.h) >= 0x100)
+    {
+        csrc.h = 0xFF - csrc.y;
+        cdst.h = cdst.h * csrc.h / src->h;
+    }
+
+    s16 sinVal = MUtil_Sin(angle);
+    s16 cosVal = MUtil_Cos(angle);
+
+    hx = hx * (cdst.w / csrc.w);
+    hy = hy * (cdst.h / csrc.h);
+
+    // Get rotated points
+    POINT points[4] = {
+        {0 - hx, 0 - hy},
+        {cdst.w - hx, 0 - hy},
+        {0 - hx, cdst.h - hy},
+        {cdst.w - hx, cdst.h - hy}
+    };
+
+    for (int i = 0; i < 4; i++)
+    {
+        MUtil_RotatePoint(&points[i], sinVal, cosVal);
+        points[i].x += cdst.x;
+        points[i].y += cdst.y;
+    }
 	
 	//Add quad
 	POLY_FT4 *quad = (POLY_FT4*)nextpri;
 	setPolyFT4(quad);
-	setUVWH(quad, src->x, src->y, src->w, src->h);
-	setXY4(quad, d0.x, d0.y, d1.x, d1.y, d2.x, d2.y, d3.x, d3.y);
+	setUVWH(quad, src->x, csrc.y, csrc.w, csrc.h);
+    setXY4(quad, points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y, points[3].x, points[3].y);
 	setRGB0(quad, r, g, b);
 	setSemiTrans(quad, 1);
 	quad->tpage = tex->tpage | getTPage(0, mode, 0, 0);

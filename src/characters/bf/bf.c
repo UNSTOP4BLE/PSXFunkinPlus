@@ -180,7 +180,12 @@ void Char_BF_Tick(Character *character)
 	
 	//Retry screen
 	if (character->animatable.anim >= PlayerAnim_Dead2)
-		Stage_BlendTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), (stage.retry_visibility == 0) ? 0 : 1);
+	{
+		if(stage.retry_visibility == 0)
+			Stage_DrawTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
+		else
+			Stage_BlendTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), 0);
+	}
 	
 	//Animate and draw character
 	Animatable_Animate(&character->animatable, (void*)this, Char_BF_SetFrame);

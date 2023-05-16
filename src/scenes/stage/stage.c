@@ -494,7 +494,7 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 			this->pad_press = 0;
 		}
 	}
-	stage.camera.angle = FIXED_DEC(128,1);
+	stage.camera.angle = FIXED_DEC(0,1);
 }
 
 //Stage drawing functions
@@ -608,8 +608,8 @@ void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
     fixed_t rotatedX = FIXED_MUL(xz,FIXED_DEC(MUtil_Cos(rotationAngle),256)) - FIXED_MUL(yz,FIXED_DEC(MUtil_Sin(rotationAngle),256));
     fixed_t rotatedY = FIXED_MUL(xz,FIXED_DEC(MUtil_Sin(rotationAngle),256)) + FIXED_MUL(yz,FIXED_DEC(MUtil_Cos(rotationAngle),256));
 	
-    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(rotatedX, zoom);// + FIXED_DEC(1,2);
-    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(rotatedY, zoom);// + FIXED_DEC(1,2);
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(rotatedX, zoom) + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(rotatedY, zoom) + FIXED_DEC(1,2);
     fixed_t r = l + FIXED_MUL(wz, zoom);
     fixed_t b = t + FIXED_MUL(hz, zoom);
     
@@ -940,7 +940,7 @@ static void Stage_DrawNotes(void)
 						note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
 						note_dst.y = y + clip;
 						note_dst.w = note_src.w << FIXED_SHIFT;
-						note_dst.h = (note_src.h << FIXED_SHIFT);
+						note_dst.h = note_src.h << FIXED_SHIFT;
 						
 						if (stage.prefs.downscroll)
 						{
@@ -1147,7 +1147,7 @@ static void Stage_CountDown(void)
 		if (!transparent)
 			Stage_DrawTex(&stage.tex_intro, &ready_src, &ready_dst, stage.bump);
 		else
-			Stage_BlendTex(&stage.tex_intro, &ready_src, &ready_dst, stage.bump, 1);
+			Stage_BlendTex(&stage.tex_intro, &ready_src, &ready_dst, stage.bump, 0);
 	}
 
 	transparent = false;
