@@ -39,7 +39,7 @@ void Character_DrawParallax(Character *this, Gfx_Tex *tex, const CharFrame *cfra
 	dst.w = FIXED_MUL(dst.w,this->size);
 	dst.h = FIXED_MUL(dst.h,this->size);
 	
-	Stage_DrawTex(tex, &src, &dst, stage.camera.bzoom);
+	Stage_DrawTex(tex, &src, &dst, stage.camera.bzoom, stage.camera.angle);
 }
 
 void Character_Draw(Character *this, Gfx_Tex *tex, const CharFrame *cframe)

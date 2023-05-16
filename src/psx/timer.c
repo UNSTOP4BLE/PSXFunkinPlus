@@ -151,7 +151,7 @@ void StageTimer_Draw()
 
     if (stage.song_step >= 0)
     {
-        Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &front_dst, stage.bump, 255, 255, 255);
+        Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &front_dst, stage.bump, stage.camera.hudangle, 255, 255, 255);
     }
-    Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &back_dst, stage.bump, 0, 0, 0);
+    Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &back_dst, stage.bump, stage.camera.hudangle, 0, 0, 0);
 }

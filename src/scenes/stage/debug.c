@@ -233,14 +233,11 @@ void Debug_ScrollCamera(void)
 	}
 	else if (pad_state.held & PAD_SELECT)
 	{
-		//Get delta position
-		fixed_t dx = stage.camera.tx - stage.camera.x;
-		fixed_t dy = stage.camera.ty - stage.camera.y;
-		fixed_t dz = stage.camera.tz - stage.camera.zoom;
-		
 		//Scroll based off current divisor
-		stage.camera.x += FIXED_MUL(dx, stage.camera.td);
-		stage.camera.y += FIXED_MUL(dy, stage.camera.td);
-		stage.camera.zoom += FIXED_MUL(dz, stage.camera.td);
+		stage.camera.x = lerp(stage.camera.x, stage.camera.tx, stage.camera.speed);
+		stage.camera.y = lerp(stage.camera.y, stage.camera.ty, stage.camera.speed);
+		stage.camera.zoom = lerp(stage.camera.zoom, stage.camera.tz, stage.camera.speed);
+		stage.camera.angle = lerp(stage.camera.angle, stage.camera.ta << FIXED_SHIFT, stage.camera.speed);
+		stage.camera.hudangle = lerp(stage.camera.hudangle, stage.camera.hudta << FIXED_SHIFT, stage.camera.speed);
 	}
 }

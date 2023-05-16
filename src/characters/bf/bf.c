@@ -182,9 +182,9 @@ void Char_BF_Tick(Character *character)
 	if (character->animatable.anim >= PlayerAnim_Dead2)
 	{
 		if(stage.retry_visibility == 0)
-			Stage_DrawTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
+			Stage_DrawTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), stage.camera.angle);
 		else
-			Stage_BlendTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), 0);
+			Stage_BlendTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), stage.camera.angle, 0);
 	}
 	
 	//Animate and draw character
@@ -202,7 +202,7 @@ void Char_BF_SetAnim(Character *character, u8 anim)
 		case PlayerAnim_Dead0:
 			character->focus_x = FIXED_DEC(0,1);
 			character->focus_y = FIXED_DEC(-40,1);
-			character->focus_zoom = FIXED_DEC(125,100);
+			character->focus_zoom = FIXED_DEC(100,100);
 			break;
 		case PlayerAnim_Dead2:
 			//Load retry art

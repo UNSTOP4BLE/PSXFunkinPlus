@@ -33,16 +33,16 @@ void Back_Default_DrawBG(StageBack *back)
 		FIXED_DEC(107,1),
 		FIXED_DEC(221,1)
 	};
-	RECT curtainr_src = {122, 0, 134, 255};
+	RECT curtainr_src = {122, 0, 134, 256};
 	RECT_FIXED curtainr_dst = {
 		FIXED_DEC(110,1) + FIXED_DEC(SCREEN_WIDEOADD,2) - fx,
 		FIXED_DEC(-150,1) - fy,
 		FIXED_DEC(134,1),
-		FIXED_DEC(255,1)
+		FIXED_DEC(256,1)
 	};
 	
-	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, stage.camera.bzoom, stage.camera.angle);
+	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	//Draw stage
 	fx = stage.camera.x * 3 / 2;
@@ -71,7 +71,7 @@ void Back_Default_DrawBG(StageBack *back)
 	
 	RECT stage_src = {0, 0, 255, 59};
 	
-	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, stage.camera.bzoom);
+	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, stage.camera.bzoom, stage.camera.angle);
 	
 	//Draw back
 	//fx = stage.camera.x * 2 / 3;
@@ -99,8 +99,8 @@ void Back_Default_DrawBG(StageBack *back)
 		SCREEN_HEIGHT,
 	};
 	
-	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, stage.camera.bzoom, stage.camera.angle);
+	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, stage.camera.bzoom, stage.camera.angle);
 	Gfx_DrawTex(&this->tex_back0, &backf_src, &backf_dst);
 }
 

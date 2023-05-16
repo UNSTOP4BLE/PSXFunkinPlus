@@ -14,7 +14,6 @@ Event event;
 void Load_Events()
 {
 	event.zoom = FIXED_DEC(1,1);
-	event.speed = FIXED_DEC(5,100);
 	event.shake = 0;
 	event.flash = 0;
 	event.fade = 0;
@@ -79,7 +78,7 @@ void FollowCharCamera()
 
 void NoteHitEvent(u8 type)
 {
-	
+	stage.camera.ta = RandomRange(-50, 50);
 }
 
 void NoteHitEnemyEvent(u8 type)
