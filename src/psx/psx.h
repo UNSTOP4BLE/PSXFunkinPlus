@@ -44,7 +44,7 @@ typedef s8 boolean;
 //Point type
 typedef struct
 {
-	short x, y;
+	s32 x, y;
 } POINT;
 
 //Common macros

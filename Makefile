@@ -4,27 +4,15 @@ TYPE = ps-exe
 SRCS = src/main.c \
 	   \
        src/characters/bf/bf.c \
-       src/characters/bfg/bfg.c \
-       src/characters/bfn/bfn.c \
        src/characters/bf/bflow.c \
 	   \
        src/characters/dad/dad.c \
-       src/characters/aldryx/aldryx.c \
-       src/characters/agoti/agoti.c \
-       src/characters/sol/sol.c \
-       src/characters/niku/niku.c \
 	   \
        src/characters/gf/gf.c \
        src/characters/gf/speaker.c \
-       src/characters/gfb/gfb.c \
-       src/characters/gfg/gfg.c \
 	   \
        src/stages/default/default.c \
        src/stages/default/defaultlow.c \
-       src/stages/bg1/bg1.c \
-       src/stages/bg2/bg2.c \
-       src/stages/bg3/bg3.c \
-       src/stages/bg4/bg4.c \
 	   \
        src/scenes/menu/menu.c \
        src/scenes/menu/options.c \

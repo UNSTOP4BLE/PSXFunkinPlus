@@ -8,23 +8,23 @@ typedef struct
 
 static const XA_TrackDef xa_tracks[] = {
 	//MENU.XA
-	{XA_Menu, XA_LENGTH(14034)}, //XA_GettinFreaky
+	{XA_Menu, XA_LENGTH(11300)}, //XA_GettinFreaky
 	{XA_Menu, XA_LENGTH(3800)},  //XA_GameOver
-	
-	{XA_1, XA_LENGTH(13076)},
-	{XA_1, XA_LENGTH(12599)},
-	
-	{XA_2, XA_LENGTH(13019)},
-	{XA_2, XA_LENGTH(14624)},
-	
-	{XA_3, XA_LENGTH(36686)},
+	//1.XA
+	{XA_1, XA_LENGTH(7700)}, //XA_Bopeebo
+	{XA_1, XA_LENGTH(8000)}, //XA_Fresh
+	//2.XA
+	{XA_2, XA_LENGTH(8700)}, //XA_Dadbattle
+	{XA_2, XA_LENGTH(6800)}, //XA_Tutorial
+	//3.XA
+	{XA_3, XA_LENGTH(10700)}, //XA_Blammed
 };
 
 static const char *xa_paths[] = {
 	"\\MUSIC\\MENU.XA;1",   //XA_Menu
-	"\\MUSIC\\1.XA;1",
-	"\\MUSIC\\2.XA;1",
-	"\\MUSIC\\3.XA;1",
+	"\\MUSIC\\1.XA;1", //XA_Week1A
+	"\\MUSIC\\2.XA;1", //XA_Week1B
+	"\\MUSIC\\3.XA;1", //XA_Week3A
 	NULL,
 };
 
@@ -38,14 +38,14 @@ static const XA_Mp3 xa_mp3s[] = {
 	//MENU.XA
 	{"freakymenu", false},   //XA_GettinFreaky
 	{"gameover", false}, //XA_GameOver
-	
-	{"shotgun-shell", true},
-	{"parasite", true},
-	
-	{"godrays", true},
-	{"promenade", true},
-	
-	{"bushwhack", true},
+	//WEEK1A.XA
+	{"bopeebo", true}, //XA_Bopeebo
+	{"fresh", true},   //XA_Fresh
+	//WEEK1B.XA
+	{"dadbattle", true}, //XA_Dadbattle
+	{"tutorial", false}, //XA_Tutorial
+	//WEEK3A.XA
+	{"blammed", true},   //XA_Blammed
 	
 	{NULL, false}
 };

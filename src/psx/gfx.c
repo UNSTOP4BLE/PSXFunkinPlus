@@ -208,49 +208,6 @@ void Gfx_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 mode)
 	nextpri += sizeof(POLY_FT4);
 }
 
-//The Blend V2 system script by IgorSoup,
-//enables smooth blending of animations and graphics in PSXFunkin. 
-void Gfx_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 mode, u8 opacity)
-{
-	//Manipulate rects to comply with GPU restrictions
-	RECT csrc, cdst;
-	csrc = *src;
-	cdst = *dst;
-
-	//math to convert "opacity" in colors
-	opacity = (opacity * 10 * 254 / 1000) + 1;
-	//printf("opacity is %d \n", opacity);
-
-	if (dst->w < 0)
-		csrc.x--;
-	if (dst->h < 0)
-		csrc.y--;
-
-	if ((csrc.x + csrc.w) >= 0x100)
-	{
-		csrc.w = 0xFF - csrc.x;
-		cdst.w = cdst.w * csrc.w / src->w;
-	}
-	if ((csrc.y + csrc.h) >= 0x100)
-	{
-		csrc.h = 0xFF - csrc.y;
-		cdst.h = cdst.h * csrc.h / src->h;
-	}
-
-	//Add quad
-	POLY_FT4 *quad = (POLY_FT4*)nextpri;
-	setPolyFT4(quad);
-	setUVWH(quad, csrc.x, csrc.y, csrc.w, csrc.h);
-	setXYWH(quad, cdst.x, cdst.y, cdst.w, cdst.h);
-	setRGB0(quad, opacity, opacity, opacity);
-	setSemiTrans(quad, 1);
-	quad->tpage = tex->tpage | getTPage(0, mode, 0, 0);
-	quad->clut = tex->clut;
-
-	addPrim(ot[db], quad);
-	nextpri += sizeof(POLY_FT4);
-}
-
 void Gfx_BlitTexCol(Gfx_Tex *tex, const RECT *src, s32 x, s32 y, u8 r, u8 g, u8 b)
 {
 	//Add sprite
@@ -414,4 +371,61 @@ void Gfx_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT *p0, const PO
 void Gfx_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT *p0, const POINT *p1, const POINT *p2, const POINT *p3, u8 mode)
 {
 	Gfx_BlendTexArbCol(tex, src, p0, p1, p2, p3, 128, 128, 128, mode);
+}
+
+void Gfx_BlendTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle, fixed_t hx, fixed_t hy, u8 mode, u8 r, u8 g, u8 b)
+{	
+	s16 sin = MUtil_Sin(angle);
+	s16 cos = MUtil_Cos(angle);
+	
+	hx = hx * (dst->w / src->w);
+	hy = hy * (dst->h / src->h);
+	
+	//Get rotated points
+	POINT p0 = {0 - hx, 0 - hy};
+	MUtil_RotatePoint(&p0, sin, cos);
+	
+	POINT p1 = {dst->w - hx, 0 - hy};
+	MUtil_RotatePoint(&p1, sin, cos);
+	
+	POINT p2 = {0 - hx, dst->h - hy};
+	MUtil_RotatePoint(&p2, sin, cos);
+	
+	POINT p3 = {dst->w - hx, dst->h - hy};
+	MUtil_RotatePoint(&p3, sin, cos);
+	
+	POINT d0 = {
+		dst->x + p0.x,
+		dst->y + p0.y
+	};
+	POINT d1 = {
+		dst->x + p1.x,
+		dst->y + p1.y
+	};
+	POINT d2 = {
+        dst->x + p2.x,
+		dst->y + p2.y
+	};
+	POINT d3 = {
+        dst->x + p3.x,
+		dst->y + p3.y
+	};
+	
+	//Add quad
+	POLY_FT4 *quad = (POLY_FT4*)nextpri;
+	setPolyFT4(quad);
+	setUVWH(quad, src->x, src->y, src->w, src->h);
+	setXY4(quad, d0.x, d0.y, d1.x, d1.y, d2.x, d2.y, d3.x, d3.y);
+	setRGB0(quad, r, g, b);
+	setSemiTrans(quad, 1);
+	quad->tpage = tex->tpage | getTPage(0, mode, 0, 0);
+	quad->clut = tex->clut;
+	
+	addPrim(ot[db], quad);
+	nextpri += sizeof(POLY_FT4);
+}
+
+void Gfx_BlendTexRotate(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle, fixed_t hx, fixed_t hy, u8 mode)
+{
+	Gfx_BlendTexRotateCol(tex, src, dst, angle, hx, hy, mode, 128, 128, 128);
 }

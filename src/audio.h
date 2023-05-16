@@ -8,9 +8,9 @@ typedef enum
 {
 	XA_Menu,   //MENU.XA
 	
-	XA_1,
-	XA_2,
-	XA_3,
+	XA_1, //1.XA
+	XA_2, //2.XA
+	XA_3, //3.XA
 	
 	XA_Max,
 } XA_File;
@@ -20,14 +20,14 @@ typedef enum
 	//MENU.XA
 	XA_GettinFreaky, //Gettin' Freaky
 	XA_GameOver,     //Game Over
-
-	XA_Shotgun_Shell,
-	XA_Parasite,
-	
-	XA_Godrays,
-	XA_Promenade,
-	
-	XA_Bushwhack,
+	//WEEK1A.XA
+	XA_Bopeebo, //Bopeebo
+	XA_Fresh,   //Fresh
+	//WEEK1B.XA
+	XA_Dadbattle, //DadBattle
+	XA_Tutorial,  //Tutorial
+	//WEEK3B.XA
+	XA_Blammed, //Blammed
 	
 	XA_TrackMax,
 } XA_Track;

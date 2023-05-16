@@ -42,11 +42,6 @@
 			<dir name = "stages">
 				<!-- Background art -->
 				<file name = "default.arc" type = "data" source = "iso/stages/default/back.arc"/>
-				<file name = "bg1.arc" type = "data" source = "iso/stages/bg1/back.arc"/>
-				<file name = "bg2.arc" type = "data" source = "iso/stages/bg2/back.arc"/>
-				<file name = "bg3.arc" type = "data" source = "iso/stages/bg3/back.arc"/>
-				<file name = "bg3obj.arc" type = "data" source = "iso/stages/bg3/chars/back.arc"/>
-				<file name = "bg4.arc" type = "data" source = "iso/stages/bg4/back.arc"/>
 			</dir>
 			
 			<!-- Characters assets -->
@@ -54,43 +49,37 @@
 				<!-- Boyfriend assets -->
 				<file name = "bf.arc" type = "data" source = "iso/characters/bf/main.arc"/>
 				<file name = "bflow.arc" type = "data" source = "iso/characters/bf/low.arc"/>
-				<file name = "bfg.arc" type = "data" source = "iso/characters/bfg/main.arc"/>
-				<file name = "bfn.arc" type = "data" source = "iso/characters/bfn/main.arc"/>
 				
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>
-				<file name = "aldryx.arc" type = "data" source = "iso/characters/aldryx/main.arc"/>
-				<file name = "agoti.arc" type = "data" source = "iso/characters/agoti/main.arc"/>
-				<file name = "sol.arc" type = "data" source = "iso/characters/sol/main.arc"/>
-				<file name = "niku.arc" type = "data" source = "iso/characters/niku/main.arc"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
 				<file name = "speaker.tim" type = "data" source = "iso/characters/gf/speaker.tim"/>
-				<file name = "gfb.arc" type = "data" source = "iso/characters/gfb/main.arc"/>
-				<file name = "gfg.arc" type = "data" source = "iso/characters/gfg/main.arc"/>
 			</dir>
 			
 			<!-- Songs -->
 			<dir name = "songs">
-				<file name = "1.1e.cht" type = "data" source = "iso/songs/shotgun-shell/shotgun-shell-easy.json.cht"/>
-				<file name = "1.1n.cht" type = "data" source = "iso/songs/shotgun-shell/shotgun-shell.json.cht"/>
-				<file name = "1.1h.cht" type = "data" source = "iso/songs/shotgun-shell/shotgun-shell-hard.json.cht"/>
-				
-				<file name = "1.2e.cht" type = "data" source = "iso/songs/parasite/parasite-easy.json.cht"/>
-				<file name = "1.2n.cht" type = "data" source = "iso/songs/parasite/parasite.json.cht"/>
-				<file name = "1.2h.cht" type = "data" source = "iso/songs/parasite/parasite-hard.json.cht"/>
-				
-				<file name = "1.3e.cht" type = "data" source = "iso/songs/godrays/godrays-easy.json.cht"/>
-				<file name = "1.3n.cht" type = "data" source = "iso/songs/godrays/godrays.json.cht"/>
-				<file name = "1.3h.cht" type = "data" source = "iso/songs/godrays/godrays-hard.json.cht"/>
-				
-				<file name = "1.4e.cht" type = "data" source = "iso/songs/promenade/promenade-easy.json.cht"/>
-				<file name = "1.4n.cht" type = "data" source = "iso/songs/promenade/promenade.json.cht"/>
-				<file name = "1.4h.cht" type = "data" source = "iso/songs/promenade/promenade-hard.json.cht"/>
-				
-				<file name = "1.5n.cht" type = "data" source = "iso/songs/bushwhack/bushwhack.json.cht"/>
+				<!-- Bopeebo charts -->
+				<file name = "1.1e.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-easy.json.cht"/>
+				<file name = "1.1n.cht" type = "data" source = "iso/songs/bopeebo/bopeebo.json.cht"/>
+				<file name = "1.1h.cht" type = "data" source = "iso/songs/bopeebo/bopeebo-hard.json.cht"/>
+				<!-- Fresh charts -->
+				<file name = "1.2e.cht" type = "data" source = "iso/songs/fresh/fresh-easy.json.cht"/>
+				<file name = "1.2n.cht" type = "data" source = "iso/songs/fresh/fresh.json.cht"/>
+				<file name = "1.2h.cht" type = "data" source = "iso/songs/fresh/fresh-hard.json.cht"/>
+				<!-- Dadbattle charts -->
+				<file name = "1.3e.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-easy.json.cht"/>
+				<file name = "1.3n.cht" type = "data" source = "iso/songs/dadbattle/dadbattle.json.cht"/>
+				<file name = "1.3h.cht" type = "data" source = "iso/songs/dadbattle/dadbattle-hard.json.cht"/>
+				<!-- Tutorial charts -->
+				<file name = "1.4e.cht" type = "data" source = "iso/songs/tutorial/tutorial-easy.json.cht"/>
+				<file name = "1.4n.cht" type = "data" source = "iso/songs/tutorial/tutorial.json.cht"/>
+				<file name = "1.4h.cht" type = "data" source = "iso/songs/tutorial/tutorial-hard.json.cht"/>
+
+				<!-- Blammed charts -->
+				<file name = "2.1h.cht" type = "data" source = "iso/songs/blammed/blammed.json.cht"/>
 			</dir>
 			
 			<!-- Music -->

@@ -118,7 +118,7 @@ void Char_GF_Tick(Character *character)
 			{
 				//Play animation and bump speakers
 				character->set_anim(character, ((*this->pico_p) & 0x8000) ? CharAnim_RightAlt : CharAnim_LeftAlt);
-				//Speaker_Bump(&this->speaker);
+				Speaker_Bump(&this->speaker);
 				this->pico_p++;
 			}
 		}
@@ -151,7 +151,7 @@ void Char_GF_Tick(Character *character)
 					character->set_anim(character, CharAnim_LeftAlt);
 				
 				//Bump speakers
-				//Speaker_Bump(&this->speaker);
+				Speaker_Bump(&this->speaker);
 			}
 		}
 	}
@@ -165,7 +165,7 @@ void Char_GF_Tick(Character *character)
 	Character_DrawParallax(character, &this->tex, &char_gf_frame[this->frame], parallax);
 	
 	//Tick speakers
-	//Speaker_Tick(&this->speaker, character->x, character->y, parallax);
+	Speaker_Tick(&this->speaker, character->x, character->y, parallax);
 }
 
 void Char_GF_SetAnim(Character *character, u8 anim)
@@ -265,7 +265,7 @@ Character *Char_GF_New(fixed_t x, fixed_t y)
 	this->tex_id = this->frame = 0xFF;
 	
 	//Initialize speaker
-	//Speaker_Init(&this->speaker);
+	Speaker_Init(&this->speaker);
 	
 	this->pico_p = NULL;
 	

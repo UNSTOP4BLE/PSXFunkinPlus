@@ -1,23 +1,15 @@
+FILES = $(addsuffix .xa,  $(basename $(wildcard iso/songs/*/*.ogg) $(wildcard iso/music/*.ogg))) \
+  $(basename $(wildcard iso/music/*.txt) $(wildcard iso/songs/*.txt))
+
 all: \
-	iso/music/menu.xa \
-	iso/songs/1.xa \
-	iso/songs/2.xa \
-	iso/songs/3.xa \
+  $(FILES) \
 
+# XA converts
 iso/%.xa: iso/%.ogg
-	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C 0 $< $@ 
-
+	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C 0 $< $@
 iso/%.xa:
-	tools/xainterleave/xainterleave $@ $^
+	tools/xainterleave/xainterleave $@
 
-# Menu
-iso/music/menu.xa: iso/music/freakymenu.xa iso/music/gameover.xa
-
-# 1
-iso/songs/1.xa: iso/songs/shotgun-shell/Inst.xa iso/songs/shotgun-shell/Merged.xa iso/songs/parasite/Inst.xa iso/songs/parasite/Merged.xa
-
-# 2
-iso/songs/2.xa: iso/songs/godrays/Inst.xa iso/songs/godrays/Merged.xa iso/songs/promenade/Inst.xa iso/songs/promenade/Merged.xa
-
-# 3
-iso/songs/3.xa: iso/songs/bushwhack/Inst.xa iso/songs/bushwhack/Merged.xa
+.PHONY: clean
+clean:
+	rm -f $(FILES)

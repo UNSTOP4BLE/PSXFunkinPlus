@@ -1,27 +1,15 @@
 //Characters
 //Players
 #include "../../characters/bf/bf.h"
-#include "../../characters/bfg/bfg.h"
-#include "../../characters/bfn/bfn.h"
 
 //Opponents
 #include "../../characters/dad/dad.h"
-#include "../../characters/aldryx/aldryx.h"
-#include "../../characters/agoti/agoti.h"
-#include "../../characters/sol/sol.h"
-#include "../../characters/niku/niku.h"
 
 //Stages
 #include "../../stages/default/default.h"
-#include "../../stages/bg1/bg1.h"
-#include "../../stages/bg2/bg2.h"
-#include "../../stages/bg3/bg3.h"
-#include "../../stages/bg4/bg4.h"
 
 //Middle Char (Girlfriend)
 #include "../../characters/gf/gf.h"
-#include "../../characters/gfb/gfb.h"
-#include "../../characters/gfg/gfg.h"
 
 
 //Stage Codes
@@ -506,6 +494,7 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 			this->pad_press = 0;
 		}
 	}
+	stage.camera.angle = FIXED_DEC(128,1);
 }
 
 //Stage drawing functions
@@ -573,8 +562,13 @@ void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
             return;
     #endif
     
-    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
-    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
+    // Calculate the rotated coordinates
+    u8 rotationAngle = stage.camera.angle / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
+    fixed_t rotatedX = FIXED_MUL(xz,FIXED_DEC(MUtil_Cos(rotationAngle),256)) - FIXED_MUL(yz,FIXED_DEC(MUtil_Sin(rotationAngle),256));
+    fixed_t rotatedY = FIXED_MUL(xz,FIXED_DEC(MUtil_Sin(rotationAngle),256)) + FIXED_MUL(yz,FIXED_DEC(MUtil_Cos(rotationAngle),256));
+	
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(rotatedX, zoom);// + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(rotatedY, zoom);// + FIXED_DEC(1,2);
     fixed_t r = l + FIXED_MUL(wz, zoom);
     fixed_t b = t + FIXED_MUL(hz, zoom);
     
@@ -589,7 +583,7 @@ void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
         r - l,
         b - t,
     };
-    Gfx_DrawTexRotateCol(tex, src, &sdst, angle, hx, hy, cr, cg, cb);
+    Gfx_DrawTexRotateCol(tex, src, &sdst, angle + rotationAngle, hx, hy, cr, cg, cb);
 }
 
 void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, fixed_t zoom)
@@ -609,8 +603,13 @@ void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
             return;
     #endif
     
-    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
-    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
+    // Calculate the rotated coordinates
+    u8 rotationAngle = stage.camera.angle / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
+    fixed_t rotatedX = FIXED_MUL(xz,FIXED_DEC(MUtil_Cos(rotationAngle),256)) - FIXED_MUL(yz,FIXED_DEC(MUtil_Sin(rotationAngle),256));
+    fixed_t rotatedY = FIXED_MUL(xz,FIXED_DEC(MUtil_Sin(rotationAngle),256)) + FIXED_MUL(yz,FIXED_DEC(MUtil_Cos(rotationAngle),256));
+	
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(rotatedX, zoom);// + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(rotatedY, zoom);// + FIXED_DEC(1,2);
     fixed_t r = l + FIXED_MUL(wz, zoom);
     fixed_t b = t + FIXED_MUL(hz, zoom);
     
@@ -625,7 +624,8 @@ void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
         r - l,
         b - t,
     };
-    Gfx_DrawTexCol(tex, src, &sdst, cr, cg, cb);
+	
+    Gfx_DrawTexRotateCol(tex, src, &sdst, rotationAngle, 0, 0, cr, cg, cb);
 }
 
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom)
@@ -635,18 +635,31 @@ void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t
 
 void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom)
 {
-    //Don't draw if HUD and HUD is disabled
+    // Don't draw if HUD and HUD is disabled
     #ifdef STAGE_NOHUD
         if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
             return;
     #endif
     
-    //Get screen-space points
-    POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(p0->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p0->y, zoom) / FIXED_UNIT)};
-    POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(p1->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p1->y, zoom) / FIXED_UNIT)};
-    POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(p2->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p2->y, zoom) / FIXED_UNIT)};
-    POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(p3->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p3->y, zoom) / FIXED_UNIT)};
-    
+    u8 rotationAngle = stage.camera.angle / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
+    fixed_t cosAngle = FIXED_DEC(MUtil_Cos(rotationAngle), 256);
+    fixed_t sinAngle = FIXED_DEC(MUtil_Sin(rotationAngle), 256);
+
+    fixed_t x0 = FIXED_MUL(p0->x, cosAngle) - FIXED_MUL(p0->y, sinAngle);
+    fixed_t y0 = FIXED_MUL(p0->x, sinAngle) + FIXED_MUL(p0->y, cosAngle);
+    fixed_t x1 = FIXED_MUL(p1->x, cosAngle) - FIXED_MUL(p1->y, sinAngle);
+    fixed_t y1 = FIXED_MUL(p1->x, sinAngle) + FIXED_MUL(p1->y, cosAngle);
+    fixed_t x2 = FIXED_MUL(p2->x, cosAngle) - FIXED_MUL(p2->y, sinAngle);
+    fixed_t y2 = FIXED_MUL(p2->x, sinAngle) + FIXED_MUL(p2->y, cosAngle);
+    fixed_t x3 = FIXED_MUL(p3->x, cosAngle) - FIXED_MUL(p3->y, sinAngle);
+    fixed_t y3 = FIXED_MUL(p3->x, sinAngle) + FIXED_MUL(p3->y, cosAngle);
+
+    // Get screen-space points
+    POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(x0, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y0, zoom) / FIXED_UNIT)};
+    POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(x1, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y1, zoom) / FIXED_UNIT)};
+    POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(x2, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y2, zoom) / FIXED_UNIT)};
+    POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(x3, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y3, zoom) / FIXED_UNIT)};
+
     Gfx_DrawTexArbCol(tex, src, &s0, &s1, &s2, &s3, r, g, b);
 }
 
@@ -692,57 +705,29 @@ void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_
 		#endif
 	}
 	
-	fixed_t l = (SCREEN_WIDTH2  << FIXED_SHIFT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
-	fixed_t t = (SCREEN_HEIGHT2 << FIXED_SHIFT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
-	fixed_t r = l + FIXED_MUL(wz, zoom);
-	fixed_t b = t + FIXED_MUL(hz, zoom);
+    // Calculate the rotated coordinates
+    u8 rotationAngle = stage.camera.angle / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
+    fixed_t rotatedX = FIXED_MUL(xz,FIXED_DEC(MUtil_Cos(rotationAngle),256)) - FIXED_MUL(yz,FIXED_DEC(MUtil_Sin(rotationAngle),256));
+    fixed_t rotatedY = FIXED_MUL(xz,FIXED_DEC(MUtil_Sin(rotationAngle),256)) + FIXED_MUL(yz,FIXED_DEC(MUtil_Cos(rotationAngle),256));
 	
-	l >>= FIXED_SHIFT;
-	t >>= FIXED_SHIFT;
-	r >>= FIXED_SHIFT;
-	b >>= FIXED_SHIFT;
+    fixed_t l = (SCREEN_WIDTH2  * FIXED_UNIT) + FIXED_MUL(rotatedX, zoom);// + FIXED_DEC(1,2);
+    fixed_t t = (SCREEN_HEIGHT2 * FIXED_UNIT) + FIXED_MUL(rotatedY, zoom);// + FIXED_DEC(1,2);
+    fixed_t r = l + FIXED_MUL(wz, zoom);
+    fixed_t b = t + FIXED_MUL(hz, zoom);
+    
+    l /= FIXED_UNIT;
+    t /= FIXED_UNIT;
+    r /= FIXED_UNIT;
+    b /= FIXED_UNIT;
+    
+    RECT sdst = {
+        l,
+        t,
+        r - l,
+        b - t,
+    };
 	
-	RECT sdst = {
-		l,
-		t,
-		r - l,
-		b - t,
-	};
-	Gfx_BlendTex(tex, src, &sdst, mode);
-}
-
-void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 mode, u8 opacity)
-{
-	fixed_t xz = dst->x;
-	fixed_t yz = dst->y;
-	fixed_t wz = dst->w;
-	fixed_t hz = dst->h;
-
-	//Don't draw if HUD and is disabled
-	if (tex == &stage.tex_hud0)
-	{
-		#ifdef STAGE_NOHUD
-			return;
-		#endif
-	}
-
-	fixed_t l = (SCREEN_WIDTH2  << FIXED_SHIFT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
-	fixed_t t = (SCREEN_HEIGHT2 << FIXED_SHIFT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
-	fixed_t r = l + FIXED_MUL(wz, zoom);
-	fixed_t b = t + FIXED_MUL(hz, zoom);
-
-	l >>= FIXED_SHIFT;
-	t >>= FIXED_SHIFT;
-	r >>= FIXED_SHIFT;
-	b >>= FIXED_SHIFT;
-
-	RECT sdst = {
-		l,
-		t,
-		r - l,
-		b - t,
-	};
-	Gfx_BlendTexV2(tex, src, &sdst, mode, opacity);
+    Gfx_BlendTexRotate(tex, src, &sdst, rotationAngle, 0, 0, mode);
 }
 
 //Stage HUD functions
@@ -1088,86 +1073,83 @@ static void Stage_DrawNotes(void)
 
 static void Stage_CountDown(void)
 {
-	static const struct
-	{
-		RECT src;
-	} textures[] = {
-		{{0,0,189,91}},
-		{{0,92,176,81}},
-		{{0,174,77,59}},
+	static const RECT textures[] = {
+		{0, 0, 189, 91},
+		{0, 92, 176, 81},
+		{0, 174, 77, 59}
 	};
-	
-	boolean transparent = false;
-	
-    switch(stage.song_step)
-    {
-        case -21:
-			stage.introsound = true;
-            break;
-        case -20:
-			if(stage.introsound)
-			{
-				Audio_PlaySound(Sounds[2], 0x3fff);
-				stage.introsound = false;
-			}
-            break;
-        case -16:
-			transparent = true;
-			stage.introsound = true;
-            break;
-        case -15:
-			stage.frame = 0;
-			if(stage.introsound)
-			{
-				Audio_PlaySound(Sounds[3], 0x3fff);
-				stage.introsound = false;
-			}
-            break;
-        case -11:
-			transparent = true;
-			stage.introsound = true;
-            break;
-        case -10:
-			stage.frame = 1;
-			if(stage.introsound)
-			{
-				Audio_PlaySound(Sounds[4], 0x3fff);
-				stage.introsound = false;
-			}
-            break;
-        case -6:
-			transparent = true;
-			stage.introsound = true;
-            break;
-        case -5:
-			stage.frame = 2;
-			if(stage.introsound)
-			{
-				Audio_PlaySound(Sounds[5], 0x3fff);
-				stage.introsound = false;
-			}
-            break;
-        case -1:
-			transparent = true;
-            break;
-    }
-	
-    RECT ready_src = textures[stage.frame].src;
-    RECT_FIXED ready_dst = {
+
+	static boolean transparent = false;
+
+	switch (stage.song_step)
+	{
+	case -21:
+		stage.introsound = true;
+		break;
+	case -20:
+		if (stage.introsound)
+		{
+			Audio_PlaySound(Sounds[2], 0x3fff);
+			stage.introsound = false;
+		}
+		break;
+	case -16:
+		transparent = true;
+		stage.introsound = true;
+		break;
+	case -15:
+		stage.frame = 0;
+		if (stage.introsound)
+		{
+			Audio_PlaySound(Sounds[3], 0x3fff);
+			stage.introsound = false;
+		}
+		break;
+	case -11:
+		transparent = true;
+		stage.introsound = true;
+		break;
+	case -10:
+		stage.frame = 1;
+		if (stage.introsound)
+		{
+			Audio_PlaySound(Sounds[4], 0x3fff);
+			stage.introsound = false;
+		}
+		break;
+	case -6:
+		transparent = true;
+		stage.introsound = true;
+		break;
+	case -5:
+		stage.frame = 2;
+		if (stage.introsound)
+		{
+			Audio_PlaySound(Sounds[5], 0x3fff);
+			stage.introsound = false;
+		}
+		break;
+	case -1:
+		transparent = true;
+		break;
+	}
+
+	RECT ready_src = textures[stage.frame];
+	RECT_FIXED ready_dst = {
 		-(ready_src.w / 2) << FIXED_SHIFT,
-		-(ready_src.h / 2) << FIXED_SHIFT, 
-		FIXED_DEC(ready_src.w,1), 
-		FIXED_DEC(ready_src.h,1)
-	};   
-	
-	if(stage.song_step > -16 && stage.song_step < 0)
+		-(ready_src.h / 2) << FIXED_SHIFT,
+		FIXED_DEC(ready_src.w, 1),
+		FIXED_DEC(ready_src.h, 1)
+	};
+
+	if (stage.song_step > -16 && stage.song_step < 0)
 	{
 		if (!transparent)
 			Stage_DrawTex(&stage.tex_intro, &ready_src, &ready_dst, stage.bump);
 		else
 			Stage_BlendTex(&stage.tex_intro, &ready_src, &ready_dst, stage.bump, 1);
 	}
-	
+
 	transparent = false;
 }
 
@@ -2165,8 +2147,6 @@ void Stage_Tick(void)
 	//Fallthrough
 		case StageState_DeadLoad:
 		{
-			stage.player->tick(stage.player);
-			
 			//Scroll camera and tick player
 			if (stage.song_time < FIXED_UNIT)
 				stage.song_time += FIXED_UNIT / 60;
@@ -2174,9 +2154,6 @@ void Stage_Tick(void)
 			if (stage.camera.td > 0)
 				Stage_ScrollCamera();
 			stage.player->tick(stage.player);
-			
-			//Drop mic and change state if CD has finished reading and animation has ended
-			//if (IO_IsReading() || stage.player->animatable.anim != PlayerAnim_Dead1)
 			
 			stage.camera.td = FIXED_DEC(25, 1000);
 			stage.state = StageState_DeadDrop;

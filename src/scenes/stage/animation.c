@@ -25,31 +25,31 @@ void Animatable_Animate(Animatable *this, void *user, void (*set_frame)(void*, u
 	//Wait for time
 	if (!stage.paused)
 	{
-	while (this->anim_time <= 0)
-	{
-		//Read script
-		switch (this->anim_p[0])
+		while (this->anim_time <= 0)
 		{
-			case ASCR_REPEAT:
-				this->anim_p = this->anims[this->anim].script;
-				this->ended = true;
-				break;
-			case ASCR_CHGANI:
-				Animatable_SetAnim(this, this->anim_p[1]);
-				break;
-			case ASCR_BACK:
-				this->anim_time += this->anim_spd;
-				this->anim_p -= this->anim_p[1];
-				this->ended = true;
-				break;
-			default:
-				set_frame(user, this->anim_p[0]);
-				this->anim_time += this->anim_spd;
-				this->anim_p++;
-				break;
+			//Read script
+			switch (this->anim_p[0])
+			{
+				case ASCR_REPEAT:
+					this->anim_p = this->anims[this->anim].script;
+					this->ended = true;
+					break;
+				case ASCR_CHGANI:
+					Animatable_SetAnim(this, this->anim_p[1]);
+					break;
+				case ASCR_BACK:
+					this->anim_time += this->anim_spd;
+					this->anim_p -= this->anim_p[1];
+					this->ended = true;
+					break;
+				default:
+					set_frame(user, this->anim_p[0]);
+					this->anim_time += this->anim_spd;
+					this->anim_p++;
+					break;
+			}
 		}
-	}
-	this->anim_time -= timer_dt;
+		this->anim_time -= timer_dt;
 	}
 }
 
