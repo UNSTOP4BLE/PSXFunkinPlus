@@ -35,5 +35,6 @@
 		"PlayerAnim_Dead6",
 		"PlayerAnim_Dead7"
 	],
-	"output": "src/characters"
+	"output": "src/characters",
+	"icons": "iso/characters/icons.png"
 }

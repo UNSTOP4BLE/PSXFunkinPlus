@@ -26,6 +26,10 @@ typedef struct
 } Char_<CharacterName>;
 
 //<CharacterName> character definitions
+static const u16 char_<charactername>_icons[2][4] = {
+<IconsHere>
+};
+
 static const CharFrame char_<charactername>_frame[] = {
 <FramesHere>
 };
@@ -99,22 +103,14 @@ Character *Char_<CharacterName>_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i[0][0] = 84;
-	this->character.health_i[0][1] = 0;
-	this->character.health_i[0][2] = 27;
-	this->character.health_i[0][3] = 25;
-	
-	this->character.health_i[1][0] = 112;
-	this->character.health_i[1][1] = 0;
-	this->character.health_i[1][2] = 27;
-	this->character.health_i[1][3] = 25;
+	memcpy(this->character.health_i, char_<charactername>_icons, sizeof(char_<charactername>_icons));
 	
 	//health bar color
 	this->character.health_bar = 0xFF<HB Color>;
 	
-	this->character.focus_x = FIXED_DEC(65,1);
-	this->character.focus_y = FIXED_DEC(-115,1);
-	this->character.focus_zoom = FIXED_DEC(1,1);
+	this->character.focus_x = FIXED_DEC(<Focus X>,1);
+	this->character.focus_y = FIXED_DEC(<Focus Y>,1);
+	this->character.focus_zoom = FIXED_DEC(<Focus Zoom>,1);
 	
 	this->character.size = FIXED_DEC(<CharSize>,100);
 	
