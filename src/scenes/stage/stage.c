@@ -676,11 +676,24 @@ void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, 
             return;
     #endif
     
-    //Get screen-space points
-    POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(p0->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p0->y, zoom) / FIXED_UNIT)};
-    POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(p1->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p1->y, zoom) / FIXED_UNIT)};
-    POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(p2->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p2->y, zoom) / FIXED_UNIT)};
-    POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(p3->x, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(p3->y, zoom) / FIXED_UNIT)};
+    u8 rotationAngle = rotation / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
+    fixed_t cosAngle = FIXED_DEC(MUtil_Cos(rotationAngle), 256);
+    fixed_t sinAngle = FIXED_DEC(MUtil_Sin(rotationAngle), 256);
+
+    fixed_t x0 = FIXED_MUL(p0->x, cosAngle) - FIXED_MUL(p0->y, sinAngle);
+    fixed_t y0 = FIXED_MUL(p0->x, sinAngle) + FIXED_MUL(p0->y, cosAngle);
+    fixed_t x1 = FIXED_MUL(p1->x, cosAngle) - FIXED_MUL(p1->y, sinAngle);
+    fixed_t y1 = FIXED_MUL(p1->x, sinAngle) + FIXED_MUL(p1->y, cosAngle);
+    fixed_t x2 = FIXED_MUL(p2->x, cosAngle) - FIXED_MUL(p2->y, sinAngle);
+    fixed_t y2 = FIXED_MUL(p2->x, sinAngle) + FIXED_MUL(p2->y, cosAngle);
+    fixed_t x3 = FIXED_MUL(p3->x, cosAngle) - FIXED_MUL(p3->y, sinAngle);
+    fixed_t y3 = FIXED_MUL(p3->x, sinAngle) + FIXED_MUL(p3->y, cosAngle);
+
+    // Get screen-space points
+    POINT s0 = {SCREEN_WIDTH2 + (FIXED_MUL(x0, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y0, zoom) / FIXED_UNIT)};
+    POINT s1 = {SCREEN_WIDTH2 + (FIXED_MUL(x1, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y1, zoom) / FIXED_UNIT)};
+    POINT s2 = {SCREEN_WIDTH2 + (FIXED_MUL(x2, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y2, zoom) / FIXED_UNIT)};
+    POINT s3 = {SCREEN_WIDTH2 + (FIXED_MUL(x3, zoom) / FIXED_UNIT), SCREEN_HEIGHT2 + (FIXED_MUL(y3, zoom) / FIXED_UNIT)};
     
     Gfx_BlendTexArbCol(tex, src, &s0, &s1, &s2, &s3, r, g, b, mode);
 }
