@@ -99,6 +99,9 @@
 			
 			<!-- Sound -->
 			<dir name = "sounds">
+				<file name = "scroll.vag" type = "data" source = "iso/sounds/scrollMenu.ogg.vag"/>
+				<file name = "confirm.vag" type = "data" source = "iso/sounds/confirmMenu.ogg.vag"/>
+				<file name = "cancel.vag" type = "data" source = "iso/sounds/cancel.ogg.vag"/>
 				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.wav.vag"/>
 				<file name = "continue.vag" type = "data" source = "iso/sounds/gameOverEnd.wav.vag"/>
 				<file name = "intro3.vag" type = "data" source = "iso/sounds/intro3.VAG"/>

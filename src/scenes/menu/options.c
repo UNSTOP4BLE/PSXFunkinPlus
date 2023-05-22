@@ -67,7 +67,8 @@ static void Main_Options()
 	{
 		//Change option
 		if (pad_state.press & PAD_UP)
-			{
+		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (options.main_select > 0)
 				options.main_select--;
 			else
@@ -75,6 +76,7 @@ static void Main_Options()
 		}
 		if (pad_state.press & PAD_DOWN)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (options.main_select < COUNT_OF(menu_options) - 1)
 				options.main_select++;
 			else
@@ -84,6 +86,7 @@ static void Main_Options()
 		//Select option if cross is pressed
 		if (pad_state.press & (PAD_START | PAD_CROSS))
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			options.page = options.main_select + 1;
 			menu.select = 0;
 			menu.scroll = 0;
@@ -99,6 +102,7 @@ static void Main_Options()
 				options.exit = false;
 				menu.next_page = MenuPage_Main;
 				menu.next_select = 3; //Options
+				Audio_PlaySound(menu.sounds[2], 0x3fff);
 				Trans_Start();
 			}
 			if (pad_state.press & PAD_CIRCLE)
@@ -111,6 +115,7 @@ static void Main_Options()
 		{
 			if (pad_state.press & PAD_CIRCLE)
 			{
+				Audio_PlaySound(menu.sounds[2], 0x3fff);
 				menu.next_page = MenuPage_Main;
 				menu.next_select = 3; //Options
 				Trans_Start();
@@ -147,6 +152,7 @@ static void Controls()
 	{
 		if (pad_state.press & PAD_UP)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select > 0)
 				menu.select--;
 			else
@@ -154,22 +160,28 @@ static void Controls()
 		}
 		if (pad_state.press & PAD_DOWN)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select < 3)
 				menu.select++;
 			else
 				menu.select = 0;
 		}
 		if (pad_state.press & (PAD_CROSS | PAD_START))
+		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			options.bind = true;
+		}
 		
 		if (pad_state.press & PAD_CIRCLE)
 		{
+			Audio_PlaySound(menu.sounds[2], 0x3fff);
 			options.page = 0;
 			options.main_select = 0;
 		}
 	}
 	else if(pad_state.press && !(pad_state.press & (PAD_START | PAD_SELECT)))
 	{
+		Audio_PlaySound(menu.sounds[1], 0x3fff);
 		stage.prefs.control_keys[menu.select] = pad_state.press;
 		options.bind = false;
 	}
@@ -240,6 +252,7 @@ static void Adjust_Combo()
 	
 	if (pad_state.press & PAD_CIRCLE)
 	{
+		Audio_PlaySound(menu.sounds[2], 0x3fff);
 		options.page = 0;
 		options.main_select = 1;
 	}
@@ -289,6 +302,7 @@ static void Graphics()
 		//Change option
 		if (pad_state.press & PAD_UP)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select > 0)
 				menu.select--;
 			else
@@ -296,6 +310,7 @@ static void Graphics()
 		}
 		if (pad_state.press & PAD_DOWN)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select < COUNT_OF(menu_options) - 1)
 				menu.select++;
 			else
@@ -307,15 +322,24 @@ static void Graphics()
 		{
 			case OptType_Boolean:
 				if (pad_state.press & (PAD_CROSS | PAD_LEFT | PAD_RIGHT))
+				{
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
 					*((boolean*)menu_options[menu.select].value) ^= 1;
+				}
 				break;
 			case OptType_Enum:
 				if (pad_state.press & PAD_LEFT)
+				{
 					if (--*((s32*)menu_options[menu.select].value) < 0)
 						*((s32*)menu_options[menu.select].value) = menu_options[menu.select].spec.spec_enum.max - 1;
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
+				}
 				if (pad_state.press & PAD_RIGHT)
+				{
 					if (++*((s32*)menu_options[menu.select].value) >= menu_options[menu.select].spec.spec_enum.max)
 						*((s32*)menu_options[menu.select].value) = 0;
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
+				}
 				break;
 		}
 		
@@ -324,6 +348,7 @@ static void Graphics()
 		{
 			options.page = 0;
 			options.main_select = 2;
+			Audio_PlaySound(menu.sounds[2], 0x3fff);
 		}
 	}
 		
@@ -401,6 +426,7 @@ static void Visuals_And_UI()
 		//Change option
 		if (pad_state.press & PAD_UP)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select > 0)
 				menu.select--;
 			else
@@ -408,6 +434,7 @@ static void Visuals_And_UI()
 		}
 		if (pad_state.press & PAD_DOWN)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select < COUNT_OF(menu_options) - 1)
 				menu.select++;
 			else
@@ -419,21 +446,31 @@ static void Visuals_And_UI()
 		{
 			case OptType_Boolean:
 				if (pad_state.press & (PAD_CROSS | PAD_LEFT | PAD_RIGHT))
+				{
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
 					*((boolean*)menu_options[menu.select].value) ^= 1;
+				}
 				break;
 			case OptType_Enum:
 				if (pad_state.press & PAD_LEFT)
+				{
 					if (--*((s32*)menu_options[menu.select].value) < 0)
 						*((s32*)menu_options[menu.select].value) = menu_options[menu.select].spec.spec_enum.max - 1;
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
+				}
 				if (pad_state.press & PAD_RIGHT)
+				{
 					if (++*((s32*)menu_options[menu.select].value) >= menu_options[menu.select].spec.spec_enum.max)
 						*((s32*)menu_options[menu.select].value) = 0;
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
+				}
 				break;
 		}
 		
 		//Return to main menu if circle is pressed
 		if (pad_state.press & PAD_CIRCLE)
 		{
+			Audio_PlaySound(menu.sounds[2], 0x3fff);
 			options.page = 0;
 			options.main_select = 3;
 		}
@@ -526,6 +563,7 @@ static void Gameplay()
 		//Change option
 		if (pad_state.press & PAD_UP)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select > 0)
 				menu.select--;
 			else
@@ -533,6 +571,7 @@ static void Gameplay()
 		}
 		if (pad_state.press & PAD_DOWN)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select < COUNT_OF(menu_options) - 1)
 				menu.select++;
 			else
@@ -544,21 +583,31 @@ static void Gameplay()
 		{
 			case OptType_Boolean:
 				if (pad_state.press & (PAD_CROSS | PAD_LEFT | PAD_RIGHT))
+				{
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
 					*((boolean*)menu_options[menu.select].value) ^= 1;
+				}
 				break;
 			case OptType_Enum:
 				if (pad_state.press & PAD_LEFT)
+				{
 					if (--*((s32*)menu_options[menu.select].value) < 0)
 						*((s32*)menu_options[menu.select].value) = menu_options[menu.select].spec.spec_enum.max - 1;
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
+				}
 				if (pad_state.press & PAD_RIGHT)
+				{
 					if (++*((s32*)menu_options[menu.select].value) >= menu_options[menu.select].spec.spec_enum.max)
 						*((s32*)menu_options[menu.select].value) = 0;
+					Audio_PlaySound(menu.sounds[0], 0x3fff);
+				}
 				break;
 		}
 		
 		//Return to main menu if circle is pressed
 		if (pad_state.press & PAD_CIRCLE)
 		{
+			Audio_PlaySound(menu.sounds[2], 0x3fff);
 			options.page = 0;
 			options.main_select = 4;
 		}
@@ -614,6 +663,7 @@ static void Memory_Card()
 		//Change option
 		if (pad_state.press & PAD_UP)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select > 0)
 				menu.select--;
 			else
@@ -621,6 +671,7 @@ static void Memory_Card()
 		}
 		if (pad_state.press & PAD_DOWN)
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			if (menu.select < COUNT_OF(menu_options) - 1)
 				menu.select++;
 			else
@@ -628,11 +679,15 @@ static void Memory_Card()
 		}
 		
 		if((menu.select == 2) && (pad_state.press & (PAD_LEFT | PAD_RIGHT)))
+		{
 			stage.prefs.autosave = (stage.prefs.autosave) ? false : true;
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
+		}
 		
 		//Select option if cross is pressed
 		if (pad_state.press & (PAD_START | PAD_CROSS))
 		{
+			Audio_PlaySound(menu.sounds[0], 0x3fff);
 			switch (menu.select)
 			{
 				case 0:
@@ -652,6 +707,7 @@ static void Memory_Card()
 		{
 			options.page = 0;
 			options.main_select = 5;
+			Audio_PlaySound(menu.sounds[2], 0x3fff);
 		}
 	}
 			

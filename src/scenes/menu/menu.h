@@ -34,6 +34,10 @@ typedef struct
 	{
 		struct
 		{
+			u8 funny_message;
+		} opening;
+		struct
+		{
 			fixed_t logo_bump;
 			fixed_t fade, fadespd;
 		} title;
@@ -60,6 +64,8 @@ typedef struct
 	Gfx_Tex tex_back, tex_ng, tex_story, tex_title, tex_options;
 	Gfx_Tex tex_titleback0, tex_titleback1, tex_titleback2, tex_titleback3;
 	FontData font_bold, font_arial;
+	
+	u32 sounds[7];
 	
 	Character *gf; //Title Girlfriend
 } Menu;

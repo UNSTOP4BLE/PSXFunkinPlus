@@ -218,8 +218,8 @@ Character *Char_GF_New(fixed_t x, fixed_t y)
 	this->character.health_bar = 0xFFA5004A;
 	
 	this->character.focus_x = FIXED_DEC(2,1);
-	this->character.focus_y = FIXED_DEC(-40,1);
-	this->character.focus_zoom = FIXED_DEC(2,1);
+	this->character.focus_y = FIXED_DEC(20,1);
+	this->character.focus_zoom = FIXED_DEC(1,1);
 	
 	this->character.size = FIXED_DEC(1,1);
 	
