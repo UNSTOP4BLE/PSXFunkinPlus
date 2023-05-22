@@ -15,7 +15,7 @@ void Animatable_SetAnim(Animatable *this, u8 anim)
 	//Start animation
 	this->anim = anim;
 	this->anim_p = this->anims[anim].script;
-	this->anim_spd = FIXED_DEC(this->anims[anim].spd,1) / 24;
+	this->anim_spd = FIXED_DEC(1,1) / this->anims[anim].spd;
 	this->anim_time = 0;
 	this->ended = false;
 }

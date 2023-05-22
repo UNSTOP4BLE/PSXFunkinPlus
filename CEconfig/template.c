@@ -110,7 +110,7 @@ Character *Char_<CharacterName>_New(fixed_t x, fixed_t y)
 	
 	this->character.focus_x = FIXED_DEC(<Focus X>,1);
 	this->character.focus_y = FIXED_DEC(<Focus Y>,1);
-	this->character.focus_zoom = FIXED_DEC(<Focus Zoom>,1);
+	this->character.focus_zoom = FIXED_DEC(<Focus Zoom>,100);
 	
 	this->character.size = FIXED_DEC(<CharSize>,100);
 	

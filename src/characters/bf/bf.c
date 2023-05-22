@@ -103,33 +103,33 @@ static const CharFrame char_bf_frame[] = {
 };
 
 static const Animation char_bf_anim[PlayerAnim_Max] = {
-	{2, (const u8[]){ 0,  1,  2,  3,  4, ASCR_BACK, 1}}, //CharAnim_Idle
-	{2, (const u8[]){ 5,  6, ASCR_BACK, 1}},             //CharAnim_Left
+	{12, (const u8[]){ 0,  1,  2,  3,  4, ASCR_BACK, 1}}, //CharAnim_Idle
+	{12, (const u8[]){ 5,  6, ASCR_BACK, 1}},             //CharAnim_Left
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_LeftAlt
-	{2, (const u8[]){ 7,  8, ASCR_BACK, 1}},             //CharAnim_Down
+	{12, (const u8[]){ 7,  8, ASCR_BACK, 1}},             //CharAnim_Down
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_DownAlt
-	{2, (const u8[]){ 9, 10, ASCR_BACK, 1}},             //CharAnim_Up
+	{12, (const u8[]){ 9, 10, ASCR_BACK, 1}},             //CharAnim_Up
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
-	{2, (const u8[]){11, 12, ASCR_BACK, 1}},             //CharAnim_Right
+	{12, (const u8[]){11, 12, ASCR_BACK, 1}},             //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
 	
-	{1, (const u8[]){ 20, 20, 21, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
-	{1, (const u8[]){ 22, 22, 23, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
-	{1, (const u8[]){ 24, 24, 25, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
-	{1, (const u8[]){ 26, 26, 27, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
+	{24, (const u8[]){ 20, 20, 21, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
+	{24, (const u8[]){ 22, 22, 23, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
+	{24, (const u8[]){ 24, 24, 25, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
+	{24, (const u8[]){ 26, 26, 27, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
 	
-	{2, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
-	{2, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat
+	{12, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
+	{12, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat
 	
-	{2, (const u8[]){28, 29, 30, 31, 31, 31, 31, 31, 31, 31, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
-	{2, (const u8[]){31, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
-	{3, (const u8[]){32, 33, 34, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
-	{2, (const u8[]){35, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
-	{3, (const u8[]){36, 37, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
-	{3, (const u8[]){38, 39, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
+	{12, (const u8[]){28, 29, 30, 31, 31, 31, 31, 31, 31, 31, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
+	{12, (const u8[]){31, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
+	{6, (const u8[]){32, 33, 34, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
+	{12, (const u8[]){35, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
+	{6, (const u8[]){36, 37, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
+	{6, (const u8[]){38, 39, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
 	
-	{10, (const u8[]){35, 35, 35, ASCR_BACK, 1}}, //PlayerAnim_Dead4
-	{ 3, (const u8[]){38, 39, 35, ASCR_REPEAT}},  //PlayerAnim_Dead5
+	{3, (const u8[]){35, 35, 35, ASCR_BACK, 1}}, //PlayerAnim_Dead4
+	{6, (const u8[]){38, 39, 35, ASCR_REPEAT}},  //PlayerAnim_Dead5
 };
 
 //Boyfriend player functions
