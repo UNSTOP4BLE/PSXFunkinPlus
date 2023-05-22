@@ -8,13 +8,13 @@
 //Dad character structure
 enum
 {
-	Dad_ArcMain_Idle0,
-	Dad_ArcMain_Idle1,
-	Dad_ArcMain_Left,
-	Dad_ArcMain_Down,
-	Dad_ArcMain_Up,
-	Dad_ArcMain_Right,
-	
+	Dad_ArcMain_idle0,
+	Dad_ArcMain_idle1,
+	Dad_ArcMain_left,
+	Dad_ArcMain_down,
+	Dad_ArcMain_up,
+	Dad_ArcMain_right,
+
 	Dad_Arc_Max,
 };
 
@@ -33,39 +33,42 @@ typedef struct
 
 //Dad character definitions
 static const u16 char_dad_icons[2][4] = {
-    {140, 0, 33, 39},
-    {140, 0, 33, 39}
+	{140,0,33,39},
+	{140,0,33,39}
 };
 
 static const CharFrame char_dad_frame[] = {
-	{Dad_ArcMain_Idle0, {  0,   0, 106, 192}, { 42, 183+4}}, //0 idle 1
-	{Dad_ArcMain_Idle0, {107,   0, 108, 190}, { 43, 181+4}}, //1 idle 2
-	{Dad_ArcMain_Idle1, {  0,   0, 107, 190}, { 42, 181+4}}, //2 idle 3
-	{Dad_ArcMain_Idle1, {108,   0, 105, 192}, { 41, 183+4}}, //3 idle 4
+	{Dad_ArcMain_idle0,{107,0,108,190},{45,179}}, //0 Idle
+	{Dad_ArcMain_idle1,{0,0,107,190},{44,179}}, //1 Idle
+	{Dad_ArcMain_idle1,{108,0,105,192},{43,181}}, //2 Idle
+	{Dad_ArcMain_idle0,{0,0,106,192},{44,181}}, //3 Idle
 	
-	{Dad_ArcMain_Left, {  0,   0,  93, 195}, { 40, 185+4}}, //4 left 1
-	{Dad_ArcMain_Left, { 94,   0,  95, 195}, { 40, 185+4}}, //5 left 2
+	{Dad_ArcMain_left,{0,0,93,195},{43,183}}, //4 Left
+	{Dad_ArcMain_left,{94,0,96,195},{43,183}}, //5 Left
 	
-	{Dad_ArcMain_Down, {  0,   0, 118, 183}, { 43, 174+4}}, //6 down 1
-	{Dad_ArcMain_Down, {119,   0, 117, 183}, { 43, 175+4}}, //7 down 2
+	{Dad_ArcMain_down,{0,0,118,183},{45,172}}, //6 Down
+	{Dad_ArcMain_down,{119,0,117,184},{45,173}}, //7 Down
 	
-	{Dad_ArcMain_Up, {  0,   0, 102, 205}, { 40, 196+4}}, //8 up 1
-	{Dad_ArcMain_Up, {103,   0, 103, 203}, { 40, 194+4}}, //9 up 2
+	{Dad_ArcMain_up,{0,0,102,205},{43,194}}, //8 Up
+	{Dad_ArcMain_up,{103,0,102,203},{43,192}}, //9 Up
 	
-	{Dad_ArcMain_Right, {  0,   0, 117, 199}, { 43, 189+4}}, //10 right 1
-	{Dad_ArcMain_Right, {118,   0, 114, 199}, { 42, 189+4}}, //11 right 2
+	{Dad_ArcMain_right,{0,0,117,199},{44,188}}, //10 Right
+	{Dad_ArcMain_right,{118,0,114,199},{44,188}}, //11 Right
+	
+
 };
 
 static const Animation char_dad_anim[CharAnim_Max] = {
-	{12, (const u8[]){ 1,  2,  3,  0, ASCR_BACK, 1}}, //CharAnim_Idle
-	{12, (const u8[]){ 4,  5, ASCR_BACK, 1}},         //CharAnim_Left
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_LeftAlt
-	{12, (const u8[]){ 6,  7, ASCR_BACK, 1}},         //CharAnim_Down
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_DownAlt
-	{12, (const u8[]){ 8,  9, ASCR_BACK, 1}},         //CharAnim_Up
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_UpAlt
-	{12, (const u8[]){10, 11, ASCR_BACK, 1}},         //CharAnim_Right
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_RightAlt
+	{12, (const u8[]){ 0, 1, 2, 3,  ASCR_BACK, 1}},		//CharAnim_Idle
+	{12, (const u8[]){ 4, 5,  ASCR_BACK, 1}},		//CharAnim_Left
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},		//CharAnim_LeftAlt
+	{12, (const u8[]){ 6, 7,  ASCR_BACK, 1}},		//CharAnim_Down
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},		//CharAnim_DownAlt
+	{12, (const u8[]){ 8, 9,  ASCR_BACK, 1}},		//CharAnim_Up
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},		//CharAnim_UpAlt
+	{12, (const u8[]){ 10, 11,  ASCR_BACK, 1}},		//CharAnim_Right
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},		//CharAnim_RightAlt
+
 };
 
 //Dad character functions
@@ -140,20 +143,21 @@ Character *Char_Dad_New(fixed_t x, fixed_t y)
 	
 	this->character.focus_x = FIXED_DEC(65,1);
 	this->character.focus_y = FIXED_DEC(-115,1);
-	this->character.focus_zoom = FIXED_DEC(1,1);
+	this->character.focus_zoom = FIXED_DEC(100,100);
 	
-	this->character.size = FIXED_DEC(1,1);
+	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\DAD.ARC;1");
 	
 	const char **pathp = (const char *[]){
-		"idle0.tim", //Dad_ArcMain_Idle0
-		"idle1.tim", //Dad_ArcMain_Idle1
-		"left.tim",  //Dad_ArcMain_Left
-		"down.tim",  //Dad_ArcMain_Down
-		"up.tim",    //Dad_ArcMain_Up
-		"right.tim", //Dad_ArcMain_Right
+		"idle0.tim",
+		"idle1.tim",
+		"left.tim",
+		"down.tim",
+		"up.tim",
+		"right.tim",
+
 		NULL
 	};
 	IO_Data *arc_ptr = this->arc_ptr;

@@ -3,7 +3,7 @@
 
 #include "../../scenes/stage/character.h"
 
-//Dad character functions
+//CharacterName character functions
 Character *Char_Dad_New(fixed_t x, fixed_t y);
 
 #endif
