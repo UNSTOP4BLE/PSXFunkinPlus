@@ -3,7 +3,7 @@
 
 #include "../../scenes/stage/player.h"
 
-//Boyfriend player functions
+//BF player functions
 Character *Char_BF_New(fixed_t x, fixed_t y);
 
 #endif

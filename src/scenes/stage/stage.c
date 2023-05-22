@@ -1382,8 +1382,8 @@ static void Retry_Tick()
 		32
 	};
 	RECT_FIXED retry_dst = {
-		FIXED_DEC(7,1),
-		FIXED_DEC(92,1),
+		FIXED_DEC(12,1),
+		FIXED_DEC(84,1),
 		FIXED_DEC(48,1),
 		FIXED_DEC(32,1),
 	};
