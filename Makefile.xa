@@ -1,8 +1,9 @@
-FILES = $(addsuffix .xa,  $(basename $(wildcard iso/songs/*/*.ogg) $(wildcard iso/music/*.ogg))) \
-  $(basename $(wildcard iso/music/*.txt) $(wildcard iso/songs/*.txt))
+FILES = $(addsuffix .xa,  $(basename $(wildcard iso/songs/*/*.ogg))) \
+  $(basename $(wildcard iso/songs/*.txt))
 
 all: \
-  $(FILES) \
+	iso/music/menu.xa \
+	$(FILES) \
 
 # XA converts
 iso/%.xa: iso/%.ogg
@@ -10,6 +11,5 @@ iso/%.xa: iso/%.ogg
 iso/%.xa:
 	tools/xainterleave/xainterleave $@
 
-.PHONY: clean
-clean:
-	rm -f $(FILES)
+# Menu
+iso/music/menu.xa: iso/music/freakymenu.xa iso/music/gameover.xa
