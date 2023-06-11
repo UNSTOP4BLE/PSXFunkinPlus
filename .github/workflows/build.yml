@@ -24,17 +24,34 @@ jobs:
         wget https://github.com/Lameguy64/mkpsxiso/releases/download/v2.03/mkpsxiso-2.03-Linux.deb
         sudo dpkg -i mkpsxiso-2.03-Linux.deb
 
-    - name: Copy PsyQ
+    - name: Restore PsyQ
+      id: cache-psyq
+      uses: actions/cache/restore@v3
+      with:
+        path: mips/psyq
+        key: psyq
+
+    - name: Download PsyQ
+      if: steps.cache-psyq.outputs.cache-hit != 'true'
       run: |
         cd mips
         wget http://psx.arthus.net/sdk/Psy-Q/psyq-4_7-converted-light.zip
         unzip psyq-4_7-converted-light.zip
         mv psyq-4_7-converted psyq
+        wget https://archive.org/download/psyq-sdk/PSYQ_SDK.zip/psyq%2Fcdgen%2FLCNSFILE%2FLICENSEA.DAT -O psyq/LICENSEA.DAT
+        
+    - name: Cache PsyQ
+      if: steps.cache-psyq.outputs.cache-hit != 'true'
+      id: save-psyq
+      uses: actions/cache/save@v3
+      with:
+        path: mips/psyq
+        key: psyq
         
     - name: Compile tools
       run: |
         make -f Makefile.tools
-        wget https://archive.org/download/psyq-sdk/PSYQ_SDK.zip/psyq%2Fcdgen%2FLCNSFILE%2FLICENSEA.DAT -O licensea.dat
+        mv ./mips/psyq/LICENSEA.DAT licensea.dat
               
     - name: Compile PSXFunkin
       run: |
