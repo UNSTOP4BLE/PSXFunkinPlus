@@ -65,7 +65,7 @@ jobs:
           funkin.cue
 
   noob-build:
-    name: Build
+    name: n00b Build
     runs-on: ubuntu-latest
 
     steps:
