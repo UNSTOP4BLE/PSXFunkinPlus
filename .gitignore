@@ -38,11 +38,14 @@ build/
 *.xa
 *.cht
 
+# remove these
+PSXFunkin Editor.exe
+main.exe
+
 # Don't remove these
 !makefile.cht
 !makefile.tim
 !makefile.xa
 !makefile.vag
-!PSXFunkin Editor.exe
-!main.exe
+
 
