@@ -37,10 +37,7 @@ build/
 *.arc
 *.xa
 *.cht
-
-# remove these
-PSXFunkin Editor.exe
-main.exe
+*.exe
 
 # Don't remove these
 !makefile.cht
