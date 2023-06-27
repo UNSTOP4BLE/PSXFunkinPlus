@@ -32,8 +32,8 @@ void Timer_Init(boolean pal_console, boolean pal_video)
 	static const u32 hblanks_per_sec[4] = {
 		15734 >> TIMER_BITS, //!console && !video => 262.5 * 59.940
 		15591 >> TIMER_BITS, //!console &&  video => 262.5 * 59.393
-		15769 >> TIMER_BITS, // console && !video => 312.5 * 50.460
-		15625 >> TIMER_BITS, // console &&  video => 312.5 * 50.000
+		15769 >> TIMER_BITS, //console && !video => 312.5 * 50.460
+		15625 >> TIMER_BITS, //console &&  video => 312.5 * 50.000
 	};
 	timer_persec = hblanks_per_sec[(pal_console << 1) | pal_video];
 	
@@ -49,22 +49,22 @@ void Timer_Init(boolean pal_console, boolean pal_video)
 	timer_brokeconf = 0;
 }
 
-// Increment the frame count and update the counter time
+//Increment the frame count and update the counter time
 void Timer_Tick(void)
 {
 	u32 status = *((volatile const u32*)0x1f801814);
 
-	// Increment frame count
+	//Increment frame count
 	frame_count++;
 
-	// Update counter time
+	//Update counter time
 	if (timer_count == timer_lcount)
 	{
 		if (timer_brokeconf != 0xFF)
 			timer_brokeconf++;
 		if (timer_brokeconf >= 10)
 		{
-			// Update timer count based on status value
+			//Update timer count based on status value
 			if ((status & 0x00100000) != 0)
 				timer_count += timer_persec / 50;
 			else
@@ -77,7 +77,7 @@ void Timer_Tick(void)
 			timer_brokeconf--;
 	}
 
-	// Update timer_sec and animf_count
+	//Update timer_sec and animf_count
 	if (timer_count < timer_lcount)
 	{
 		timer_secbase = timer_sec;
@@ -90,20 +90,14 @@ void Timer_Tick(void)
 	timer_lcount = timer_count;
 }
 
-// Reset the timer and timer_dt
+//Reset the timer and timer_dt
 void Timer_Reset(void)
 {
 	Timer_Tick();
 	timer_dt = 0;
 }
 
-// Calculate the minutes and seconds for the timer
-void StageTimer_Calculate()
-{
-	
-}
-
-// Update the remaining time for the stage timer
+//Update the remaining time for the stage timer
 void StageTimer_Tick()
 {
 	int remaining_time = (Audio_GetLength(stage.stage_def->music_track) - stage.song_time / 1000);
@@ -111,7 +105,7 @@ void StageTimer_Tick()
 		timer.timer = remaining_time;
 }
 
-// Draw the stage timer and length
+//Draw the stage timer and length
 void StageTimer_Draw()
 {
 	s8 timerdata[2] = {
@@ -119,13 +113,13 @@ void StageTimer_Draw()
 		timer.timer % ((stage.prefs.palmode) ? 50 : 60)
 	};
 
-	// Format the timer display
+	//Format the timer display
 	if (timerdata[1] >= 10)
 		sprintf(timer.timer_display, "%d:%d", timerdata[0], timerdata[1]);
 	else
 		sprintf(timer.timer_display, "%d:0%d", timerdata[0], (timerdata[1] > 0 ? timerdata[1] : 0));
 
-	// Draw the timer
+	//Draw the timer
 	fonts.font_cdr.draw(&fonts.font_cdr,
 		timer.timer_display,
 		FIXED_DEC(2, 1),
@@ -133,7 +127,7 @@ void StageTimer_Draw()
 		FontAlign_Center
 	);
 
-	// Draw the length
+	//Draw the length
 	const RECT texture_src = { 2, 230, 2, 2 };
 	RECT_FIXED back_dst = {
 		FIXED_DEC(-46, 1),
@@ -148,14 +142,14 @@ void StageTimer_Draw()
 		FIXED_DEC(4, 1)
 	};
 
-	// Adjust the coordinates for downscroll mode
+	//Adjust the coordinates for downscroll mode
 	if (stage.prefs.downscroll && !(stage.prefs.mode >= StageMode_2P))
 	{
 		back_dst.y = -back_dst.y - back_dst.h + FIXED_DEC(1, 1);
 		front_dst.y = -front_dst.y - front_dst.h + FIXED_DEC(1, 1);
 	}
 
-	// Draw the front and back length indicators
+	//Draw the front and back length indicators
 	if (stage.song_step >= 0)
 	{
 		Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &front_dst, stage.bump, stage.camera.hudangle, 255, 255, 255);
