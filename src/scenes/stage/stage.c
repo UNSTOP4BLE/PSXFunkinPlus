@@ -387,7 +387,7 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 
 static void CheckNewScore()
 {
-	if (stage.prefs.mode == StageMode_Normal && !stage.prefs.botplay && timer.timermin == 0 && timer.timer <= 5)
+	if (stage.prefs.mode == StageMode_Normal && !stage.prefs.botplay && (timer.timer / ((stage.prefs.palmode) ? 50 : 60)) == 0 && timer.timer <= 5)
 	{
 		if (stage.player_state[0].score >= stage.prefs.savescore[stage.stage_id][stage.stage_diff])
 			stage.prefs.savescore[stage.stage_id][stage.stage_diff] = stage.player_state[0].score;
@@ -1322,9 +1322,7 @@ static void Stage_LoadState(void)
 	
 	stage.state = StageState_Play;
 	
-	timer.secondtimer = 0;
-	timer.timer = Audio_GetLength(stage.stage_def->music_track) - 1;
-	timer.timermin = 0;
+	timer.timer = Audio_GetLength(stage.stage_def->music_track);
 	stage.paused = false;
 	if (!stage.debug)
 		stage.freecam = 0;
@@ -2121,10 +2119,8 @@ void Stage_Tick(void)
 					stage.back->draw_bg(stage.back);
 			}
 			
-			if (stage.song_step > 0)
+			if (stage.song_step >= 0)
 				StageTimer_Tick();
-			else
-				StageTimer_Calculate();
 			
 			break;
 		}

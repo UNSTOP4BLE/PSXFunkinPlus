@@ -10,12 +10,8 @@ extern fixed_t timer_sec, timer_dt;
 
 typedef struct
 {
-	u32 cursonglength;
-	int secondtimer;
 	int timer;
-	int timersec;
-	int timermin;
-	char timer_display[13];
+	char timer_display[5];
 } Timer;
 
 extern Timer timer;
@@ -24,7 +20,6 @@ extern Timer timer;
 void Timer_Init(boolean pal_console, boolean pal_video);
 void Timer_Tick(void);
 void Timer_Reset(void);
-void StageTimer_Calculate();
 void StageTimer_Tick();
 void StageTimer_Draw();
 

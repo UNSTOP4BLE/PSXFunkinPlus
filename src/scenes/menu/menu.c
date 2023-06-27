@@ -435,7 +435,7 @@ void Menu_Tick(void)
 			
 			//Draw version identification
 			fonts.font_cdr.draw(&fonts.font_cdr,
-				"Plus v0.4 (Alpha)",
+				"Plus v0.5 (Alpha)",
 				4,
 				SCREEN_HEIGHT - 20,
 				FontAlign_Left
