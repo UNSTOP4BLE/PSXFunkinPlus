@@ -33,6 +33,10 @@ bin/
 build/
 
 # Exclude converted assets
+*.tim
+*.arc
+*.xa
+*.cht
 *.exe
 
 # Don't remove these
