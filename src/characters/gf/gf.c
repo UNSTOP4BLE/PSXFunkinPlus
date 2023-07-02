@@ -190,7 +190,7 @@ void Char_GF_Free(Character *character)
 	Mem_Free(this->arc_scene);
 }
 
-Character *Char_GF_New(fixed_t x, fixed_t y)
+Character *Char_GF_New(fixed_t x, fixed_t y, fixed_t scale)
 {
 	//Allocate gf object
 	Char_GF *this = Mem_Alloc(sizeof(Char_GF));
@@ -221,7 +221,7 @@ Character *Char_GF_New(fixed_t x, fixed_t y)
 	this->character.focus_y = FIXED_DEC(20,1);
 	this->character.focus_zoom = FIXED_DEC(1,1);
 	
-	this->character.size = FIXED_DEC(1,1);
+	this->character.size = FIXED_MUL(FIXED_DEC(1,1),scale);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\GF.ARC;1");

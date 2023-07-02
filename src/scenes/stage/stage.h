@@ -74,14 +74,16 @@ typedef struct
 	struct
 	{
 		Character* (*new)();
-		fixed_t x, y;
+		fixed_t x, y, scale;
 	} pchar, ochar, gchar;
 	
 	//Stage background
 	StageBack* (*back)();
 	
-	//Song info
+	//Camera Offsets
+	fixed_t offset_x, offset_y, offset_zoom;
 	
+	//Song info
 	u8 week, week_song;
 	
 	//Mus file
@@ -220,6 +222,11 @@ typedef struct
 		
 		// Positions
 		fixed_t x, y, zoom, bzoom, angle, hudangle;
+		
+		struct
+		{
+			fixed_t x, y, zoom;
+		} offset;
 		
 		// Targets
 		fixed_t tx, ty, tz;

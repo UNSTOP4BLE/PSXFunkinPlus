@@ -6,7 +6,7 @@ all: \
 
 # XA converts
 iso/%.xa: iso/%.ogg
-	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C 0 $< $@ 
+	tools/psxavenc/psxavenc -f 37800 -t xa -b 4 -c 2 -F 1 -C -l 0 $< $@ 
 
 iso/%.xa:
 	tools/xainterleave/xainterleave $@ $^

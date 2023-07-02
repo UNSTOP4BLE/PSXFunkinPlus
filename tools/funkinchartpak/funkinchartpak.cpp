@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <unordered_set>
+#include <filesystem>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -183,13 +184,14 @@ int main(int argc, char *argv[])
 	dum_note.type = NOTE_FLAG_HIT;
 	notes.push_back(dum_note);
 	
-	//Write to output
-	std::ofstream out(std::string(argv[1]) + ".cht", std::ostream::binary);
-	if (!out.is_open())
-	{
-		std::cout << "Failed to open " << argv[1] << ".cht" << std::endl;
-		return 1;
-	}
+    // Write to output
+    std::filesystem::path outputPath = std::filesystem::path(argv[1]).replace_extension(".cht");
+    std::ofstream out(outputPath.string(), std::ostream::binary);
+    
+    if (!out.is_open()) {
+        std::cout << "Failed to open " << outputPath << std::endl;
+        return 1;
+    }
 	
 	//Write header
 	WriteLong(out, (fixed_t)(speed * FIXED_UNIT));

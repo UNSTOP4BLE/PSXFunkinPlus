@@ -4,6 +4,6 @@
 #include "../../scenes/stage/character.h"
 
 //GF character functions
-Character *Char_GF_New(fixed_t x, fixed_t y);
+Character *Char_GF_New(fixed_t x, fixed_t y, fixed_t scale);
 
 #endif

@@ -1,11 +1,14 @@
 	{ //StageId_1_1 (Bopeebo)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
+		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
+		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1), FIXED_DEC(1,1)},
 		
 		//Stage background
 		Back_Default_New,
+		
+		//Camera Offset (X, Y, Scale)
+		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),
 		
 		//Song info
 		1, 1,
@@ -16,12 +19,15 @@
 	},
 	{ //StageId_1_2 (Fresh)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
+		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
+		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1), FIXED_DEC(1,1)},
 		
 		//Stage background
 		Back_Default_New,
+		
+		//Camera Offset (X, Y, Scale)
+		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),
 		
 		//Song info
 		1, 2,
@@ -32,12 +38,15 @@
 	},
 	{ //StageId_1_3 (Dadbattle)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BF_New,    FIXED_DEC(60,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
+		{Char_Dad_New, FIXED_DEC(-120,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
+		{Char_GF_New,     FIXED_DEC(0,1),  FIXED_DEC(-10,1), FIXED_DEC(1,1)},
 		
 		//Stage background
 		Back_Default_New,
+		
+		//Camera Offset (X, Y, Scale)
+		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),
 		
 		//Song info
 		1, 3,
@@ -48,12 +57,15 @@
 	},
 	{ //StageId_1_4 (Tutorial)
 		//Characters
-		{Char_BF_New, FIXED_DEC(60,1),  FIXED_DEC(100,1)},
-		{Char_GF_New,  FIXED_DEC(0,1),  FIXED_DEC(-15,1)}, //TODO
-		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
+		{Char_BF_New, FIXED_DEC(60,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
+		{Char_GF_New,  FIXED_DEC(0,1),  FIXED_DEC(-15,1)}, FIXED_DEC(1,1)},
+		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1)}, FIXED_DEC(1,1)},
 		
 		//Stage background
 		Back_Default_New,
+		
+		//Camera Offset (X, Y, Scale)
+		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),
 		
 		//Song info
 		1, 4,

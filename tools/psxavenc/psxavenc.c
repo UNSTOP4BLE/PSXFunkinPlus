@@ -37,7 +37,14 @@ void print_help(void) {
 	fprintf(stderr, "    -c channels      Use specified channel count (1 or 2)\n");
 	fprintf(stderr, "    -F num           [.xa] Set the file number to num (0-255)\n");
 	fprintf(stderr, "    -C num           [.xa] Set the channel number to num (0-31)\n");
+	
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Additional Options:\n");
+    fprintf(stderr, "    -l               Print the length of the audio file\n");
 }
+
+// Add a new variable to store the option for printing audio length
+bool print_length = true;
 
 int parse_args(settings_t* settings, int argc, char** argv) {
 	int c;
@@ -94,6 +101,9 @@ int parse_args(settings_t* settings, int argc, char** argv) {
 				print_help();
 				return -1;
 			} break;
+            case 'l': {
+                print_length = true;
+            } break;
 		}
 	}
 
@@ -182,6 +192,11 @@ int main(int argc, char **argv) {
 			encode_file_str(&settings, output);
 			break;
 	}
+
+    if (print_length) {
+        double audio_length = (double)settings.audio_sample_count / (double)settings.frequency;
+        fprintf(stderr, "Audio Length: %.2f seconds\n", audio_length / 2);
+    }
 
 	fclose(output);
 	close_av_data(&settings);

@@ -96,8 +96,8 @@ static void Stage_CutVocal(void)
 static void Stage_FocusCharacter(Character *ch)
 {
 	//Use character focus settings to update target position and zoom
-	stage.camera.tx = ch->x + ch->focus_x;
-	stage.camera.ty = ch->y + ch->focus_y;
+	stage.camera.tx = ch->x + ch->focus_x + ((stage.state == StageState_Play) ? stage.camera.offset.x : 0);
+	stage.camera.ty = ch->y + ch->focus_y + ((stage.state == StageState_Play) ? stage.camera.offset.y : 0);
 	stage.camera.tz = FIXED_MUL(ch->focus_zoom, event.zoom);
 }
 
@@ -125,7 +125,7 @@ static void Stage_ScrollCamera(void)
 		//Scroll based off current divisor
 		stage.camera.x = lerp(stage.camera.x, stage.camera.tx, stage.camera.speed);
 		stage.camera.y = lerp(stage.camera.y, stage.camera.ty, stage.camera.speed);
-		stage.camera.zoom = lerp(stage.camera.zoom, stage.camera.tz, stage.camera.speed);
+		stage.camera.zoom = lerp(stage.camera.zoom, FIXED_MUL(stage.camera.tz,stage.camera.offset.zoom), stage.camera.speed);
 		stage.camera.angle = lerp(stage.camera.angle, stage.camera.ta << FIXED_SHIFT, stage.camera.speed);
 		stage.camera.hudangle = lerp(stage.camera.hudangle, stage.camera.hudta << FIXED_SHIFT, stage.camera.speed);
 	}
@@ -1184,7 +1184,7 @@ static void Stage_LoadPlayer(void)
 	if(stage.prefs.lowgraphics)
 		stage.player = Char_BFLow_New(0, 0);
 	else
-		stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y);
+		stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y, stage.stage_def->pchar.scale);
 }
 
 static void Stage_LoadOpponent(void)
@@ -1194,7 +1194,7 @@ static void Stage_LoadOpponent(void)
 	if(stage.prefs.lowgraphics)
 		stage.opponent = Char_BFLow_New(0, 0);
 	else
-		stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y);
+		stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y, stage.stage_def->pchar.scale);
 }
 
 static void Stage_LoadGirlfriend(void)
@@ -1202,7 +1202,7 @@ static void Stage_LoadGirlfriend(void)
 	//Load girlfriend character
 	Character_Free(stage.gf);
 	if (stage.stage_def->gchar.new != NULL)
-		stage.gf = stage.stage_def->gchar.new(stage.stage_def->gchar.x, stage.stage_def->gchar.y);
+		stage.gf = stage.stage_def->gchar.new(stage.stage_def->gchar.x, stage.stage_def->gchar.y, stage.stage_def->pchar.scale);
 	else
 		stage.gf = NULL;
 }
@@ -1230,7 +1230,7 @@ static void Stage_LoadChart(void)
 	else
 	{
 		//Use standard path convention
-		sprintf(chart_path, "\\SONGS\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
+		sprintf(chart_path, "\\SONGS\\%d.%d.CHT;1", stage.stage_def->week, stage.stage_def->week_song);
 	}
 	
 	if (stage.chart_data != NULL)
@@ -1485,6 +1485,10 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	stage.camera.zoom = stage.camera.tz;
 	stage.camera.angle = stage.camera.ta;
 	stage.camera.hudangle = stage.camera.hudta;
+	
+	stage.camera.offset.x = stage.stage_def->offset_x;
+	stage.camera.offset.y = stage.stage_def->offset_y;
+	stage.camera.offset.zoom = stage.stage_def->offset_zoom;
 	
 	//Initialize Bumps
 	stage.bump = FIXED_UNIT;

@@ -141,7 +141,7 @@ void Char_<CharacterName>_Free(Character *character)
 	Mem_Free(this->arc_main);
 }
 
-Character *Char_<CharacterName>_New(fixed_t x, fixed_t y)
+Character *Char_<CharacterName>_New(fixed_t x, fixed_t y, fixed_t scale)
 {
 	//Allocate boyfriend object
 	Char_<CharacterName> *this = Mem_Alloc(sizeof(Char_<CharacterName>));
@@ -172,7 +172,7 @@ Character *Char_<CharacterName>_New(fixed_t x, fixed_t y)
 	this->character.focus_y = FIXED_DEC(<Focus Y>,1);
 	this->character.focus_zoom = FIXED_DEC(<Focus Zoom>,100);
 	
-	this->character.size = FIXED_DEC(<CharSize>,100);
+	this->character.size = FIXED_MUL(FIXED_DEC(<CharSize>,100),scale);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\<CHARACTERNAME>.ARC;1");
