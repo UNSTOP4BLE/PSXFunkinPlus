@@ -11,22 +11,39 @@ u32 timer_count, timer_lcount, timer_countbase;
 u32 timer_persec;
 
 fixed_t timer_sec, timer_dt, timer_secbase;
+u8 frame_rate_count, frame_rate;
 
 u8 timer_brokeconf;
 
 //Timer interface
 extern void InterruptCallback(int index, void *cb);
+int VSyncCallback(void (*f)(void)) ;
 extern void ChangeClearRCnt(int t, int m);
 
-void Timer_Callback(void) {
+void Timer_Callback(void) 
+{
 	timer_count++;
 }
 
-void Timer_Init(boolean pal_console, boolean pal_video)
+void VBlank_Handler(void) 
+{
+	int refresh_rate = (stage.prefs.palmode) ? 50 : 60;
+
+	// Only update once per second (every 50 or 60 vblanks).
+	if (VSync(-1) % refresh_rate)
+		return;
+
+	//Get current frame rate and reset counter
+	frame_rate = frame_rate_count;
+	frame_rate_count = 0;
+}
+
+void Timer_Init(void)
 {
 	//Initialize counters
 	frame_count = animf_count = timer_count = timer_lcount = timer_countbase = 0;
 	timer_sec = timer_dt = timer_secbase = 0;
+	frame_rate = frame_rate_count = 0;
 	
 	//Setup counter IRQ
 	static const u32 hblanks_per_sec[4] = {
@@ -35,12 +52,13 @@ void Timer_Init(boolean pal_console, boolean pal_video)
 		15769 >> TIMER_BITS, //console && !video => 312.5 * 50.460
 		15625 >> TIMER_BITS, //console &&  video => 312.5 * 50.000
 	};
-	timer_persec = hblanks_per_sec[(pal_console << 1) | pal_video];
+	timer_persec = hblanks_per_sec[(stage.prefs.palmode << 1) | stage.prefs.palmode];
 	
 	EnterCriticalSection();
 	
 	SetRCnt(RCntCNT1, 1 << TIMER_BITS, RCntMdINTR);
 	InterruptCallback(5, (void*)Timer_Callback); //IRQ5 is RCNT1
+	VSyncCallback(&VBlank_Handler);
 	StartRCnt(RCntCNT1);
 	ChangeClearRCnt(1, 0);
 	
@@ -56,6 +74,9 @@ void Timer_Tick(void)
 
 	//Increment frame count
 	frame_count++;
+
+	//Incremente frame rate count
+	frame_rate_count++;
 
 	//Update counter time
 	if (timer_count == timer_lcount)
