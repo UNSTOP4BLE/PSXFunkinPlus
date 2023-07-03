@@ -104,10 +104,10 @@
 				<file name = "cancel.vag" type = "data" source = "iso/sounds/cancel.ogg.vag"/>
 				<file name = "micdrop.vag" type = "data" source = "iso/sounds/fnf_loss_sfx.wav.vag"/>
 				<file name = "continue.vag" type = "data" source = "iso/sounds/gameOverEnd.wav.vag"/>
-				<file name = "intro3.vag" type = "data" source = "iso/sounds/intro3.VAG"/>
-				<file name = "intro2.vag" type = "data" source = "iso/sounds/intro2.VAG"/>
-				<file name = "intro1.vag" type = "data" source = "iso/sounds/intro1.VAG"/>
-				<file name = "intro0.vag" type = "data" source = "iso/sounds/intro0.VAG"/>
+				<file name = "intro3.vag" type = "data" source = "iso/sounds/intro3.ogg.vag"/>
+				<file name = "intro2.vag" type = "data" source = "iso/sounds/intro2.ogg.vag"/>
+				<file name = "intro1.vag" type = "data" source = "iso/sounds/intro1.ogg.vag"/>
+				<file name = "intro0.vag" type = "data" source = "iso/sounds/introGo.ogg.vag"/>
 			</dir>
 			
 			<!-- Dummy sectors -->

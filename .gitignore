@@ -37,6 +37,7 @@ build/
 *.arc
 *.xa
 *.cht
+*.vag
 *.exe
 
 # Don't remove these

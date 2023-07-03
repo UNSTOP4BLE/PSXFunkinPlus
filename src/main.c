@@ -32,7 +32,7 @@ void ErrorLock(void)
 }
 
 //Memory heap
-//#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
+#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
 
 #define MEM_IMPLEMENTATION
 #include "psx/mem.h"
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     ChangeClearPAD(0);
     IO_Init();
     Audio_Init();
-    Timer_Init(false, false);
+    Timer_Init();
 
     if (!readSaveFile())
         defaultSettings();
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
 			Mem_GetStat(&mem_used, &mem_size, &mem_max);
 			#ifndef MEM_BAR
 				char text[80];
-				sprintf(text, "FPS: %d", 1000 / timer_dt);
+				sprintf(text, "FPS: %d", frame_rate);
 				fonts.font_cdr.draw(&fonts.font_cdr,
 					text,
 					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_WIDTH2 + 10,1) : 10,
@@ -111,7 +111,6 @@ int main(int argc, char **argv)
 			SetVideoMode(MODE_PAL);
 			SsSetTickMode(SS_TICK50);
 			stage.disp[0].screen.y = stage.disp[1].screen.y = 24;
-			Timer_Init(true, true);
 			stage.pal_i = 2;
 		}
 		else if (!stage.prefs.palmode && stage.pal_i == 1)
@@ -119,7 +118,6 @@ int main(int argc, char **argv)
 			SetVideoMode(MODE_NTSC);
 			SsSetTickMode(SS_TICK60);
 			stage.disp[0].screen.y = stage.disp[1].screen.y = 0;
-			Timer_Init(false, false);
 			stage.pal_i = 2;
 		}
 
