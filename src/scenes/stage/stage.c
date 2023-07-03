@@ -1442,10 +1442,10 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Audio_ClearAlloc();
 	Load_SFX("\\SOUNDS\\MICDROP.VAG;1",0);
 	Load_SFX("\\SOUNDS\\CONTINUE.VAG;1",1);
-	Load_SFX("\\SOUNDS\\INTRO0.VAG;1",2);
-	Load_SFX("\\SOUNDS\\INTRO1.VAG;1",3);
-	Load_SFX("\\SOUNDS\\INTRO2.VAG;1",4);
-	Load_SFX("\\SOUNDS\\INTRO3.VAG;1",5);
+	Load_SFX("\\SOUNDS\\INTRO3.VAG;1",2);
+	Load_SFX("\\SOUNDS\\INTRO2.VAG;1",3);
+	Load_SFX("\\SOUNDS\\INTRO1.VAG;1",4);
+	Load_SFX("\\SOUNDS\\INTRO0.VAG;1",5);
 	
 	//Load Events
 	Load_Events();

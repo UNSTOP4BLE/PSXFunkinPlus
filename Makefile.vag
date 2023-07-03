@@ -6,6 +6,6 @@ all: \
 
 # SFX converts
 iso/sounds/%.ogg.vag: iso/sounds/%.ogg
-	  tools/psxavenc/psxavenc -f 44100 -t spu -b 4 -c 2 -F 1 -C 0 $< $@
+	  tools/psxavenc/psxavenc -f 44100 -t spu -b 4 -F 1 -C 0 $< $@
 iso/sounds/%.wav.vag: iso/sounds/%.wav
-	  tools/psxavenc/psxavenc -f 44100 -t spu -b 4 -c 2 -F 1 -C 0 $< $@
+	  tools/psxavenc/psxavenc -f 44100 -t spu -b 4 -F 1 -C 0 $< $@
