@@ -14,9 +14,42 @@ jobs:
     - name: Install dependencies
       uses: awalsh128/cache-apt-pkgs-action@latest
       with:
-        packages: libswscale-dev libavformat-dev libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
+        packages: libtinyxml2-dev gcc-mipsel-linux-gnu g++-mipsel-linux-gnu binutils-mipsel-linux-gnu
         version: 1.0
-          
+
+    - name: Restore FFmpeg
+      id: cache-ffmpeg
+      uses: actions/cache/restore@v3
+      with:
+        path: ffmpeg
+        key: ffmpeg-6.0
+
+    - name: Install and Build FFmpeg
+      if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
+      run: |
+        wget http://ffmpeg.org/releases/ffmpeg-6.0.tar.xz
+        tar Jxf ffmpeg-6.0.tar.xz
+
+        cd ffmpeg-6.0
+        sudo ./configure --prefix=../ffmpeg --enable-shared --disable-static --enable-small --disable-programs --disable-doc --disable-avdevice --disable-postproc --disable-avfilter --disable-network --disable-encoders --disable-hwaccels --disable-muxers --disable-bsfs --disable-devices --disable-filters --disable-mmx
+        make -j
+        sudo make install
+
+    - name: Cache FFmpeg
+      if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
+      id: save-ffmpeg
+      uses: actions/cache/save@v3
+      with:
+        path: ffmpeg
+        key: ffmpeg-6.0
+
+    - name: Move FFmpeg path
+      run: |
+        sudo mv ffmpeg/lib/* /usr/local/lib
+        sudo mv ffmpeg/include/* /usr/local/include
+
+        sudo ldconfig
+
     - name: Install mkpsxiso
       run: |
         wget https://github.com/Lameguy64/mkpsxiso/releases/download/v2.03/mkpsxiso-2.03-Linux.deb
