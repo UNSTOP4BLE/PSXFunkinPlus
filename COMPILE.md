@@ -26,7 +26,7 @@ If you encounter any issues or need further details, check the Detailed MSYS2 in
 ## Installing "g++-mipsel-none-elf-11.2.0"
 Once you have set up MSYS2, you will need to copy the MIPS toolchain. Download it from this link: http://static.grumpycoder.net/pixel/mips/g++-mipsel-none-elf-11.2.0.zip.
 
-Close MSYS2 if it is open. Extract the downloaded zip file and copy the following folders into msys64/usr/local/:
+Close MSYS2 if it is open. Extract the downloaded zip file and copy the following folders into `msys64/usr/local/`:
 - `bin, include, lib, libexec, mipsel-none-elf`
 
 IMPORTANT: Delete the following files in the bin folder, or your terminal may not work properly:
