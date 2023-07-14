@@ -1,4 +1,4 @@
-Due to changes in the MSYS2 installation instructions, the old 'compile.md' document will not work. Therefore, I do not recommend using the installation instructions on the website as they will not be effective. Instead, I have gathered the commands that need to be entered in the terminal. Please follow the updated installation guide below:
+Due to changes in the MSYS2 installation instructions, the old `compile.md` document will not work. Therefore, I do not recommend using the installation instructions on the website as they will not be effective. Instead, I have gathered the commands that need to be entered in the terminal. Please follow the updated installation guide below:
 
 # Compiling PSXFunkin (MSYS2 ONLY)
 
