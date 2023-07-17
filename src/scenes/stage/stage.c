@@ -38,11 +38,6 @@
 #include "../../psx/loadscr.h"
 
 //Stage constants
-//#define STAGE_PERFECT //Play all notes perfectly
-//#define STAGE_NOHUD //Disable the HUD
-
-//#define STAGE_FREECAM //Freecam
-
 static int Sounds[7];
 
 static const u8 note_anims[4][3] = {
@@ -399,13 +394,13 @@ static void CheckNewScore()
 	}
 }
 
-static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
+static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing, boolean player)
 {
 	//Handle player note presses
 	if (stage.prefs.botplay == 0) {
 		if (playing)
 		{
-			u8 i = (this->character == stage.opponent) ? NOTE_FLAG_OPPONENT : 0;
+			u8 i = (!player) ? NOTE_FLAG_OPPONENT : 0;
 			
 			this->pad_held = this->character->pad_held = pad->held;
 			this->pad_press = pad->press;
@@ -442,7 +437,7 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 		//Do perfect note checks
 		if (playing)
 		{
-			u8 i = (this->character == stage.opponent) ? NOTE_FLAG_OPPONENT : 0;
+			u8 i = (!player) ? NOTE_FLAG_OPPONENT : 0;
 			
 			u8 hit[4] = {0, 0, 0, 0};
 			for (Note *note = stage.cur_note;; note++)
@@ -562,11 +557,6 @@ void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
     fixed_t wz = dst->w;
     fixed_t hz = dst->h;
     
-    #ifdef STAGE_NOHUD
-        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-            return;
-    #endif
-    
     // Calculate the rotated coordinates
     u8 rotationAngle = rotation / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
     fixed_t rotatedX = FIXED_MUL(xz,FIXED_DEC(MUtil_Cos(rotationAngle),256)) - FIXED_MUL(yz,FIXED_DEC(MUtil_Sin(rotationAngle),256));
@@ -603,11 +593,6 @@ void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
     fixed_t wz = dst->w;
     fixed_t hz = dst->h;
     
-    #ifdef STAGE_NOHUD
-        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-            return;
-    #endif
-    
     // Calculate the rotated coordinates
     u8 rotationAngle = rotation / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
     fixed_t rotatedX = FIXED_MUL(xz,FIXED_DEC(MUtil_Cos(rotationAngle),256)) - FIXED_MUL(yz,FIXED_DEC(MUtil_Sin(rotationAngle),256));
@@ -640,12 +625,6 @@ void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t
 
 void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation)
 {
-    // Don't draw if HUD and HUD is disabled
-    #ifdef STAGE_NOHUD
-        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-            return;
-    #endif
-    
     u8 rotationAngle = rotation / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
     fixed_t cosAngle = FIXED_DEC(MUtil_Cos(rotationAngle), 256);
     fixed_t sinAngle = FIXED_DEC(MUtil_Sin(rotationAngle), 256);
@@ -675,12 +654,6 @@ void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, cons
 
 void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b, u8 mode)
 {
-    //Don't draw if HUD and HUD is disabled
-    #ifdef STAGE_NOHUD
-        if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
-            return;
-    #endif
-    
     u8 rotationAngle = rotation / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
     fixed_t cosAngle = FIXED_DEC(MUtil_Cos(rotationAngle), 256);
     fixed_t sinAngle = FIXED_DEC(MUtil_Sin(rotationAngle), 256);
@@ -714,14 +687,6 @@ void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_
 	fixed_t yz = dst->y;
 	fixed_t wz = dst->w;
 	fixed_t hz = dst->h;
-
-	//Don't draw if HUD and is disabled
-	if (tex == &stage.tex_hud0)
-	{
-		#ifdef STAGE_NOHUD
-			return;
-		#endif
-	}
 	
     // Calculate the rotated coordinates
     u8 rotationAngle = rotation / FIXED_UNIT;  // Specify the desired rotation angle (in degrees)
@@ -1897,7 +1862,7 @@ void Stage_Tick(void)
 				case StageMode_Swap:
 				{
 					//Handle player 1 inputs
-					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
+					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing, true);
 					
 					//Handle opponent notes
 					u8 opponent_anote = CharAnim_Idle;
@@ -1935,8 +1900,8 @@ void Stage_Tick(void)
 				case StageMode_2P:
 				{
 					//Handle player 1 and 2 inputs
-					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
-					Stage_ProcessPlayer(&stage.player_state[1], &pad_state_2, playing);
+					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing, true);
+					Stage_ProcessPlayer(&stage.player_state[1], &pad_state_2, playing, false);
 					break;
 				}
 			}
