@@ -5,11 +5,11 @@
 //Opponents
 #include "../../characters/dad/dad.h"
 
+//Girlfriend
+#include "../../characters/gf/gf.h"
+
 //Stages
 #include "../../stages/default/default.h"
-
-//Middle Char (Girlfriend)
-#include "../../characters/gf/gf.h"
 
 
 //Stage Codes
@@ -36,9 +36,6 @@
 #include "../../psx/save.h"
 #include "../../psx/trans.h"
 #include "../../psx/loadscr.h"
-
-#include "../../characters/bf/bflow.h"
-#include "../../stages/default/defaultlow.h"
 
 //Stage constants
 //#define STAGE_PERFECT //Play all notes perfectly
@@ -271,10 +268,13 @@ static void Stage_MissNote(PlayerState *this, u8 type)
 	this->refresh_score = true;
 	this->miss += 1;
 	
-	if (this->character->spec & CHAR_SPEC_MISSANIM)
-		this->character->set_anim(this->character, note_anims[type & 0x3][2]);
-	else
-		this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	if (!stage.prefs.lowgraphics)
+	{
+		if (this->character->spec & CHAR_SPEC_MISSANIM)
+			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
+		else
+			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	}
 	
 	if (this->combo && stage.prefs.combostack)
 	{
@@ -315,7 +315,8 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			note->type |= NOTE_FLAG_HIT;
 			
 			NoteHitEvent(note->type);
-			this->character->set_anim(this->character, note_anims[type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0]);
+			if (!stage.prefs.lowgraphics)
+				this->character->set_anim(this->character, note_anims[type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0]);
 			u8 hit_type = Stage_HitNote(this, type, stage.note_scroll - note_fp);
 			this->arrow_hitan[type & 0x3] = stage.step_time;
 			(void)hit_type;
@@ -337,10 +338,13 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			
 			NoteHitEvent(note->type);
 			this->health -= 2000;
-			if (this->character->spec & CHAR_SPEC_MISSANIM)
-				this->character->set_anim(this->character, note_anims[type & 0x3][2]);
-			else
-				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+			if (!stage.prefs.lowgraphics)
+			{
+				if (this->character->spec & CHAR_SPEC_MISSANIM)
+					this->character->set_anim(this->character, note_anims[type & 0x3][2]);
+				else
+					this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+			}
 			this->arrow_hitan[type & 0x3] = -1;
 			return;
 		}
@@ -378,7 +382,8 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 		//Hit the note
 		note->type |= NOTE_FLAG_HIT;
 		
-		this->character->set_anim(this->character, note_anims[type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0]);
+		if (!stage.prefs.lowgraphics)
+			this->character->set_anim(this->character, note_anims[type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0]);
 		
 		Stage_StartVocal();
 		this->arrow_hitan[type & 0x3] = stage.step_time;
@@ -1181,20 +1186,14 @@ static void Stage_LoadPlayer(void)
 {
 	//Load player character
 	Character_Free(stage.player);
-	if(stage.prefs.lowgraphics)
-		stage.player = Char_BFLow_New(0, 0);
-	else
-		stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y, stage.stage_def->pchar.scale);
+	stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y, stage.stage_def->pchar.scale);
 }
 
 static void Stage_LoadOpponent(void)
 {
 	//Load opponent character
 	Character_Free(stage.opponent);
-	if(stage.prefs.lowgraphics)
-		stage.opponent = Char_BFLow_New(0, 0);
-	else
-		stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y, stage.stage_def->pchar.scale);
+	stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y, stage.stage_def->pchar.scale);
 }
 
 static void Stage_LoadGirlfriend(void)
@@ -1212,8 +1211,6 @@ static void Stage_LoadStage(void)
 	//Load back
 	if (stage.back != NULL)
 		stage.back->free(stage.back);
-	if(stage.prefs.lowgraphics)
-		stage.back = Back_DefaultLow_New();
 	else
 		stage.back = stage.stage_def->back();
 }
@@ -1451,12 +1448,14 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Load_Events();
 	
 	//Load characters
-	Stage_LoadPlayer();
-	Stage_LoadOpponent();
 	if(!stage.prefs.lowgraphics)
+	{
+		Stage_LoadPlayer();
+		Stage_LoadOpponent();
 		Stage_LoadGirlfriend();
-	stage.hidegf = false;
-	Stage_SwapChars();
+		stage.hidegf = false;
+		Stage_SwapChars();
+	}
 	
 	//Load stage chart
 	Stage_LoadChart();
@@ -1565,34 +1564,37 @@ static boolean Stage_NextLoad(void)
 		//Get stage definition
 		stage.stage_def = &stage_defs[stage.stage_id = stage.stage_def->next_stage];
 		
-		//Load stage background
-		if (load & STAGE_LOAD_STAGE)
-			Stage_LoadStage();
-		
-		//Load characters
-		Stage_SwapChars();
-		if (load & STAGE_LOAD_PLAYER)
+		if(!stage.prefs.lowgraphics)
 		{
-			Stage_LoadPlayer();
-		}
-		else
-		{
-			stage.player->x = stage.stage_def->pchar.x;
-			stage.player->y = stage.stage_def->pchar.y;
-		}
-		if (load & STAGE_LOAD_OPPONENT)
-		{
-			Stage_LoadOpponent();
-		}
-		Stage_SwapChars();
-		if (load & STAGE_LOAD_GIRLFRIEND)
-		{
-			Stage_LoadGirlfriend();
-		}
-		else if (stage.gf != NULL)
-		{
-			stage.gf->x = stage.stage_def->gchar.x;
-			stage.gf->y = stage.stage_def->gchar.y;
+			//Load stage background
+			if (load & STAGE_LOAD_STAGE)
+				Stage_LoadStage();
+			
+			//Load characters
+			Stage_SwapChars();
+			if (load & STAGE_LOAD_PLAYER)
+			{
+				Stage_LoadPlayer();
+			}
+			else
+			{
+				stage.player->x = stage.stage_def->pchar.x;
+				stage.player->y = stage.stage_def->pchar.y;
+			}
+			if (load & STAGE_LOAD_OPPONENT)
+			{
+				Stage_LoadOpponent();
+			}
+			Stage_SwapChars();
+			if (load & STAGE_LOAD_GIRLFRIEND)
+			{
+				Stage_LoadGirlfriend();
+			}
+			else if (stage.gf != NULL)
+			{
+				stage.gf->x = stage.stage_def->gchar.x;
+				stage.gf->y = stage.stage_def->gchar.y;
+			}
 		}
 		
 		//Load stage chart
@@ -1921,10 +1923,13 @@ void Stage_Tick(void)
 						}
 					}
 					
-					if (opponent_anote != CharAnim_Idle)
-						stage.opponent->set_anim(stage.opponent, opponent_anote);
-					else if (opponent_snote != CharAnim_Idle)
-						stage.opponent->set_anim(stage.opponent, opponent_snote);
+					if (!stage.prefs.lowgraphics)
+					{
+						if (opponent_anote != CharAnim_Idle)
+							stage.opponent->set_anim(stage.opponent, opponent_anote);
+						else if (opponent_snote != CharAnim_Idle)
+							stage.opponent->set_anim(stage.opponent, opponent_snote);
+					}
 					break;
 				}
 				case StageMode_2P:
@@ -2151,7 +2156,8 @@ void Stage_Tick(void)
 			Gfx_SetClear(0, 0, 0);
 			
 			//Run death animation, focus on player, and change state
-			stage.player->set_anim(stage.player, PlayerAnim_Dead0);
+			if (stage.prefs.lowgraphics)
+				stage.player->set_anim(stage.player, PlayerAnim_Dead0);
 			
 			Stage_FocusCharacter(stage.player);
 			stage.song_time = 0;
