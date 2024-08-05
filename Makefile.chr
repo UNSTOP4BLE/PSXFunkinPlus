@@ -1,0 +1,13 @@
+# List all .json files in iso/characters/ subdirectories
+JSON_FILES := $(wildcard iso/characters/*/*.json)
+
+# Convert .json files to .chr files
+CHR_FILES := $(JSON_FILES:.json=.chr)
+
+all: $(CHR_FILES)
+
+# Rule to convert a .json file to a .chr file
+iso/%.chr: iso/%.json
+	tools/funkinchrpak/funkinchrpak $@ $<
+
+.PHONY: all

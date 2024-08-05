@@ -73,7 +73,7 @@ typedef struct
 	//Characters
 	struct
 	{
-		Character* (*new)();
+		const char *path;
 		fixed_t x, y, scale;
 	} pchar, ochar, gchar;
 	
@@ -274,12 +274,6 @@ typedef struct
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
-	
-	//Retry
-	u8 retry_bump, retry_visibility, retry_fade;
-	RECT retry_src;
-	RECT_FIXED retry_dst;
-	boolean retry;
 	
 	//Intro
 	u8 frame;

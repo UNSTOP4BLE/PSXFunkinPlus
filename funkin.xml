@@ -48,6 +48,7 @@
 			<dir name = "char">
 				<!-- Players -->
 				<file name = "bf.arc" type = "data" source = "iso/characters/bf/main.arc"/>
+                <file name = "bf.chr" type = "data" source = "iso/characters/bf/bf.chr"/>
 				
 				<!-- Opponents -->
 				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>

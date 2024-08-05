@@ -1,13 +1,3 @@
-//Characters
-//Players
-#include "../../characters/bf/bf.h"
-
-//Opponents
-#include "../../characters/dad/dad.h"
-
-//Girlfriend
-#include "../../characters/gf/gf.h"
-
 //Stages
 #include "../../stages/default/default.h"
 
@@ -26,6 +16,8 @@
 #include "../../audio.h"
 
 #include "../../events/event.h"
+
+#include "gameover.h"
 
 #include "../../psx/mem.h"
 #include "../../psx/timer.h"
@@ -1149,26 +1141,32 @@ static void Stage_SwapChars(void)
 
 static void Stage_LoadPlayer(void)
 {
-	//Load player character
-	Character_Free(stage.player);
-	stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y, stage.stage_def->pchar.scale);
+    //Load player character
+    Character_Free(stage.player);
+    if (stage.stage_def->pchar.path != NULL)
+        stage.player = Character_FromFile(stage.player, stage.stage_def->pchar.path, stage.stage_def->pchar.x, stage.stage_def->pchar.y);
+    else
+        stage.player = NULL;
 }
 
 static void Stage_LoadOpponent(void)
 {
-	//Load opponent character
-	Character_Free(stage.opponent);
-	stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y, stage.stage_def->pchar.scale);
+    //Load opponent character
+    Character_Free(stage.opponent);
+    if (stage.stage_def->ochar.path != NULL)
+        stage.opponent = Character_FromFile(stage.opponent, stage.stage_def->ochar.path, stage.stage_def->ochar.x, stage.stage_def->ochar.y);
+    else
+        stage.opponent = NULL;
 }
 
 static void Stage_LoadGirlfriend(void)
 {
-	//Load girlfriend character
-	Character_Free(stage.gf);
-	if (stage.stage_def->gchar.new != NULL)
-		stage.gf = stage.stage_def->gchar.new(stage.stage_def->gchar.x, stage.stage_def->gchar.y, stage.stage_def->pchar.scale);
-	else
-		stage.gf = NULL;
+    //Load girlfriend character
+    Character_Free(stage.gf);
+    if (stage.stage_def->gchar.path != NULL)
+        stage.gf = Character_FromFile(stage.gf, stage.stage_def->gchar.path, stage.stage_def->gchar.x, stage.stage_def->gchar.y);
+    else
+        stage.gf = NULL;
 }
 
 static void Stage_LoadStage(void)
@@ -1318,63 +1316,6 @@ static void Stage_LoadState(void)
 	ObjectList_Free(&stage.objlist_bg);
 }
 
-//Retry Tick
-static void Retry_Tick()
-{
-	//Draw 'RETRY'
-	u8 retry_frame = 0;
-	
-	if (stage.player->animatable.anim >= PlayerAnim_Dead3)
-	{
-		if (stage.player->animatable.anim == PlayerAnim_Dead6)
-		{
-			//Selected retry
-			retry_frame = 3 + (stage.retry_bump >> 2);
-			if (retry_frame >= 5)
-				retry_frame = 5;
-			
-			if (stage.retry_bump <= 55)
-				stage.retry_bump++;
-		}
-		else
-		{
-			//Idle
-			retry_frame = 1 + (stage.retry_bump >> 2);
-			if (retry_frame >= 3)
-				retry_frame = 0;
-			
-			if (++stage.retry_bump >= 55)
-				stage.retry_bump = 0;
-		}
-	}
-	
-	RECT retry_src = {
-		(retry_frame & 1) ? 48 : 0,
-		(retry_frame >> 1) << 5,
-		48,
-		32
-	};
-	RECT_FIXED retry_dst = {
-		FIXED_DEC(12,1),
-		FIXED_DEC(84,1),
-		FIXED_DEC(48,1),
-		FIXED_DEC(32,1),
-	};
-	
-	retry_dst.x = stage.player->x - FIXED_MUL(retry_dst.x,stage.player->size) - stage.camera.x;
-	retry_dst.y = stage.player->y - FIXED_MUL(retry_dst.y,stage.player->size) - stage.camera.y;
-	retry_dst.w = FIXED_MUL(retry_dst.w,stage.player->size);
-	retry_dst.h = FIXED_MUL(retry_dst.h,stage.player->size);
-	
-	stage.retry_dst = retry_dst;
-	stage.retry_src = retry_src;
-	
-	if (stage.retry_visibility > 0)
-		stage.retry_visibility--;
-	
-	(void)retry_frame;
-}
-
 static void Load_SFX(char *path, u8 offset)
 {
 	CdlFILE file;
@@ -1478,11 +1419,6 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 		stage.note_x[i] = FIXED_DEC(note_def[scroll_index][i], 1);
 		stage.note_y[i] = FIXED_DEC(note_def[0][i], 1);
 	}
-	
-	//Initialize player state
-	stage.retry_visibility = 10;
-	stage.retry_bump = 0;
-	stage.retry_fade = 0;
 }
 
 void Stage_Unload(void)
@@ -1579,17 +1515,6 @@ static boolean Stage_NextLoad(void)
 
 void Stage_Tick(void)
 {
-	//Reload song when start or cross is pressed
-	if (pad_state.press & PAD_START && stage.state != StageState_Play && stage.state != StageState_DeadDecide && (stage.player->animatable.anim >= PlayerAnim_Dead2))
-	{
-		stage.state = StageState_DeadDecide;
-		stage.player->set_anim(stage.player, PlayerAnim_Dead6);
-		Audio_StopXA();
-		Audio_PlaySound(Sounds[1], 0x3fff);
-		stage.retry_visibility = 0;
-		stage.retry_bump = 0;
-	}
-	
 	SeamLoad:;
 	
 	//Tick transition
@@ -2088,7 +2013,7 @@ void Stage_Tick(void)
 			
 			break;
 		}
-		case StageState_Dead: //Start BREAK animation and reading extra data from CD
+		case StageState_Dead: //Start BREAK animation
 		{
 			//Stop music immediately
 			Audio_StopXA();
@@ -2106,12 +2031,14 @@ void Stage_Tick(void)
 			ObjectList_Free(&stage.objlist_fg);
 			ObjectList_Free(&stage.objlist_bg);
 			
-			//Free opponent and girlfriend
+			//Free characters
 			Stage_SwapChars();
 			Character_Free(stage.opponent);
 			stage.opponent = NULL;
 			Character_Free(stage.gf);
 			stage.gf = NULL;
+			Character_Free(stage.player);
+			stage.player = NULL;
 			
 			//Reset stage state
 			stage.flag = 0;
@@ -2120,13 +2047,8 @@ void Stage_Tick(void)
 			//Change background colour to black
 			Gfx_SetClear(0, 0, 0);
 			
-			//Run death animation, focus on player, and change state
-			if (stage.prefs.lowgraphics)
-				stage.player->set_anim(stage.player, PlayerAnim_Dead0);
-			
-			Stage_FocusCharacter(stage.player);
+			//Reset song time and change state
 			stage.song_time = 0;
-			
 			stage.state = StageState_DeadLoad;
 		}
 	//Fallthrough
@@ -2136,69 +2058,16 @@ void Stage_Tick(void)
 			if (stage.song_time < FIXED_UNIT)
 				stage.song_time += FIXED_UNIT / 60;
 			Stage_ScrollCamera();
-			stage.player->tick(stage.player);
 			
 			stage.state = StageState_DeadDrop;
 			break;
 		}
 		case StageState_DeadDrop:
-		{
-			//Scroll camera and tick player
-			Stage_ScrollCamera();
-			if (stage.player->animatable.anim >= PlayerAnim_Dead2)
-				Retry_Tick();
-			stage.player->tick(stage.player);
-			
-			//Enter next state once mic has been dropped
-			if (stage.player->animatable.anim == PlayerAnim_Dead1)
-				stage.player->set_anim(stage.player, PlayerAnim_Dead2);
-			//Enter next state once mic has been dropped
-			if (stage.player->animatable.anim == PlayerAnim_Dead3)
-			{
-				stage.state = StageState_DeadRetry;
-				Audio_PlayXA_Track(XA_GameOver, 0x40, 1, true);
-			}
 			break;
-		}
 		case StageState_DeadRetry:
-		{
-			//Randomly twitch
-			if (stage.player->animatable.anim == PlayerAnim_Dead3)
-			{
-				if (RandomRange(0, 29) == 0)
-					stage.player->set_anim(stage.player, PlayerAnim_Dead4);
-				if (RandomRange(0, 29) == 0)
-					stage.player->set_anim(stage.player, PlayerAnim_Dead5);
-			}
-			
-			//Scroll camera and tick player
-			Stage_ScrollCamera();
-			if (stage.player->animatable.anim >= PlayerAnim_Dead2)
-				Retry_Tick();
-			stage.player->tick(stage.player);
 			break;
-		}
 		case StageState_DeadDecide:
-		{
-			//Fade
-			static const RECT fade = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-			Gfx_BlendRect(&fade, stage.retry_fade, stage.retry_fade, stage.retry_fade, 2);
-			
-			if (stage.retry_fade < 252)
-				stage.retry_fade += 4;
-			if (Trans_Idle() && (stage.retry_fade > 200))
-			{
-				stage.trans = StageTrans_Reload;
-				Trans_Start();
-			}
-			
-			//Scroll camera and tick player
-			Stage_ScrollCamera();
-			if (stage.player->animatable.anim >= PlayerAnim_Dead2)
-				Retry_Tick();
-			stage.player->tick(stage.player);
 			break;
-		}
 		default:
 			break;
 	}

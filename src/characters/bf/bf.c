@@ -16,9 +16,6 @@ enum
 	BF_ArcMain_bf4,
 	BF_ArcMain_bf5,
 	BF_ArcMain_bf6,
-	BF_ArcMain_dead0,
-	BF_ArcMain_dead1,
-	BF_ArcMain_dead2,
 
 	
 	BF_ArcMain_Retry,
@@ -88,61 +85,6 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_bf6,{0,108,99,108},{45,97}}, //26 Rightmiss
 	{BF_ArcMain_bf6,{100,109,101,108},{45,97}}, //27 Rightmiss
 	
-	{BF_ArcMain_dead0,{0,0,128,128},{58,92}}, //28 Dead0
-	{BF_ArcMain_dead0,{128,0,128,128},{58,91}}, //29 Dead0
-	{BF_ArcMain_dead0,{0,128,128,128},{59,91}}, //30 Dead0
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //31 Dead0
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //32 Dead0
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //33 Dead0
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //34 Dead0
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //35 Dead0
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //36 Dead0
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //37 Dead0
-	
-	{BF_ArcMain_dead0,{128,128,128,128},{59,90}}, //38 Dead1
-	
-	{BF_ArcMain_dead1,{0,0,128,128},{59,90}}, //39 Dead2
-	{BF_ArcMain_dead1,{128,0,128,128},{58,90}}, //40 Dead2
-	{BF_ArcMain_dead1,{0,128,128,128},{58,90}}, //41 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //42 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //43 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //44 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //45 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //46 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //47 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //48 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //49 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //50 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //51 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //52 Dead2
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //53 Dead2
-	
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //54 Dead3
-	
-	{BF_ArcMain_dead2,{0,0,128,128},{58,90}}, //55 Dead4
-	{BF_ArcMain_dead2,{128,0,128,128},{58,90}}, //56 Dead4
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //57 Dead4
-	{BF_ArcMain_dead2,{128,0,128,128},{58,90}}, //58 Dead4
-	{BF_ArcMain_dead2,{128,0,128,128},{58,90}}, //59 Dead4
-	{BF_ArcMain_dead2,{128,0,128,128},{58,90}}, //60 Dead4
-	{BF_ArcMain_dead2,{128,0,128,128},{58,90}}, //61 Dead4
-	
-	{BF_ArcMain_dead2,{0,128,128,128},{58,90}}, //62 Dead5
-	{BF_ArcMain_dead2,{128,128,128,128},{58,90}}, //63 Dead5
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //64 Dead5
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //65 Dead5
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //66 Dead5
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //67 Dead5
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //68 Dead5
-	
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //69 Dead6
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //70 Dead6
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //71 Dead6
-	
-	{BF_ArcMain_dead2,{0,128,128,128},{58,90}}, //72 Dead7
-	{BF_ArcMain_dead2,{128,128,128,128},{58,90}}, //73 Dead7
-	{BF_ArcMain_dead1,{128,128,128,128},{58,90}}, //74 Dead7
-	
 
 };
 
@@ -162,14 +104,6 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{12, (const u8[]){ 26, 27,  ASCR_BACK, 1}},		//PlayerAnim_RightMiss
 	{12, (const u8[]){ 13, 14, 15,  ASCR_BACK, 1}},		//PlayerAnim_Peace
 	{12, (const u8[]){ 16, 17, 18, 19,  ASCR_REPEAT}},		//PlayerAnim_Sweat
-	{12, (const u8[]){ 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,  ASCR_CHGANI, PlayerAnim_Dead1}},		//PlayerAnim_Dead0
-	{12, (const u8[]){ 38,  ASCR_REPEAT}},		//PlayerAnim_Dead1
-	{12, (const u8[]){ 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,  ASCR_CHGANI, PlayerAnim_Dead3}},		//PlayerAnim_Dead2
-	{12, (const u8[]){ 54,  ASCR_REPEAT}},		//PlayerAnim_Dead3
-	{12, (const u8[]){ 55, 56, 57, 58, 59, 60, 61,  ASCR_CHGANI, PlayerAnim_Dead3}},		//PlayerAnim_Dead4
-	{12, (const u8[]){ 62, 63, 64, 65, 66, 67, 68,  ASCR_CHGANI, PlayerAnim_Dead3}},		//PlayerAnim_Dead5
-	{3, (const u8[]){ 69, 70, 71,  ASCR_BACK, 1}},		//PlayerAnim_Dead6
-	{12, (const u8[]){ 72, 73, 74,  ASCR_REPEAT}},		//PlayerAnim_Dead7
 
 };
 
@@ -222,15 +156,6 @@ void Char_BF_Tick(Character *character)
 		     character->animatable.anim != PlayerAnim_RightMiss) &&
 			(stage.song_step & 0x7) == 0)
 			character->set_anim(character, CharAnim_Idle);
-	}
-	
-	//Retry screen
-	if (character->animatable.anim >= PlayerAnim_Dead2)
-	{
-		if(stage.retry_visibility == 0)
-			Stage_DrawTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), stage.camera.angle);
-		else
-			Stage_BlendTex(&this->tex_retry, &stage.retry_src, &stage.retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump), stage.camera.angle, 0);
 	}
 	
 	//Animate and draw character
@@ -314,11 +239,6 @@ Character *Char_BF_New(fixed_t x, fixed_t y, fixed_t scale)
 		"bf4.tim",
 		"bf5.tim",
 		"bf6.tim",
-		"dead0.tim",
-		"dead1.tim",
-		"dead2.tim",
-
-		"retry.tim",
 
 		NULL
 	};

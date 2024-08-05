@@ -3,17 +3,15 @@ TYPE = ps-exe
 
 SRCS = src/main.c \
 	   \
-       src/characters/bf/bf.c \
-	   \
-       src/characters/dad/dad.c \
-	   \
-       src/characters/gf/gf.c \
-       src/characters/gf/speaker.c \
-	   \
        src/stages/default/default.c \
 	   \
        src/scenes/menu/menu.c \
        src/scenes/menu/options.c \
+	   \
+       src/scenes/stage/characters/speaker.c \
+       src/scenes/stage/characters/chardef.c \
+       src/scenes/stage/characters/gfdef.c \
+       src/scenes/stage/characters/playerdef.c \
 	   \
 	   src/events/event.c \
 	   src/fonts/font.c \
