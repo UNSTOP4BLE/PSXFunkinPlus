@@ -14,12 +14,12 @@ void Character_Free(Character *this)
     
     //Free character
     if (this->arc_ptr != NULL)
-        free(this->arc_ptr);
+        Mem_Free(this->arc_ptr);
     if (this->file != NULL) {
-        free(this->file);
+        Mem_Free(this->file);
     }
-    free(this->arc_main);
-    free(this);
+    Mem_Free(this->arc_main);
+    Mem_Free(this);
 }
 
 //Character functions
@@ -47,9 +47,8 @@ Character *Character_FromFile(Character *this, const char *path, fixed_t x, fixe
 
     if (this != NULL)
         Character_Free(this);
-
-	printf("hiii\n");
-    this = malloc(sizeof(Character)); //<--- crashes "E(UnknownReadHandler): Invalid word read at address 0x275A0C88, pc 0xBFC020C0"
+	
+    this = Mem_Alloc(sizeof(Character)); //<--- crashes "E(UnknownReadHandler): Invalid word read at address 0x275A0C88, pc 0xBFC020C0"
 	
     //load the actual character
     if (this == NULL)
@@ -101,7 +100,6 @@ Character *Character_FromFile(Character *this, const char *path, fixed_t x, fixe
     Character_Init(this, x, y);
 
     memcpy(this->health_i, tmphdr->health_i, sizeof(this->health_i));
-
     //health bar color
     this->health_bar = tmphdr->health_bar;
     
@@ -113,7 +111,8 @@ Character *Character_FromFile(Character *this, const char *path, fixed_t x, fixe
     //Load art 
     this->arc_main = IO_Read(tmphdr->archive_path);
 
-    this->arc_ptr = malloc(sizeof(IO_Data) * tmphdr->size_textures);
+    this->arc_ptr = Mem_Alloc(sizeof(IO_Data) * tmphdr->size_textures);
+	printf("hiii\n");
     for (int i = 0; i < tmphdr->size_textures; i++) {
         this->arc_ptr[i] = Archive_Find(this->arc_main, tex_paths[i]);
     } 

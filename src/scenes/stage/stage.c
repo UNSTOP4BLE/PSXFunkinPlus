@@ -19,6 +19,7 @@
 
 #include "gameover.h"
 
+#include <stdlib.h>  
 #include "../../psx/mem.h"
 #include "../../psx/timer.h"
 #include "../../psx/pad.h"
@@ -1341,31 +1342,22 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Load stage background
 	Stage_LoadStage();
 	
-	//Load VAG files
-	Audio_ClearAlloc();
-	Load_SFX("\\SOUNDS\\MICDROP.VAG;1",0);
-	Load_SFX("\\SOUNDS\\CONTINUE.VAG;1",1);
-	Load_SFX("\\SOUNDS\\INTRO3.VAG;1",2);
-	Load_SFX("\\SOUNDS\\INTRO2.VAG;1",3);
-	Load_SFX("\\SOUNDS\\INTRO1.VAG;1",4);
-	Load_SFX("\\SOUNDS\\INTRO0.VAG;1",5);
+	size_t mem_used, mem_size, mem_max;
+	Mem_GetStat(&mem_used, &mem_size, &mem_max);
+	printf("Memory: %08X/%08X (max %08X)", mem_used, mem_size, mem_max);
 	
 	//Load Events
 	Load_Events();
-	
-	stage.prefs.lowgraphics = false;
 	
 	//Load characters
 	if(!stage.prefs.lowgraphics)
 	{
 		Stage_LoadPlayer();
-		//Stage_LoadOpponent();
-		//Stage_LoadGirlfriend();
-		//stage.hidegf = false;
-		//Stage_SwapChars();
+		Stage_LoadOpponent();
+		Stage_LoadGirlfriend();
+		stage.hidegf = false;
+		Stage_SwapChars();
 	}
-	
-	stage.prefs.lowgraphics = true;
 	
 	//Load stage chart
 	Stage_LoadChart();
@@ -1405,6 +1397,15 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	
 	//Initialize stage according to mode
 	stage.note_swap = (stage.prefs.mode == StageMode_Swap) ? 4 : 0;
+	
+	//Load VAG files
+	Audio_ClearAlloc();
+	Load_SFX("\\SOUNDS\\MICDROP.VAG;1",0);
+	Load_SFX("\\SOUNDS\\CONTINUE.VAG;1",1);
+	Load_SFX("\\SOUNDS\\INTRO3.VAG;1",2);
+	Load_SFX("\\SOUNDS\\INTRO2.VAG;1",3);
+	Load_SFX("\\SOUNDS\\INTRO1.VAG;1",4);
+	Load_SFX("\\SOUNDS\\INTRO0.VAG;1",5);
 	
 	//Load music
 	stage.note_scroll = 0;

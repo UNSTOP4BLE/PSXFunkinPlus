@@ -10,11 +10,11 @@
 #define ASCR_CHGANI 0xFE
 #define ASCR_BACK   0xFD
 
-typedef struct
+typedef struct __attribute__((packed)) 
 {
 	//Animation data and script
 	u8 spd;
-	const u8 *script;
+	u8 script[255];
 } Animation;
 
 typedef struct
