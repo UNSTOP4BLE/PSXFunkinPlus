@@ -47,7 +47,10 @@ Character *Character_FromFile(Character *this, const char *path, fixed_t x, fixe
 
     if (this != NULL)
         Character_Free(this);
-    this = malloc(sizeof(Character));
+
+	printf("hiii\n");
+    this = malloc(sizeof(Character)); //<--- crashes "E(UnknownReadHandler): Invalid word read at address 0x275A0C88, pc 0xBFC020C0"
+	
     //load the actual character
     if (this == NULL)
     {

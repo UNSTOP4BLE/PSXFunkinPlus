@@ -1353,15 +1353,19 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Load Events
 	Load_Events();
 	
+	stage.prefs.lowgraphics = false;
+	
 	//Load characters
 	if(!stage.prefs.lowgraphics)
 	{
 		Stage_LoadPlayer();
-		Stage_LoadOpponent();
-		Stage_LoadGirlfriend();
-		stage.hidegf = false;
-		Stage_SwapChars();
+		//Stage_LoadOpponent();
+		//Stage_LoadGirlfriend();
+		//stage.hidegf = false;
+		//Stage_SwapChars();
 	}
+	
+	stage.prefs.lowgraphics = true;
 	
 	//Load stage chart
 	Stage_LoadChart();

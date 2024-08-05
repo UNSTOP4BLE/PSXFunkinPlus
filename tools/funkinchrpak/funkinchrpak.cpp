@@ -11,6 +11,10 @@ using json = nlohmann::json;
 
 typedef int32_t fixed_t;
 
+typedef int32_t s32;
+typedef uint16_t u16;
+typedef uint32_t u32;
+
 #define ASCR_REPEAT 0xFF
 #define ASCR_CHGANI 0xFE
 #define ASCR_BACK   0xFD
@@ -52,19 +56,19 @@ std::vector<std::string> playerAnim{
 
 struct __attribute__((packed)) CharacterFileHeader
 {
-    int32_t size_struct;
-    int32_t size_frames;
-    int32_t size_animation;
-    int32_t sizes_scripts[32]; // size of charAnim vector + playeranim vector
-    int32_t size_textures;
+    s32 size_struct;
+    s32 size_frames;
+    s32 size_animation;
+    s32 sizes_scripts[32]; 
+    s32 size_textures;
 
     //Character information
-    uint16_t spec;
-    uint16_t health_i[2][4]; //hud1.tim
-    uint32_t health_bar; //hud1.tim
+    u16 spec;
+    u16 health_i[2][4]; //hud1.tim
+    u32 health_bar; //hud1.tim
     char archive_path[128];
-    int32_t focus_x, focus_y, focus_zoom;
-    int32_t scale;
+    s32 focus_x, focus_y, focus_zoom;
+    s32 scale;
 };
 
 std::vector<std::string> charStruct;

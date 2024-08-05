@@ -25,11 +25,11 @@ typedef enum
 } CharAnim;
 
 //Character structures
-typedef struct
+typedef struct __attribute__((packed)) CharFrame
 {
-	u8 tex;
-	u16 src[4];
-	s16 off[2];
+    u8 tex;
+    u16 src[4];
+    s16 off[2];
 } CharFrame;
 
 typedef struct Character
