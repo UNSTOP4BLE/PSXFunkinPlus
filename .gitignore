@@ -38,6 +38,7 @@ build/
 *.xa
 *.cht
 *.vag
+*.chr
 *.exe
 
 # Don't remove these

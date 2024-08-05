@@ -58,7 +58,7 @@
 	{ //StageId_1_4 (Tutorial)
 		//Characters
 		{"\\CHAR\\BF.CHR;1", FIXED_DEC(60,1),  FIXED_DEC(100,1), FIXED_DEC(1,1)},
-		{"\\CHAR\\BF.CHR;1",  FIXED_DEC(0,1),  FIXED_DEC(-15,1), FIXED_DEC(1,1)},
+		{"\\CHAR\\GF.CHR;1",  FIXED_DEC(0,1),  FIXED_DEC(-15,1), FIXED_DEC(1,1)},
 		{NULL,           FIXED_DEC(0,1),  FIXED_DEC(-10,1), FIXED_DEC(1,1)},
 		
 		//Stage background

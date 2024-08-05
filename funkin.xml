@@ -52,10 +52,11 @@
 				
 				<!-- Opponents -->
 				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>
+                <file name = "dad.chr" type = "data" source = "iso/characters/dad/dad.chr"/>
 				
 				<!-- Girlfriend -->
 				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
-				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
+				<file name = "gf.chr" type = "data" source = "iso/characters/gf/gf.chr"/>
 				<file name = "speaker.tim" type = "data" source = "iso/characters/gf/speaker.tim"/>
 			</dir>
 			
@@ -77,9 +78,6 @@
 				<file name = "1.4e.cht" type = "data" source = "iso/songs/tutorial/tutorial-easy.cht"/>
 				<file name = "1.4n.cht" type = "data" source = "iso/songs/tutorial/tutorial.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/songs/tutorial/tutorial-hard.cht"/>
-
-				<!-- Blammed charts -->
-				<file name = "2.1h.cht" type = "data" source = "iso/songs/blammed/blammed.cht"/>
 			</dir>
 			
 			<!-- Music -->
