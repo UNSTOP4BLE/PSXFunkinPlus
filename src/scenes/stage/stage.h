@@ -77,6 +77,9 @@ typedef struct
 		fixed_t x, y, scale;
 	} pchar, ochar, gchar;
 	
+	//Characters
+	u8 death_offset;
+	
 	//Stage background
 	StageBack* (*back)();
 	

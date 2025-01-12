@@ -60,6 +60,12 @@
 				<file name = "speaker.tim" type = "data" source = "iso/characters/gf/speaker.tim"/>
 			</dir>
 			
+			<!-- Deaths -->
+			<dir name = "deaths">
+				<!-- Assets -->
+				<file name = "blueball.arc" type = "data" source = "iso/deaths/blueball/main.arc"/>
+			</dir>
+			
 			<!-- Songs -->
 			<dir name = "songs">
 				<!-- Bopeebo charts -->

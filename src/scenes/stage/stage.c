@@ -1359,6 +1359,8 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 		Stage_SwapChars();
 	}
 	
+	Stage_Retry_Load(stage.stage_def->death_offset);
+	
 	//Load stage chart
 	Stage_LoadChart();
 	
@@ -1449,6 +1451,9 @@ void Stage_Unload(void)
 	stage.opponent = NULL;
 	Character_Free(stage.gf);
 	stage.gf = NULL;
+	
+	//Free death
+	Stage_Retry_Unload();
 }
 
 static boolean Stage_NextLoad(void)
@@ -2052,6 +2057,8 @@ void Stage_Tick(void)
 			//Change background colour to black
 			Gfx_SetClear(0, 0, 0);
 			
+			Stage_Retry_Reset();
+			
 			//Reset song time and change state
 			stage.song_time = 0;
 			stage.state = StageState_DeadLoad;
@@ -2062,9 +2069,9 @@ void Stage_Tick(void)
 			//Scroll camera and tick player
 			if (stage.song_time < FIXED_UNIT)
 				stage.song_time += FIXED_UNIT / 60;
-			Stage_ScrollCamera();
 			
-			stage.state = StageState_DeadDrop;
+			Stage_ScrollCamera();
+			Stage_Retry_Tick();
 			break;
 		}
 		case StageState_DeadDrop:

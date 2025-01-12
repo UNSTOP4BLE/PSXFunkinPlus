@@ -9,7 +9,7 @@ all: \
 	\
 	iso/stages/default/back.arc \
 	\
-	iso/images/deaths/bf/main.arc \
+	iso/deaths/blueball/main.arc \
 	\
 	iso/characters/icons.tim \
 	iso/images/menu/menu.arc \
@@ -45,4 +45,4 @@ iso/stages/default/back.arc: iso/stages/default/back0.tim iso/stages/default/bac
 # ---Deaths---
 
 # Boyfriend (blue-balls)
-iso/images/deaths/bf/main.arc: iso/images/deaths/bf/dead0.tim iso/images/deaths/bf/dead1.tim iso/images/deaths/bf/dead2.tim iso/images/deaths/bf/retry.tim
+iso/deaths/blueball/main.arc: iso/deaths/blueball/dead0.tim iso/deaths/blueball/dead1.tim iso/deaths/blueball/dead2.tim iso/deaths/blueball/retry.tim
