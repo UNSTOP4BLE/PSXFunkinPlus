@@ -96,9 +96,6 @@
 				
 				<file name = "2.xa" type = "xa" source = "iso/songs/2.xa"/>
 				<dummy sectors="128"/>
-				
-				<file name = "3.xa" type = "xa" source = "iso/songs/3.xa"/>
-				<dummy sectors="128"/>
 			</dir>
 			
 			<!-- Sound -->
