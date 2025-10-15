@@ -388,20 +388,21 @@ void retire_av_data(settings_t *settings, int retired_audio_samples, int retired
 
 void close_av_data(settings_t *settings)
 {
-	av_decoder_state_t* av = &(settings->decoder_state_av);
+    av_decoder_state_t* av = &(settings->decoder_state_av);
 
-	av_frame_free(&(av->frame));
-	swr_free(&(av->resampler));
-	avcodec_close(av->audio_codec_context);
-	avcodec_free_context(&(av->audio_codec_context));
-	avformat_free_context(av->format);
+    av_frame_free(&(av->frame));
+    swr_free(&(av->resampler));
+    avcodec_free_context(&(av->audio_codec_context));
+    avcodec_free_context(&(av->video_codec_context));
+    avformat_free_context(av->format);
 
-	if(settings->audio_samples != NULL) {
-		free(settings->audio_samples);
-		settings->audio_samples = NULL;
-	}
-	if(settings->video_frames != NULL) {
-		free(settings->video_frames);
-		settings->video_frames = NULL;
-	}
+    if(settings->audio_samples != NULL) {
+        free(settings->audio_samples);
+        settings->audio_samples = NULL;
+    }
+    if(settings->video_frames != NULL) {
+        free(settings->video_frames);
+        settings->video_frames = NULL;
+    }
 }
+
