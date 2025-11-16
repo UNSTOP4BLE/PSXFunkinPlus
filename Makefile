@@ -36,6 +36,7 @@ SRCS = src/main.c \
 	   src/scenes/stage/object/combo.c \
 	   src/scenes/stage/object/splash.c \
 	   src/scenes/stage/pause.c \
+	   src/scenes/stage/stage_draw.c \
 	   src/scenes/stage/stage.c \
        mips/common/crt0/crt0.s
 

@@ -175,7 +175,7 @@ void Font_CDR_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, Fon
 		if (gameloop == GameLoop_Stage)
 		{
 			RECT_FIXED dst = {x - FIXED_DEC(alignoffset,1), y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
-			Stage_DrawTexCol(&this->tex, &src, &dst, stage.bump, stage.camera.hudangle, r, g, b);
+			Stage_DrawTexCol(&this->tex, &src, &dst, r, g, b, &stage.camera.hud);
 			x += (font_cdrmap[c].charW - 1) << FIXED_SHIFT;
 		}
 		else

@@ -173,7 +173,7 @@ void StageTimer_Draw()
 	//Draw the front and back length indicators
 	if (stage.song_step >= 0)
 	{
-		Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &front_dst, stage.bump, stage.camera.hudangle, 255, 255, 255);
+		Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &front_dst, 255, 255, 255, &stage.camera.hud);
 	}
-	Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &back_dst, stage.bump, stage.camera.hudangle, 0, 0, 0);
+	Stage_DrawTexCol(&stage.tex_hud0, &texture_src, &back_dst, 0, 0, 0, &stage.camera.hud);
 }

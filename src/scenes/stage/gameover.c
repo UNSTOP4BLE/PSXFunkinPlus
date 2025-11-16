@@ -67,13 +67,13 @@ static void Draw_BlueBall(void) {
 	};
 
     RECT_FIXED blueball_dst = {
-        stage.player->x - stage.camera.x,
-        stage.player->y - stage.camera.y,
+        stage.player->x,
+        stage.player->y,
         FIXED_DEC(blueball_src.w, 1),
         FIXED_DEC(blueball_src.h, 1)
     };
 
-    Stage_DrawTex(&retry.tex, &blueball_src, &blueball_dst, stage.camera.bzoom, stage.camera.angle);
+    Stage_DrawTex(&retry.tex, &blueball_src, &blueball_dst, &stage.camera.stage);
 }
 
 

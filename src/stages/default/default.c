@@ -22,10 +22,6 @@ void Back_Default_DrawBG(StageBack *back)
 	
 	fixed_t fx, fy;
 	
-	//Draw curtains
-	fx = (stage.camera.x * 5) >> 2;
-	fy = (stage.camera.y * 5) >> 2;
-	
 	RECT curtainl_src = {0, 0, 107, 221};
 	RECT_FIXED curtainl_dst = {
 		FIXED_DEC(-250,1) - FIXED_DEC(SCREEN_WIDEOADD,2) - fx,
@@ -41,12 +37,8 @@ void Back_Default_DrawBG(StageBack *back)
 		FIXED_DEC(256,1)
 	};
 	
-	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, stage.camera.bzoom, stage.camera.angle);
-	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, stage.camera.bzoom, stage.camera.angle);
-	
-	//Draw stage
-	fx = stage.camera.x * 3 / 2;
-	fy = stage.camera.y * 3 / 2;
+	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, &stage.camera.stage);
+	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, &stage.camera.stage);
 	
 	POINT_FIXED stage_d2 = {
 		FIXED_DEC(-230,1) - fx,
@@ -56,9 +48,6 @@ void Back_Default_DrawBG(StageBack *back)
 		FIXED_DEC(-230,1) + FIXED_DEC(410,1) - fx,
 		FIXED_DEC(50,1) + FIXED_DEC(123,1) - fy,
 	};
-	
-	fx = stage.camera.x >> 1;
-	fy = stage.camera.y >> 1;
 	
 	POINT_FIXED stage_d0 = {
 		FIXED_DEC(-230,1) - fx,
@@ -71,11 +60,7 @@ void Back_Default_DrawBG(StageBack *back)
 	
 	RECT stage_src = {0, 0, 255, 59};
 	
-	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, stage.camera.bzoom, stage.camera.angle);
-	
-	//Draw back
-	//fx = stage.camera.x * 2 / 3;
-	//fy = stage.camera.y * 2 / 3;
+	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, &stage.camera.stage);
 	
 	RECT backl_src = {0, 59, 121, 105};
 	RECT_FIXED backl_dst = {
@@ -99,8 +84,8 @@ void Back_Default_DrawBG(StageBack *back)
 		SCREEN_HEIGHT,
 	};
 	
-	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, stage.camera.bzoom, stage.camera.angle);
-	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, stage.camera.bzoom, stage.camera.angle);
+	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, &stage.camera.stage);
+	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, &stage.camera.stage);
 	Gfx_DrawTex(&this->tex_back0, &backf_src, &backf_dst);
 }
 

@@ -71,8 +71,8 @@ void FollowCharCamera()
     
 	if (!stage.paused)
 	{
-		stage.camera.x += char_dx;
-		stage.camera.y += char_dy;
+		stage.camera.stage.current.x += char_dx;
+		stage.camera.stage.current.y += char_dy;
 	}
 }
 

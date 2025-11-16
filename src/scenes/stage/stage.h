@@ -12,6 +12,8 @@
 #include "pause.h"
 #include "../../fonts/font.h"
 
+#include "stage_draw.h"
+
 #define STAGE_FLAG_JUST_STEP     (1 << 0) //Song just stepped this frame
 #define STAGE_FLAG_VOCAL_ACTIVE  (1 << 1) //Song's vocal track is currently active
 #define STAGE_FLAG_SCORE_REFRESH (1 << 2) //Score text should be refreshed
@@ -219,21 +221,8 @@ typedef struct
 	
 	struct
 	{
-		// Specs
-		boolean force;
-		fixed_t speed;
-		
-		// Positions
-		fixed_t x, y, zoom, bzoom, angle, hudangle;
-		
-		struct
-		{
-			fixed_t x, y, zoom;
-		} offset;
-		
-		// Targets
-		fixed_t tx, ty, tz;
-		s16 ta, hudta;
+		Camera stage;
+		Camera hud;
 	} camera;
 	fixed_t bump, sbump;
 	
@@ -284,19 +273,6 @@ typedef struct
 } Stage;
 
 extern Stage stage;
-
-//Stage drawing functions
-void Stage_DrawRect(const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb);
-void Stage_BlendRect(const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb, int mode);
-void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation);
-void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, fixed_t zoom, fixed_t rotation);
-void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b);
-void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation);
-void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation);
-void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation);
-void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b, u8 mode);
-void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 mode);
-void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode);
 
 //Stage functions
 void Stage_Load(StageId id, StageDiff difficulty, boolean story);

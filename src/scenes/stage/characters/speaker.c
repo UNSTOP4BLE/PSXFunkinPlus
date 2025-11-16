@@ -64,12 +64,12 @@ void Speaker_Tick(Speaker *this, fixed_t x, fixed_t y, fixed_t parallax)
 		//Draw piece
 		RECT piece_src = {piece->rect[0], piece->rect[1], piece->rect[2], piece->rect[3]};
 		RECT_FIXED piece_dst = {
-			x - FIXED_DEC(88,1) + ((fixed_t)piece->ox << FIXED_SHIFT) - FIXED_MUL(stage.camera.x, parallax),
-			y + ((fixed_t)piece->oy << FIXED_SHIFT) - FIXED_MUL(stage.camera.y, parallax),
+			x - FIXED_DEC(88,1) + ((fixed_t)piece->ox << FIXED_SHIFT),
+			y + ((fixed_t)piece->oy << FIXED_SHIFT),
 			(fixed_t)piece->rect[2] << FIXED_SHIFT,
 			(fixed_t)piece->rect[3] << FIXED_SHIFT,
 		};
 		
-		Stage_DrawTex(&this->tex, &piece_src, &piece_dst, stage.camera.bzoom, stage.camera.angle);
+		Stage_DrawTex(&this->tex, &piece_src, &piece_dst, &stage.camera.stage);
 	}
 }
