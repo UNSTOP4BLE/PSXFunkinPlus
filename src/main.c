@@ -3,7 +3,7 @@
 #include "psx/timer.h"
 #include "psx/io.h"
 #include "psx/gfx.h"
-#include "audio.h"
+#include "psx/audio.h"
 #include "psx/pad.h"
 #include "psx/save.h"
 #include "fonts/font.h"

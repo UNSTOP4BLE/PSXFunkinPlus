@@ -1,6 +1,6 @@
 #include "stage.h"
 #include "../../psx/trans.h"
-#include "../../audio.h"
+#include "../../psx/audio.h"
 void PausedState()
 {
 	static const char *stage_options[] = {

@@ -4,7 +4,6 @@
 
 //Stage Codes
 #include "stage.h"
-#include "debug.h"
 
 #include "object/combo.h"
 #include "object/splash.h"
@@ -13,13 +12,13 @@
 #include "../menu/menu.h"
 
 #include "../../main.h"
-#include "../../audio.h"
 
 #include "../../events/event.h"
 
 #include "gameover.h"
 
 #include <stdlib.h>  
+#include "../../psx/audio.h"
 #include "../../psx/mem.h"
 #include "../../psx/timer.h"
 #include "../../psx/pad.h"
@@ -42,8 +41,8 @@ static const u8 note_anims[4][3] = {
 
 static const s16 note_def[4][8] = {
 	{-80,-80,-80,-80,-80,-80,-80,-80}, //Notes Y Position
-	{26,60,94,128,-128,-94,-60,-26}, //Notes X Position
-	{-51,-17,17,51,-128,-94,94,128}, //Notes X Position with Middle Scroll
+	{26,61,96,131,-131,-96,-61,-26}, //Notes X Position
+	{-49,-16,16,49,-128,-94,94,128}, //Notes X Position with Middle Scroll
 	{-128,-94,-60,-26,26,60,94,128} //Notes X Position with Swapped
 };
 
@@ -54,9 +53,6 @@ static const StageDef stage_defs[StageId_Max] = {
 
 //Stage state
 Stage stage;
-
-//Debug state
-Debug debug;
 
 //Stage music functions
 static void Stage_StartVocal(void)
@@ -88,9 +84,7 @@ static void Stage_FocusCharacter(Character *ch)
 
 static void Stage_ScrollCamera(void)
 {
-	if (stage.debug)
-		Debug_ScrollCamera();
-	else if (stage.freecam)
+	if (stage.freecam)
 	{
 		if (pad_state.held & PAD_LEFT)
 			stage.camera.x -= FIXED_DEC(2,1);
@@ -1285,8 +1279,7 @@ static void Stage_LoadState(void)
 	
 	timer.timer = Audio_GetLength(stage.stage_def->music_track);
 	stage.paused = false;
-	if (!stage.debug)
-		stage.freecam = 0;
+	stage.freecam = 0;
 	
 	stage.player_state[0].character = stage.player;
 	stage.player_state[1].character = stage.opponent;
@@ -1605,8 +1598,6 @@ void Stage_Tick(void)
 			
 			if (stage.prefs.timebar)
 				StageTimer_Draw();
-			if (stage.debug)
-				Debug_StageDebug();
 			
             Stage_CountDown();
 			
@@ -1618,8 +1609,7 @@ void Stage_Tick(void)
 				RECT bot_src = {61, 178, 67, 16};
 				RECT_FIXED bot_dst = {FIXED_DEC(-bot_src.w / 2,1), FIXED_DEC(-58,1), FIXED_DEC(bot_src.w,1), FIXED_DEC(bot_src.h,1)};
 				
-				if (!stage.debug)
-					Stage_DrawTex(&stage.tex_hud0, &bot_src, &bot_dst, stage.bump, stage.camera.hudangle);
+				Stage_DrawTex(&stage.tex_hud0, &bot_src, &bot_dst, stage.bump, stage.camera.hudangle);
 			}
 			
 			//Clear per-frame flags

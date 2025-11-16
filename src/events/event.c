@@ -1,7 +1,7 @@
 #include "event.h"
 #include "../scenes/stage/stage.h"
 
-#include "../audio.h"
+#include "../psx/audio.h"
 #include "../psx/mem.h"
 #include "../psx/timer.h"
 #include "../psx/pad.h"

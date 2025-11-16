@@ -1,7 +1,7 @@
 #include "io.h"
 
 #include "mem.h"
-#include "../audio.h"
+#include "audio.h"
 #include "../main.h"
 
 //IO functions

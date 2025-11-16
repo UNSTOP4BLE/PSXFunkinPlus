@@ -31,7 +31,6 @@ SRCS = src/main.c \
 	   src/psx/trans.c \
 	   src/scenes/stage/animation.c \
 	   src/scenes/stage/character.c \
-	   src/scenes/stage/debug.c \
 	   src/scenes/stage/gameover.c \
 	   src/scenes/stage/object.c \
 	   src/scenes/stage/object/combo.c \

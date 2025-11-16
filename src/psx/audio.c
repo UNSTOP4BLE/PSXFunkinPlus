@@ -1,6 +1,6 @@
 //Most of this code is written by spicyjpeg
 
-#include "../audio.h"
+#include "audio.h"
 
 #include "io.h"
 #include "../main.h"
@@ -166,10 +166,10 @@ void Audio_Init(void)
 	//Set XA state
 	xa_state = 0;
 	
-	//Get file positions
-	CdlFILE *filep = xa_files;
-	for (const char **pathp = xa_paths; *pathp != NULL; pathp++)
-		IO_FindFile(filep++, *pathp);
+	// Clear file cache - mark as invalid by setting size to 0
+	for (int i = 0; i < XA_Max; i++) {
+		xa_files[i].size = 0;
+	}
 }
 
 void Audio_Quit(void)
@@ -180,8 +180,34 @@ void Audio_Quit(void)
 static void Audio_GetXAFile(CdlFILE *file, XA_Track track)
 {
 	const XA_TrackDef *track_def = &xa_tracks[track];
-	file->pos = xa_files[track_def->file].pos;
+	
+	// Find if we already have this file loaded in cache
+	for (int i = 0; i < XA_Max; i++) {
+		if (xa_files[i].size != 0) {  // Check size instead of pos to see if file is valid
+			// Check if this cached file matches the path we need
+			CdlFILE temp;
+			IO_FindFile(&temp, track_def->file_path); // This returns void, just call it
+			
+			// Compare CD positions to see if it's the same file
+			if (CdPosToInt(&temp.pos) == CdPosToInt(&xa_files[i].pos)) {
+				*file = xa_files[i];
+				file->size = track_def->length;
+				return;
+			}
+		}
+	}
+	
+	// File not found in cache, load it directly
+	IO_FindFile(file, track_def->file_path); // This returns void, just call it
 	file->size = track_def->length;
+	
+	// Cache this file for future use
+	for (int i = 0; i < XA_Max; i++) {
+		if (xa_files[i].size == 0) {
+			xa_files[i] = *file;
+			break;
+		}
+	}
 }
 
 static void Audio_PlayXA_File(CdlFILE *file, u8 volume, u8 channel, boolean loop)
@@ -439,4 +465,3 @@ u32 VAG_IsPlaying(u32 channel)
 {
 	return (SPU_CHANNELS[channel]._reserved != 0);
 }
-

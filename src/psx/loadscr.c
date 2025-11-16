@@ -3,7 +3,7 @@
 #include "gfx.h"
 #include "timer.h"
 #include "io.h"
-#include "../audio.h"
+#include "audio.h"
 #include "trans.h"
 
 //Loading screen functions

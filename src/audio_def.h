@@ -1,46 +1,53 @@
+#ifndef PSXF_GUARD_AUDIO_DEF_H
+#define PSXF_GUARD_AUDIO_DEF_H
+
+#include "psx/psx.h"
+#include "psx/io.h"  // For IO_SECT_SIZE
+
+// Number of unique XA files
+#define XA_Max 3
+
+//XA track enumerations
+typedef enum
+{
+    // Menu tracks
+    XA_GettinFreaky, // 0
+    XA_GameOver,     // 1
+    
+    // Week 1 tracks  
+    XA_Bopeebo,      // 2
+    XA_Fresh,        // 3
+    
+    // Week 2 tracks
+    XA_Dadbattle,    // 4
+    XA_Tutorial,     // 5
+    
+    XA_TrackMax,     // 6
+} XA_Track;
+
 #define XA_LENGTH(x) (((u64)(x) * 75) / 100 * IO_SECT_SIZE) //Centiseconds to sectors in bytes (w)
 
 typedef struct
 {
-	XA_File file;
-	u32 length;
+    const char* file_path;  // Path to the XA file
+    const char* name;       // Track name for identification
+    u32 length;             // Track length in sectors
+    boolean vocal;          // Whether the track has vocals
 } XA_TrackDef;
 
+// Single array containing all track information
 static const XA_TrackDef xa_tracks[] = {
-	//MENU.XA
-	{XA_Menu, XA_LENGTH(11300)}, //XA_GettinFreaky
-	{XA_Menu, XA_LENGTH(3800)},  //XA_GameOver
-	//1.XA
-	{XA_1, XA_LENGTH(7700)}, //XA_Bopeebo
-	{XA_1, XA_LENGTH(8000)}, //XA_Fresh
-	//2.XA
-	{XA_2, XA_LENGTH(8700)}, //XA_Dadbattle
-	{XA_2, XA_LENGTH(6800)}, //XA_Tutorial
+    // Menu tracks (both in MENU.XA)
+    [XA_GettinFreaky] = {"\\MUSIC\\MENU.XA;1", "freakymenu", XA_LENGTH(11300), false},
+    [XA_GameOver]     = {"\\MUSIC\\MENU.XA;1", "gameover",   XA_LENGTH(3800),  false},
+    
+    // Week 1 tracks (both in 1.XA)
+    [XA_Bopeebo] = {"\\MUSIC\\1.XA;1", "bopeebo", XA_LENGTH(7700), true},
+    [XA_Fresh]   = {"\\MUSIC\\1.XA;1", "fresh",   XA_LENGTH(8000), true},
+    
+    // Week 2 tracks (both in 2.XA)  
+    [XA_Dadbattle] = {"\\MUSIC\\2.XA;1", "dadbattle", XA_LENGTH(8700), true},
+    [XA_Tutorial]  = {"\\MUSIC\\2.XA;1", "tutorial",  XA_LENGTH(6800), false},
 };
 
-static const char *xa_paths[] = {
-	"\\MUSIC\\MENU.XA;1",   //XA_Menu
-	"\\MUSIC\\1.XA;1", //XA_Week1A
-	"\\MUSIC\\2.XA;1", //XA_Week1B
-	NULL,
-};
-
-typedef struct
-{
-	const char *name;
-	boolean vocal;
-} XA_Mp3;
-
-static const XA_Mp3 xa_mp3s[] = {
-	//MENU.XA
-	{"freakymenu", false},   //XA_GettinFreaky
-	{"gameover", false}, //XA_GameOver
-	//WEEK1A.XA
-	{"bopeebo", true}, //XA_Bopeebo
-	{"fresh", true},   //XA_Fresh
-	//WEEK1B.XA
-	{"dadbattle", true}, //XA_Dadbattle
-	{"tutorial", false}, //XA_Tutorial
-	
-	{NULL, false}
-};
+#endif

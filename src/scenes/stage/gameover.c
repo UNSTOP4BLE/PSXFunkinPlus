@@ -8,8 +8,9 @@
 #include "../../psx/mem.h"
 #include "../../psx/archive.h"
 #include "../../psx/fixed.h"
+#include "../../psx/audio.h"
 #include "../../main.h"
-#include "../../audio.h"
+
 
 //Retry state
 Retry retry;

@@ -2,8 +2,8 @@
 #include "menu.h"
 
 #include "../../main.h"
-#include "../../audio.h"
 
+#include "../../psx/audio.h"
 #include "../../psx/mem.h"
 #include "../../psx/timer.h"
 #include "../../psx/io.h"

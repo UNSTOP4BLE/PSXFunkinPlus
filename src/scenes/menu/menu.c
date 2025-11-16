@@ -2,8 +2,8 @@
 #include "options.h"
 
 #include "../../main.h"
-#include "../../audio.h"
 
+#include "../../psx/audio.h"
 #include "../../psx/mem.h"
 #include "../../psx/timer.h"
 #include "../../psx/io.h"
@@ -219,7 +219,6 @@ void Menu_Load(MenuPage page)
 	
 	//Play menu music
 	Audio_PlayXA_Track(XA_GettinFreaky, 0x40, 0, 1);
-	Audio_WaitPlayXA();
 	
 	//Set background colour
 	Gfx_SetClear(0, 0, 0);
