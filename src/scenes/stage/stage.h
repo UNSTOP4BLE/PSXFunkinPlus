@@ -224,7 +224,7 @@ typedef struct
 		Camera stage;
 		Camera hud;
 	} camera;
-	fixed_t bump, sbump;
+	fixed_t sbump;
 	
 	StageBack *back;
 	

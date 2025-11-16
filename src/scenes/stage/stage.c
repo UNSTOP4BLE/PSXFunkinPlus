@@ -86,8 +86,6 @@ static void Stage_FocusCharacter(Character *ch)
 
 static void Stage_ScrollCamera(void)
 {
-	Stage_TickCamera(&stage.camera.stage);
-	Stage_TickCamera(&stage.camera.hud);
 	if (stage.freecam)
 	{
 		if (pad_state.held & PAD_LEFT)
@@ -508,10 +506,10 @@ static void Stage_DrawHealth(s16 health, u16 health_i[2][4], boolean ox)
         health_i[status][3]
     };
     RECT_FIXED dst = {
-        temp,
-        (SCREEN_HEIGHT2 - 34) << FIXED_SHIFT,
-        src.w << FIXED_SHIFT,
-        src.h << FIXED_SHIFT
+        FIXED_MUL(temp, stage.sbump),
+        FIXED_MUL((SCREEN_HEIGHT2 - 34) << FIXED_SHIFT, stage.sbump),
+        FIXED_MUL(src.w << FIXED_SHIFT, stage.sbump),
+        FIXED_MUL(src.h << FIXED_SHIFT, stage.sbump)
     };
 
     if (ox)
@@ -1156,10 +1154,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Stage_InitCamera(&stage.camera.stage);
 	Stage_InitCamera(&stage.camera.hud);
 	
-	
-	
 	//Initialize Bumps
-	stage.bump = FIXED_UNIT;
 	stage.sbump = FIXED_UNIT;
 	
 	//Initialize stage according to mode
@@ -1522,11 +1517,9 @@ void Stage_Tick(void)
 			}
 			
 			//Handle bump
-			if(!stage.prefs.lowgraphics && stage.prefs.camerazooms)
+			if(!stage.prefs.lowgraphics && stage.prefs.camerazooms && !stage.paused)
 			{
-				if ((stage.bump = FIXED_UNIT + FIXED_MUL(stage.bump - FIXED_UNIT, FIXED_DEC(95,100))) <= FIXED_DEC(1003,1000))
-					stage.bump = FIXED_UNIT;
-				stage.sbump = FIXED_UNIT + FIXED_MUL(stage.sbump - FIXED_UNIT, FIXED_DEC(90,100));
+				stage.sbump = lerp(stage.sbump, FIXED_UNIT, FIXED_DEC(10,100));
 				
 				if (playing && (stage.flag & STAGE_FLAG_JUST_STEP))
 				{
@@ -1535,7 +1528,10 @@ void Stage_Tick(void)
 					
 					//Bump screen
 					if (is_bump_step)
-						stage.bump += FIXED_DEC(3,100);
+					{
+						stage.camera.stage.current.zoom += FIXED_DEC(5,100);
+						stage.camera.hud.current.zoom += FIXED_DEC(10,100);
+					}
 					
 					//Bump health every 4 steps
 					if ((stage.song_step & 0x3) == 0)
@@ -1811,7 +1807,7 @@ void Stage_Tick(void)
 			
 			//Reset stage state
 			stage.flag = 0;
-			stage.bump = stage.sbump = FIXED_UNIT;
+			stage.sbump = FIXED_UNIT;
 			
 			//Change background colour to black
 			Gfx_SetClear(0, 0, 0);
