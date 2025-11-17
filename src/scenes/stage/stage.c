@@ -41,13 +41,6 @@ static const u8 note_anims[4][3] = {
 	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss},
 };
 
-static const s16 note_def[4][8] = {
-	{-80,-80,-80,-80,-80,-80,-80,-80}, //Notes Y Position
-	{26,61,96,131,-131,-96,-61,-26}, //Notes X Position
-	{-49,-16,16,49,-128,-94,94,128}, //Notes X Position with Middle Scroll
-	{-128,-94,-60,-26,26,60,94,128} //Notes X Position with Swapped
-};
-
 static const StageDef stage_defs[StageId_Max] = {
 	#include "../../songs.h"
 };
@@ -228,8 +221,8 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 		{
 			//Create splash object
 			Obj_Splash *splash = Obj_Splash_New(
-				stage.note_x[type ^ stage.note_swap],
-				stage.note_y[type ^ stage.note_swap] * (stage.prefs.downscroll ? -1 : 1),
+				this->position.x + this->notes[type].x,
+				(this->position.y + this->notes[type].y) * (stage.prefs.downscroll ? -1 : 1),
 				type & 0x3
 			);
 			if (splash != NULL)
@@ -587,8 +580,11 @@ static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
 	}
 }
 
-static void Stage_DrawNotes(void)
+static void Stage_DrawNotes(PlayerState *player)
 {
+	// Determine which player we're drawing for
+	u8 player_id = (player == &stage.player_state[1]) ? 1 : 0;
+	
 	//Check if opponent should draw as bot
 	u8 bot = (stage.prefs.mode >= StageMode_2P) ? 0 : NOTE_FLAG_OPPONENT;
 	
@@ -613,9 +609,14 @@ static void Stage_DrawNotes(void)
 		scroll.start -= scroll.length;
 	}
 	
-	//Draw notes
+	//Draw notes for this specific player
 	for (Note *note = stage.cur_note; note->pos != 0xFFFF; note++)
 	{
+		// Only process notes for this player
+		u8 note_player = (note->type & NOTE_FLAG_OPPONENT) != 0;
+		if (note_player != player_id)
+			continue;
+		
 		//Update scroll
 		while (note->pos >= scroll_section->end)
 		{
@@ -624,16 +625,15 @@ static void Stage_DrawNotes(void)
 			Stage_GetSectionScroll(&scroll, ++scroll_section);
 		}
 		
-		//Get note information
-		u8 i = (note->type & NOTE_FLAG_OPPONENT) != 0;
-		PlayerState *this = &stage.player_state[i];
-		
 		fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
 		fixed_t time = (scroll.start - stage.song_time) + (scroll.length * (note->pos - scroll.start_step) / scroll.length_step);
-		fixed_t y = stage.note_y[(note->type & 0x7)] + FIXED_MUL(stage.speed, time * 150);
+		
+		// Use individual note Y position from player->notes array
+		u8 note_index = note->type & 0x3; // 0-3 for the 4 lanes
+		fixed_t y = player->notes[note_index].y + FIXED_MUL(stage.speed, time * 150);
 		
 		//Check if went above screen
-		if (y < FIXED_DEC(-16 - SCREEN_HEIGHT2, 1))
+		if (y < FIXED_DEC(-40, 1))
 		{
 			//Wait for note to exit late time
 			if (note_fp + stage.late_safe >= stage.note_scroll)
@@ -644,9 +644,9 @@ static void Stage_DrawNotes(void)
 			{
 				//Missed note
 				Stage_CutVocal();
-				Stage_MissNote(this, note->type);
-				NoteMissEvent(note->type,i);
-				this->health -= 475;
+				Stage_MissNote(player, note->type);
+				NoteMissEvent(note->type, player_id);
+				player->health -= 475;
 			}
 			
 			//Update current note
@@ -657,8 +657,11 @@ static void Stage_DrawNotes(void)
 			//Don't draw if below screen
 			RECT note_src;
 			RECT_FIXED note_dst;
-			if (y > (FIXED_DEC(SCREEN_HEIGHT,2) + scroll.size) || note->pos == 0xFFFF)
+			if (y > (FIXED_DEC(400,2) + scroll.size) || note->pos == 0xFFFF)
 				break;
+			
+			// Use individual note X position from player->notes array
+			fixed_t note_x = player->notes[note_index].x;
 			
 			//Draw note
 			if (note->type & NOTE_FLAG_SUSTAIN)
@@ -666,9 +669,9 @@ static void Stage_DrawNotes(void)
 				//Check for sustain clipping
 				fixed_t clip;
 				y -= scroll.size;
-				if ((note->type & (bot | NOTE_FLAG_HIT)) || ((this->pad_held & stage.prefs.control_keys[note->type & 0x3]) && (note_fp + stage.late_sus_safe >= stage.note_scroll)))
+				if ((note->type & (bot | NOTE_FLAG_HIT)) || ((player->pad_held & stage.prefs.control_keys[note->type & 0x3]) && (note_fp + stage.late_sus_safe >= stage.note_scroll)))
 				{
-					clip = stage.note_y[(note->type & 0x7)] - y;
+					clip = player->notes[note_index].y - y;
 					if (clip < 0)
 						clip = 0;
 				}
@@ -687,8 +690,8 @@ static void Stage_DrawNotes(void)
 						note_src.w = 32;
 						note_src.h = 28 - (clip >> FIXED_SHIFT);
 						
-						note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
-						note_dst.y = y + clip;
+						note_dst.x = player->position.x + note_x - FIXED_DEC(16,1);
+						note_dst.y = player->position.y + y + clip;
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = note_src.h << FIXED_SHIFT;
 						
@@ -697,21 +700,15 @@ static void Stage_DrawNotes(void)
 							note_dst.y = -note_dst.y;
 							note_dst.h = -note_dst.h;
 						}
-						//draw for opponent
-						if (stage.prefs.opponentnotes && note->type & NOTE_FLAG_OPPONENT)
-							if (stage.prefs.middlescroll)
-								Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, 1, &stage.camera.hud);
-							else
-								Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
-						else if (!(note->type & NOTE_FLAG_OPPONENT))
-							Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
+						
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
 					}
 				}
 				else
 				{
 					//Get note height
 					fixed_t next_time = (scroll.start - stage.song_time) + (scroll.length * (note->pos + 12 - scroll.start_step) / scroll.length_step);
-					fixed_t next_y = stage.note_y[(note->type & 0x7)] + FIXED_MUL(stage.speed, next_time * 150) - scroll.size;
+					fixed_t next_y = player->notes[note_index].y + FIXED_MUL(stage.speed, next_time * 150) - scroll.size;
 					fixed_t next_size = next_y - y;
 					
 					if (clip < next_size)
@@ -721,21 +718,15 @@ static void Stage_DrawNotes(void)
 						note_src.w = 32;
 						note_src.h = 16;
 						
-						note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
-						note_dst.y = y + clip;
+						note_dst.x = player->position.x + note_x - FIXED_DEC(16,1);
+						note_dst.y = player->position.y + y + clip;
 						note_dst.w = note_src.w << FIXED_SHIFT;
 						note_dst.h = (next_y - y) - clip;
 						
 						if (stage.prefs.downscroll)
 							note_dst.y = -note_dst.y - note_dst.h;
-						//draw for opponent
-						if (stage.prefs.opponentnotes && note->type & NOTE_FLAG_OPPONENT)
-							if (stage.prefs.middlescroll)
-								Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, 1, &stage.camera.hud);
-							else
-								Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
-						else if (!(note->type & NOTE_FLAG_OPPONENT))
-							Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
+							
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
 					}
 				}
 			}
@@ -751,18 +742,15 @@ static void Stage_DrawNotes(void)
 				note_src.w = 32;
 				note_src.h = 32;
 				
-				note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
-				note_dst.y = y - FIXED_DEC(16,1);
+				note_dst.x = player->position.x + note_x - FIXED_DEC(16,1);
+				note_dst.y = player->position.y + y - FIXED_DEC(16,1);
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
 				
 				if (stage.prefs.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
-				//draw for opponent
-				if (stage.prefs.middlescroll && note->type & NOTE_FLAG_OPPONENT)
-					Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, 1, &stage.camera.hud);
-				else
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
+					
+				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
 				
 				//Draw note fire
 				note_src.x = 192 + ((animf_count & 0x1) << 5);
@@ -779,14 +767,8 @@ static void Stage_DrawNotes(void)
 				{
 					note_dst.h = note_dst.h * 3 / 2;
 				}
-				//draw for opponent
-				if (stage.prefs.opponentnotes && note->type & NOTE_FLAG_OPPONENT)
-					if (stage.prefs.middlescroll)
-						Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, 1, &stage.camera.hud);
-					else
-						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
-				else if (!(note->type & NOTE_FLAG_OPPONENT))
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
+				
+				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
 				
 			}
 			else
@@ -801,23 +783,34 @@ static void Stage_DrawNotes(void)
 				note_src.w = 32;
 				note_src.h = 32;
 				
-				note_dst.x = stage.note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
-				note_dst.y = y - FIXED_DEC(16,1);
+				note_dst.x = player->position.x + note_x - FIXED_DEC(16,1);
+				note_dst.y = player->position.y + y - FIXED_DEC(16,1);
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
 				
 				if (stage.prefs.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
-				//draw for opponent
-				if (stage.prefs.opponentnotes && note->type & NOTE_FLAG_OPPONENT)
-					if (stage.prefs.middlescroll)
-						Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, 1, &stage.camera.hud);
-					else
-						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
-				else if (!(note->type & NOTE_FLAG_OPPONENT))
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
+					
+				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
 			}
 		}
+	}
+	
+	//Draw note HUD for this specific player
+	RECT note_src = {0, 0, 32, 32};
+	RECT_FIXED note_dst = {0, 0, FIXED_DEC(32,1), FIXED_DEC(32,1)};
+		
+	for (u8 i = 0; i < 4; i++)
+	{
+		// Use individual note positions for HUD
+		note_dst.x = player->position.x + player->notes[i].x - FIXED_DEC(16,1);
+		note_dst.y = player->position.y + player->notes[i].y - FIXED_DEC(16,1);
+		
+		if (stage.prefs.downscroll)
+			note_dst.y = -note_dst.y - note_dst.h;
+				
+		Stage_DrawStrum(i | (player_id ? 0x4 : 0x0), &note_src, &note_dst);
+		Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
 	}
 }
 
@@ -1100,6 +1093,18 @@ static void Load_SFX(char *path, u8 offset)
     Mem_Free(data);
 }
 
+static void Stage_InitPlayerState(PlayerState *this)
+{
+	this->position.x = FIXED_DEC(80,1);
+	this->position.y = FIXED_DEC(-80,1);
+	
+	for (int i = 0; i < 4; i++)
+	{
+		this->notes[i].x = FIXED_DEC(33 * (i - 2),1) + FIXED_DEC(16,1);
+		this->notes[i].y = FIXED_DEC(0,1);
+	}
+}
+
 //Stage functions
 void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 {
@@ -1157,9 +1162,6 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Initialize Bumps
 	stage.sbump = FIXED_UNIT;
 	
-	//Initialize stage according to mode
-	stage.note_swap = (stage.prefs.mode == StageMode_Swap) ? 4 : 0;
-	
 	//Load VAG files
 	Audio_ClearAlloc();
 	Load_SFX("\\SOUNDS\\MICDROP.VAG;1",0);
@@ -1178,14 +1180,12 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Gfx_SetClear(0, 0, 0);
 	
 	//Manage Notes Position
-	u8 scroll_index = (stage.prefs.middlescroll) ? 2 : 1;
-	if (stage.prefs.mode == StageMode_Swap && !stage.prefs.middlescroll) {
-		scroll_index = 3;
-	}
-	for (int i = 0; i < 8; i++) {
-		stage.note_x[i] = FIXED_DEC(note_def[scroll_index][i], 1);
-		stage.note_y[i] = FIXED_DEC(note_def[0][i], 1);
-	}
+	Stage_InitPlayerState(&stage.player_state[0]);
+	Stage_InitPlayerState(&stage.player_state[1]);
+	
+	u8 swap = (stage.prefs.mode == StageMode_Swap);
+	stage.player_state[0].position.x = FIXED_DEC(80 - 160 * swap, 1);
+	stage.player_state[1].position.x = FIXED_DEC(-80 + 160 * swap, 1);
 }
 
 void Stage_Unload(void)
@@ -1706,40 +1706,8 @@ void Stage_Tick(void)
 			}
 			
 			//Draw stage notes
-			Stage_DrawNotes();
-			
-			//Draw note HUD
-			RECT note_src = {0, 0, 32, 32};
-			RECT_FIXED note_dst = {0, 0, FIXED_DEC(32,1), FIXED_DEC(32,1)};
-				
-			for (u8 i = 0; i < 4; i++)
-			{
-				//BF
-				note_dst.x = stage.note_x[i] - FIXED_DEC(16,1);
-				note_dst.y = stage.note_y[i] - FIXED_DEC(16,1);
-				if (stage.prefs.downscroll)
-					note_dst.y = -note_dst.y - note_dst.h;
-				
-				Stage_DrawStrum(i, &note_src, &note_dst);
-				
-				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
-				
-				//Opponent
-				note_dst.x = stage.note_x[(i | 0x4)] - FIXED_DEC(16,1);
-				note_dst.y = stage.note_y[(i | 0x4)] - FIXED_DEC(16,1);
-				
-				if (stage.prefs.downscroll)
-					note_dst.y = -note_dst.y - note_dst.h;
-				Stage_DrawStrum(i | 4, &note_src, &note_dst);
-				
-				if (stage.prefs.opponentnotes)
-				{
-					if (stage.prefs.middlescroll)
-						Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, 1, &stage.camera.hud);
-					else
-						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, &stage.camera.hud);
-				}
-			}
+			Stage_DrawNotes(&stage.player_state[0]);
+			Stage_DrawNotes(&stage.player_state[1]);
 			
 			Events_Back();
 			

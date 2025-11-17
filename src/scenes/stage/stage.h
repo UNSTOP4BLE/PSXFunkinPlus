@@ -125,9 +125,19 @@ typedef struct
 
 typedef struct
 {
+	fixed_t x, y, scale, rotation;
+} Note_Position;
+
+typedef struct
+{
 	Character *character;
 	
 	fixed_t arrow_hitan[4]; //Arrow hit animation for presses
+	struct
+	{
+		fixed_t x, y, scale, rotation;
+	} position;
+	Note_Position notes[4];
 	
 	s16 health;
 	u16 combo;
@@ -189,8 +199,6 @@ typedef struct
 	boolean debug, freecam;
 	
 	u32 offset;
-	u32 note_x[8];
-	u32 note_y[8];
 	
 	fixed_t pause_scroll;
 	u8 pause_select;
@@ -261,8 +269,6 @@ typedef struct
 		StageState_DeadRetry,  //Retry prompt
 		StageState_DeadDecide, //Decided
 	} state;
-	
-	u8 note_swap;
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
