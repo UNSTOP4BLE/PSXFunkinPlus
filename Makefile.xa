@@ -2,6 +2,7 @@ all: \
 	iso/music/menu.xa \
 	iso/songs/1.xa \
 	iso/songs/2.xa \
+	iso/songs/3.xa \
 
 # XA converts
 iso/%.xa: iso/%.ogg
@@ -18,3 +19,6 @@ iso/songs/1.xa: iso/songs/bopeebo/Merged.xa iso/songs/bopeebo/Inst.xa iso/songs/
 
 # 2
 iso/songs/2.xa: iso/songs/dadbattle/Merged.xa iso/songs/dadbattle/Inst.xa iso/songs/tutorial/Inst.xa
+
+# 3
+iso/songs/3.xa: iso/songs/perdition/Inst.xa

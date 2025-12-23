@@ -89,7 +89,7 @@ void NoteHitEnemyEvent(u8 type)
 void NoteMissEvent(u8 type, u8 state)
 {
 	PlayerState *this = &stage.player_state[state];
-	if (type & NOTE_FLAG_BULLET)
-		this->health = -0x7000;
+	//if (type & NOTE_FLAG_BULLET)
+	//	this->health = -0x7000;
 }
 

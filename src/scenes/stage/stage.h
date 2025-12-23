@@ -109,13 +109,10 @@ typedef struct
 	u16 flag;
 } Section;
 
-#define NOTE_FLAG_OPPONENT    (1 << 2) //Note is opponent's
-#define NOTE_FLAG_SUSTAIN     (1 << 3) //Note is a sustain note
-#define NOTE_FLAG_SUSTAIN_END (1 << 4) //Is either end of sustain
-#define NOTE_FLAG_ALT_ANIM    (1 << 5) //Note plays alt animation
-#define NOTE_FLAG_MINE        (1 << 6) //Note is a mine
-#define NOTE_FLAG_BULLET      (1 << 7) //Note is a bullet
-#define NOTE_FLAG_HIT         (1 << 8) //Note has been hit
+#define NOTE_FLAG_SUSTAIN     (1 << 2) //Note is a sustain note
+#define NOTE_FLAG_SUSTAIN_END (1 << 3) //Is either end of sustain
+#define NOTE_FLAG_ALT_ANIM    (1 << 4) //Note plays alt animation
+#define NOTE_FLAG_HIT         (1 << 5) //Note has been hit
 
 typedef struct
 {
@@ -138,6 +135,11 @@ typedef struct
 		fixed_t x, y, scale, rotation;
 	} position;
 	Note_Position notes[4];
+	
+	Note *chart_notes;
+	size_t chart_num_notes;
+	Note *chart_cur_note; //First visible and hittable note, used for drawing and hit detection
+	boolean bot;
 	
 	s16 health;
 	u16 combo;
@@ -215,8 +217,6 @@ typedef struct
 	
 	IO_Data chart_data;
 	Section *sections;
-	Note *notes;
-	size_t num_notes;
 	
 	fixed_t speed;
 	fixed_t step_crochet, step_time;
@@ -243,7 +243,6 @@ typedef struct
 	boolean hidegf;
 	
 	Section *cur_section; //Current section
-	Note *cur_note; //First visible and hittable note, used for drawing and hit detection
 	
 	fixed_t note_scroll, song_time, interp_time, interp_ms, interp_speed;
 	

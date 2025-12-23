@@ -1,6 +1,6 @@
 /*
  * funkinchartpak by Regan "CuckyDev" Green
- * Packs Friday Night Funkin' json formatted charts into a binary file for the PSX port
+ * Packs Friday Night Funkin' json formatted legacy charts into a binary file for the PSX port
 */
 
 #include <iostream>
@@ -23,13 +23,10 @@ struct Section
 	uint16_t flag = 0;
 };
 
-#define NOTE_FLAG_OPPONENT    (1 << 2) //Note is opponent's
-#define NOTE_FLAG_SUSTAIN     (1 << 3) //Note is a sustain note
-#define NOTE_FLAG_SUSTAIN_END (1 << 4) //Is either end of sustain
-#define NOTE_FLAG_ALT_ANIM    (1 << 5) //Note plays alt animation
-#define NOTE_FLAG_MINE        (1 << 6) //Note is a mine
-#define NOTE_FLAG_BULLET      (1 << 7) //Note is a bullet
-#define NOTE_FLAG_HIT         (1 << 8) //Note has been hit
+#define NOTE_FLAG_SUSTAIN     (1 << 2) //Note is a sustain note
+#define NOTE_FLAG_SUSTAIN_END (1 << 3) //Is either end of sustain
+#define NOTE_FLAG_ALT_ANIM    (1 << 4) //Note plays alt animation
+#define NOTE_FLAG_HIT         (1 << 5) //Note has been hit
 
 struct Note
 {
@@ -93,7 +90,8 @@ int main(int argc, char *argv[])
 	uint16_t step_base = 0;
 	
 	std::vector<Section> sections;
-	std::vector<Note> notes;
+	std::vector<Note> notes_0;
+	std::vector<Note> notes_1;
 	
 	uint16_t section_end = 0;
 	int score = 0, dups = 0;
@@ -128,45 +126,53 @@ int main(int argc, char *argv[])
 		{
 			//Push main note
 			Note new_note;
-			int sustain = (int)PosRound(j[2], step_crochet) - 1;
+			
 			new_note.pos = (step_base * 12) + PosRound(((double)j[0] - milli_base) * 12.0, step_crochet);
-			new_note.type = (uint8_t)j[1] & (3 | NOTE_FLAG_OPPONENT);
-			if (is_opponent)
-				new_note.type ^= NOTE_FLAG_OPPONENT;
-			if (j[3] == true)
-				new_note.type |= NOTE_FLAG_ALT_ANIM;
-			else if ((new_note.type & NOTE_FLAG_OPPONENT) && is_alt)
-				new_note.type |= NOTE_FLAG_ALT_ANIM;
+			new_note.type = (uint8_t)j[1] % 4;
+			int sustain = (int)PosRound(j[2], step_crochet) - 1;
+			
 			if (sustain >= 0)
 				new_note.type |= NOTE_FLAG_SUSTAIN_END;
 			
-			if (note_fudge.count(*((uint32_t*)&new_note)))
-			{
+			if (note_fudge.count(*((uint32_t*)&new_note))) {
 				dups += 1;
 				continue;
 			}
 			note_fudge.insert(*((uint32_t*)&new_note));
-				
-			notes.push_back(new_note);
-			if (!(new_note.type & NOTE_FLAG_OPPONENT))
+			
+			if(((j[1] < 4) and !is_opponent) or (!(j[1] < 4) and is_opponent)) {
+				notes_0.push_back(new_note);
 				score += 350;
+			}
+			else
+				notes_1.push_back(new_note);
 			
 			//Push sustain notes
 			for (int k = 0; k <= sustain; k++)
 			{
-				Note sus_note; //jerma
+				Note sus_note;
 				sus_note.pos = new_note.pos + ((k + 1) * 12);
 				sus_note.type = new_note.type | NOTE_FLAG_SUSTAIN;
 				if (k != sustain)
 					sus_note.type &= ~NOTE_FLAG_SUSTAIN_END;
-				notes.push_back(sus_note);
+				
+				if(((j[1] < 4) and !is_opponent) or (!(j[1] < 4) and is_opponent))
+					notes_0.push_back(sus_note);
+				else
+					notes_1.push_back(sus_note);
 			}
 		}
 	}
 	std::cout << "max score: " << score << " dups excluded: " << dups << std::endl;
 	
 	//Sort notes
-	std::sort(notes.begin(), notes.end(), [](Note a, Note b) {
+	std::sort(notes_0.begin(), notes_0.end(), [](Note a, Note b) {
+		if (a.pos == b.pos)
+			return (b.type & NOTE_FLAG_SUSTAIN) && !(a.type & NOTE_FLAG_SUSTAIN);
+		else
+			return a.pos < b.pos;
+	});
+	std::sort(notes_1.begin(), notes_1.end(), [](Note a, Note b) {
 		if (a.pos == b.pos)
 			return (b.type & NOTE_FLAG_SUSTAIN) && !(a.type & NOTE_FLAG_SUSTAIN);
 		else
@@ -182,7 +188,9 @@ int main(int argc, char *argv[])
 	Note dum_note;
 	dum_note.pos = 0xFFFF;
 	dum_note.type = NOTE_FLAG_HIT;
-	notes.push_back(dum_note);
+	
+	notes_0.push_back(dum_note);
+	notes_1.push_back(dum_note);
 	
     // Write to output
     std::filesystem::path outputPath = std::filesystem::path(argv[1]).replace_extension(".cht");
@@ -193,19 +201,28 @@ int main(int argc, char *argv[])
         return 1;
     }
 	
-	//Write header
+	// Write header
 	WriteLong(out, (fixed_t)(speed * FIXED_UNIT));
-	WriteWord(out, 6 + (sections.size() << 2));
-	
-	//Write sections
+	WriteWord(out, 8 + (sections.size() << 2));  // sections offset
+	WriteWord(out, notes_0.size() << 2);  // player 1 notes offset
+
+	// Write sections
 	for (auto &i : sections)
 	{
 		WriteWord(out, i.end);
 		WriteWord(out, i.flag);
 	}
-	
-	//Write notes
-	for (auto &i : notes)
+
+	// Write Player 1 notes
+	for (auto &i : notes_0)
+	{
+		WriteWord(out, i.pos);
+		out.put(i.type);
+		out.put(0);
+	}
+
+	// Write Player 2 notes (empty if not used)
+	for (auto &i : notes_1)
 	{
 		WriteWord(out, i.pos);
 		out.put(i.type);

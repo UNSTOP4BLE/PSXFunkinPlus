@@ -71,7 +71,7 @@
 				<!-- Bopeebo charts -->
 				<file name = "1.1e.cht" type = "data" source = "iso/songs/bopeebo/easy.cht"/>
 				<file name = "1.1n.cht" type = "data" source = "iso/songs/bopeebo/normal.cht"/>
-				<file name = "1.1h.cht" type = "data" source = "iso/songs/bopeebo/hard.cht"/>
+				<file name = "1.1h.cht" type = "data" source = "iso/songs/perdition/hard.cht"/>
 				<!-- Fresh charts -->
 				<file name = "1.2e.cht" type = "data" source = "iso/songs/fresh/easy.cht"/>
 				<file name = "1.2n.cht" type = "data" source = "iso/songs/fresh/normal.cht"/>
@@ -91,13 +91,10 @@
 				<file name = "menu.xa" type = "xa" source = "iso/music/menu.xa"/>
 				<dummy sectors="128"/>
 				
-				<file name = "1.xa" type = "xa" source = "iso/songs/1.xa"/>
+				<file name = "1.xa" type = "xa" source = "iso/songs/3.xa"/>
 				<dummy sectors="128"/>
 				
 				<file name = "2.xa" type = "xa" source = "iso/songs/2.xa"/>
-				<dummy sectors="128"/>
-				
-				<file name = "3.xa" type = "xa" source = "iso/songs/3.xa"/>
 				<dummy sectors="128"/>
 			</dir>
 			
